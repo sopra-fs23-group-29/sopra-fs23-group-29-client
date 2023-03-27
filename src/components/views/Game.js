@@ -7,19 +7,21 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 
-const Player = ({user}) => (
-  <div className="player container">
-    <div className="player username">{user.username}</div>
-    <div className="player name">{user.name}</div>
-    <div className="player id">id: {user.id}</div>
-  </div>
-);
 
-Player.propTypes = {
-  user: PropTypes.object
-};
+const Game = props => {
 
-const Game = () => {
+  const Player = ({user}) => (
+    <div className="player container">
+      <div className="player username">{<Button width = "100%" onClick={() => goToProfile(user.id)}>{user.username}</Button>}</div>
+      <div className="player id">ID: {user.id}</div>
+      <div className="player id">{user.status}</div>
+    </div>
+  );
+
+  Player.propTypes = {
+    user: PropTypes.object
+  };  
+
   // use react-router-dom's hook to access the history
   const history = useHistory();
 
@@ -29,10 +31,34 @@ const Game = () => {
   // a component can have as many state variables as you like.
   // more information can be found under https://reactjs.org/docs/hooks-state.html
   const [users, setUsers] = useState(null);
+  const [loggedinUserId, setLoggedinUserId] = useState(null);
+  const [loggedinUserName, setLoggedinUserName] = useState(null);
 
-  const logout = () => {
+  const doLogout = async () => {
+
+    // set status to offline
+    try {
+      
+      // set status to offline
+      await api.put(
+        '/logout',
+        {},
+        {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
+      );
+
+    } catch (error) {
+      alert(`Something went wrong during the login: \n${handleError(error)}`);
+    }
+
+    // remove the token
     localStorage.removeItem('token');
+    
     history.push('/login');
+
+  };
+
+  const goToProfile = (id) => {
+    history.push(`/profile/${id}`);
   }
 
   // the effect hook can be used to react to change in your component.
@@ -43,7 +69,10 @@ const Game = () => {
     // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
     async function fetchData() {
       try {
-        const response = await api.get('/users');
+        const response = await api.get(
+          '/users',
+          {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
+        );
 
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
@@ -52,7 +81,7 @@ const Game = () => {
 
         // Get the returned users and update the state.
         setUsers(response.data);
-
+        
         // This is just some data for you to see what is available.
         // Feel free to remove it.
         console.log('request to:', response.request.responseURL);
@@ -75,6 +104,7 @@ const Game = () => {
   let content = <Spinner/>;
 
   if (users) {
+
     content = (
       <div className="game">
         <ul className="game user-list">
@@ -82,12 +112,21 @@ const Game = () => {
             <Player user={user} key={user.id}/>
           ))}
         </ul>
+        
         <Button
           width="100%"
-          onClick={() => logout()}
+          onClick={() => doLogout()}
         >
           Logout
         </Button>
+
+        <div>
+          {`Logged in with ID - Username`}
+        </div>
+        <div>
+          {`${JSON.parse(localStorage.getItem('token')).id} - ${JSON.parse(localStorage.getItem('token')).username}`}
+        </div>
+
       </div>
     );
   }
