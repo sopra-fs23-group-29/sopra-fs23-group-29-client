@@ -47,7 +47,6 @@ const Profile = props => {
         
         setUserid(response.data.id);
         setUsername(response.data.username);
-        setToken(response.data.token);
         setStatus(response.data.status);
         setCreationDate(response.data.creationDate);
         setBirthday(response.data.birthday);
@@ -92,11 +91,9 @@ const Profile = props => {
             disabled = {token !== JSON.parse(localStorage.getItem('token')).token}
             onClick = {() => edit(id)}
           >
-            Edit Profile (ony for own profile)
+            Edit Profile (only for own profile)
           </Button>
         </div>
-
-        <div className="game paragraph">{"----"}</div>
         
         <div>
           <Button width = "100%" onClick = {() => backToGame()}>Back to the Dashboard</Button>
