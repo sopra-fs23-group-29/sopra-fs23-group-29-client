@@ -14,7 +14,6 @@ import {Globalissimo} from "../ui/Globalissimo";
 const Header = props => (
   <div className="header container" style={{height: props.height}}>
     <Globalissimo/>
-
   </div>
 );
 
