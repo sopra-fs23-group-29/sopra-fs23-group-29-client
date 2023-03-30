@@ -50,14 +50,15 @@ const Login = props => {
       
       // Check if a user comes back, meaning the user exists and pw is correct
       const requestBody = JSON.stringify({password, username});
-      const response = await api.post('/login', requestBody);
+      const response = await api.put('/users/login', requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
       // Store a token into the local storage for verification if logged in
       // currently in use: token
-      localStorage.setItem('token', JSON.stringify({"token":user.token, "id":user.id, "username":user.username}));
+      const token = response.headers["authorization"];
+      localStorage.setItem('token', JSON.stringify({"token":token, "id":user.id, "username":user.username}));
       
       // Login successfully worked --> navigate to the route /game in the GameRouter
       history.push(`/game`);

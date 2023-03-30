@@ -41,7 +41,7 @@ const Game = props => {
       
       // set status to offline
       await api.put(
-        '/logout',
+        '/users/logout',
         {},
         {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
       );

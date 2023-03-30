@@ -42,7 +42,7 @@ const Registration = props => {
   const [username, setUsername] = useState(null);
 
   const goToLogin = () => {
-    history.push("/login");
+    history.push("/users/login");
   }
 
   const doRegistration = async () => {
@@ -55,7 +55,8 @@ const Registration = props => {
 
       // Store a token into the local storage for verification if logged in
       // currently in use: token
-      localStorage.setItem('token', JSON.stringify({"token":user.token, "id":user.id, "username":user.username}));
+      const token = response.headers["authorization"];
+      localStorage.setItem('token', JSON.stringify({"token":token, "id":user.id, "username":user.username}));
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
       history.push(`/game`);
