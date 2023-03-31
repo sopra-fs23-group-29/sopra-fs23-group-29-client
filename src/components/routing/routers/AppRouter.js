@@ -10,6 +10,9 @@ import Profile from "components/views/Profile"
 import ProfileEdit from "components/views/ProfileEdit"
 import Home from "../../views/Home";
 import Users from "../../views/Users";
+import HeaderHome from "../../views/HeaderHome";
+import Header from "../../views/Header";
+import HeaderGame from "../../views/HeaderGame";
 
 /**
  * Main router of your application.
@@ -27,42 +30,49 @@ const AppRouter = () => {
 
         <Route path="/game">
           <GameGuard>
+            <HeaderGame/>
             <GameRouter base="/game"/>
           </GameGuard>
         </Route>
 
         <Route exact path="/login">
           <LoginGuard>
+            <Header height="100"/>
             <Login/>
           </LoginGuard>
         </Route>
 
         <Route exact path="/registration">
           <RegistrationGuard>
+            <Header height="100"/>
             <Registration/>
           </RegistrationGuard>
         </Route>
         //TODO Add guards
         <Route exact path="/home">
+            <HeaderHome/>
             <Home/>
         </Route>
 
-        <Route exact path="/profile">
+        //TODO Add ProfileGuard here
+        <Route exact path="/profile/:id">
+          <HeaderHome/>
           <Profile/>
         </Route>
 
+        <Route exact path="/profile/:id/edit">
+          <HeaderHome/>
+          <ProfileEdit/>
+        </Route>
+
         <Route exact path="/users">
+          <HeaderHome/>
           <Users/>
         </Route>
 
         <Route exact path="/">
           <Redirect to="/game"/>
         </Route>
-        
-        <ProfileGuard>
-          <Route exact path = "/profile/:id" component={Profile}/>
-          <Route exact path = "/profile/:id/edit" component={ProfileEdit} />
-        </ProfileGuard>
 
       </Switch>
     </BrowserRouter>
