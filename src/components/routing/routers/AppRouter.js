@@ -8,6 +8,8 @@ import {ProfileGuard} from "components/routing/routeProtectors/ProfileGuard";
 import Registration from "components/views/Registration";
 import Profile from "components/views/Profile"
 import ProfileEdit from "components/views/ProfileEdit"
+import Home from "../../views/Home";
+import Users from "../../views/Users";
 
 /**
  * Main router of your application.
@@ -39,6 +41,18 @@ const AppRouter = () => {
           <RegistrationGuard>
             <Registration/>
           </RegistrationGuard>
+        </Route>
+        //TODO Add guards
+        <Route exact path="/home">
+            <Home/>
+        </Route>
+
+        <Route exact path="/profile">
+          <Profile/>
+        </Route>
+
+        <Route exact path="/users">
+          <Users/>
         </Route>
 
         <Route exact path="/">
