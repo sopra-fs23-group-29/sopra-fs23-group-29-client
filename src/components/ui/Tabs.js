@@ -3,13 +3,12 @@ import {useHistory, useParams} from "react-router-dom";
 
 export default function Tabs() {
     const history = useHistory();
-    const id = useParams().id;
+    const id = JSON.parse(localStorage.getItem('token')).id;
 
     const goToHome = () => {
         history.push("/home");
     }
 
-    //TODO Profile isn't working so far
     const goToProfile = () => {
         history.push(`/profile/${id}`);
     }

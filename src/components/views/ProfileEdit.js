@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
@@ -36,8 +36,7 @@ FormField.propTypes = {
 
 const ProfileEdit = props => {
 
-  // Get the id param from the URL.
-  let id = props.match.params.id;
+  const id = useParams().id;
 
   const history = useHistory();
   const [username, setUsername] = useState(null);
