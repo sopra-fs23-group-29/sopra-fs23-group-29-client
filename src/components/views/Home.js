@@ -14,10 +14,13 @@ As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
 
+/* Displays the lobbies that people can join*/
+// right now with dummy data, change to real once websockets work
 const DisplayLobby = (props) => {
   return (
     <div className="home lobby-container">
       <div>Existing Lobby free to join</div>
+      <button className="home lobby-container button">Join Lobby</button>
     </div>
   );
 };
@@ -42,6 +45,7 @@ const Home = (props) => {
 
   return (
     <BaseContainer className="home container">
+      <h2>PvP Lobbies</h2>
       <DisplayLobby />
       <Button
         className="primary-button"
