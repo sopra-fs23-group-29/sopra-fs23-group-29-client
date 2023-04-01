@@ -48,26 +48,33 @@ const AppRouter = () => {
             <Registration/>
           </RegistrationGuard>
         </Route>
-        //TODO Add guards
+
         <Route exact path="/">
+          <GameGuard>
             <HeaderHome height="100"/>
-            <Home/>
+              <Home/>
+          </GameGuard>
         </Route>
 
-        //TODO Add ProfileGuard here
         <Route exact path="/profile/:id">
-          <HeaderHome height="100"/>
-          <Profile/>
+          <ProfileGuard>
+            <HeaderHome height="100"/>
+            <Profile/>
+          </ProfileGuard>
         </Route>
 
         <Route exact path="/profile/:id/edit">
-          <HeaderHome height="100"/>
-          <ProfileEdit/>
+          <ProfileGuard>
+            <HeaderHome height="100"/>
+            <ProfileEdit/>
+          </ProfileGuard>
         </Route>
 
         <Route exact path="/users">
-          <HeaderHome height="100"/>
-          <Users/>
+          <GameGuard>
+            <HeaderHome height="100"/>
+            <Users/>
+          </GameGuard>
         </Route>
 
 
