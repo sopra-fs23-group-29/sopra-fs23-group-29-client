@@ -120,13 +120,6 @@ const Game = props => {
           Logout
         </Button>
 
-        <div>
-          {`Logged in with ID - Username`}
-        </div>
-        <div>
-          {`${JSON.parse(localStorage.getItem('token')).id} - ${JSON.parse(localStorage.getItem('token')).username}`}
-        </div>
-
       </div>
     );
   }
