@@ -6,7 +6,10 @@ import {Globalissimo} from "../ui/Globalissimo";
 const HeaderGame = props => (
   <div className="header container" style={{height: props.height}}>
       <Globalissimo/>
-      <h2 className="header username-game">[USERNAME]</h2>
+      <h2 className="header game username">[USERNAME]</h2>
+      <p className="header game barrier-counter">[Barrier Counter]</p>
+      <p className="header game round-counter">[Round Counter]</p>
+      <i className="header game icon">logout</i>
   </div>
 );
 
