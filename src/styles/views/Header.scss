@@ -11,15 +11,28 @@
     text-align: left;
   }
 
-  &.username-home {
-    font-weight: bold;
-    color: $accent;
-    text-align: left;
+  &.home {
+    &.username {
+      font-weight: bold;
+      color: $accent;
+      text-align: left;
+    }
   }
 
-  &.username-game {
-    font-weight: bold;
-    color: $player1;
-    text-align: left;
+  &.game {
+    &.username {
+      font-weight: bold;
+      color: $player1;
+      text-align: left;
+    }
+
+    &.barrier-counter {
+      margin-left: auto;
+      color: $player2;
+    }
+
+    &.round-counter {
+      color: $accent;
+    }
   }
 }
