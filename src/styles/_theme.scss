@@ -55,8 +55,6 @@ $borderRadiusRound: 6.25em;
   align-items: center;
   justify-content: left;
   gap: 1em;
-  padding-left: 5%;
-  padding-right: 5%;
 }
 
 @mixin right {
@@ -64,8 +62,6 @@ $borderRadiusRound: 6.25em;
   align-items: center;
   justify-content: right;
   gap: 1em;
-  padding-left: 5%;
-  padding-right: 5%;
 }
 
 @mixin icon {
