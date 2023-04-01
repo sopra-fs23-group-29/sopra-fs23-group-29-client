@@ -11,6 +11,7 @@
       transform: none;
     }
   }
+  align-self: center;
   padding: 6px;
   font-weight: 700;
   text-transform: uppercase;
@@ -21,7 +22,7 @@
   border-radius: $borderRadius;
   cursor: pointer;
   opacity: 1;
-  color: $accent;
-  background-color: $accentDark;
+  color: $textColor;
+  background-color: #2a2a2a;
   transition: all 0.3s ease;
 }

@@ -1,0 +1,24 @@
+@import 'styles/theme';
+
+.home{
+  &.container {
+    background: #6d6d6d;
+    padding: 1.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    box-shadow: $dropShadow;
+  }
+  &.lobby-container {
+    background: #c1c1c1;
+    color: $accentDark;
+    padding: 1.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+  }
+
+}

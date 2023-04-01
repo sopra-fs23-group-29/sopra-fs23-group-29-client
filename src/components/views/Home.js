@@ -3,7 +3,7 @@ import { api, handleError } from "helpers/api";
 import User from "models/User";
 import { useHistory } from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
+import "styles/views/Home.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
@@ -13,6 +13,14 @@ however be sure not to clutter your files with an endless amount!
 As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
+
+const DisplayLobby = (props) => {
+  return (
+    <div className="home lobby-container">
+      <div>Existing Lobby free to join</div>
+    </div>
+  );
+};
 
 const Home = (props) => {
   const history = useHistory();
@@ -33,8 +41,15 @@ const Home = (props) => {
   };
 
   return (
-    <BaseContainer>
-      <Button onClick={() => createGameLobby()}>Create PvP Lobby</Button>
+    <BaseContainer className="home container">
+      <DisplayLobby />
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => createGameLobby()}
+      >
+        Create Lobby
+      </Button>
     </BaseContainer>
   );
 };
