@@ -7,7 +7,7 @@ import Tabs from "../ui/Tabs";
 const HeaderHome = props => (
   <div className="header container" style={{height: props.height}}>
       <Globalissimo/>
-      <h2 className="header username-home">[USERNAME]</h2>
+      <h2 className="header home username">[USERNAME]</h2>
       <Tabs/>
   </div>
 );
