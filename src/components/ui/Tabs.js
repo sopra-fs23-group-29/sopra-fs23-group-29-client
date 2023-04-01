@@ -6,7 +6,7 @@ export default function Tabs() {
     const id = JSON.parse(localStorage.getItem('token')).id;
 
     const goToHome = () => {
-        history.push("/home");
+        history.push("/");
     }
 
     const goToProfile = () => {
