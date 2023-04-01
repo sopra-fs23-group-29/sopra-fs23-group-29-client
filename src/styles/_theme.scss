@@ -55,6 +55,7 @@ $borderRadiusSmaller: 0.25em;
   justify-content: left;
   gap: 1em;
   padding-left: 5%;
+  padding-right: 5%;
 }
 
 @mixin right {
@@ -62,5 +63,6 @@ $borderRadiusSmaller: 0.25em;
   align-items: center;
   justify-content: right;
   gap: 1em;
+  padding-left: 5%;
   padding-right: 5%;
 }
