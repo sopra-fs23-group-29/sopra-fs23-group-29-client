@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import {useHistory, useParams} from 'react-router-dom';
+import User from 'models/User';
+import {useHistory} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
@@ -34,61 +35,68 @@ FormField.propTypes = {
   onChange: PropTypes.func
 };
 
-const ProfileEdit = props => {
-
-  const id = useParams().id;
+const Home = props => {
 
   const history = useHistory();
+  const [password, setPassword] = useState(null);
   const [username, setUsername] = useState(null);
-  const [birthday, setBirthday] = useState(null);
 
-  const doEdit = async () => {
+  const goToRegistration = () => {
+    history.push("/registration");
+  }
+
+  const doLogin = async () => {
     try {
-      
+
       // Check if a user comes back, meaning the user exists and pw is correct
-      const requestBody = JSON.stringify({username, birthday});
-      const response = await api.put(
-        `/users/${id}`,
-        requestBody,
-        {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
-      );
-      
-      // Edit successfully worked --> update localStorage token
-      localStorage.setItem('token', JSON.stringify({
-        "token":JSON.parse(localStorage.getItem('token')).token, // token does not change
-        "id":JSON.parse(localStorage.getItem('token')).id, // id does not change
-        "username":username}
-      ));
+      const requestBody = JSON.stringify({password, username});
+      const response = await api.put('/users/login', requestBody);
 
-      // Edit successfully worked --> navigate to the route /profile/id
-      history.push(`/profile/${id}`);
+      // Get the returned user and update a new object.
+      const user = new User(response.data);
 
+      // Store a token into the local storage for verification if logged in
+      // currently in use: token
+      const token = response.headers["authorization"];
+      localStorage.setItem('token', JSON.stringify({"token":token, "id":user.id, "username":user.username}));
+
+      // Login successfully worked --> navigate to the route /game in the GameRouter
+      history.push(`/game`);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
   };
-  
+
   return (
     <BaseContainer>
       <div className="login container">
-        <div className="login label">Please enter new Username and Birthday. Empty means unchanged</div>
         <div className="login form">
           <FormField
-            label="New Username"
+            label="Home -> WIP"
             value={username}
             onChange={un => setUsername(un)}
           />
           <FormField
-            label="New Birthday"
-            value={birthday}
-            onChange={b => setBirthday(b)}
+            label="Password"
+            value={password}
+            onChange={n => setPassword(n)}
           />
           <div className="login button-container">
             <Button
+              disabled={!username || !password}
               width="100%"
-              onClick={() => doEdit()}
+              onClick={() => doLogin()}
             >
-              Edit Profile
+              Login
+            </Button>
+          </div>
+          
+          <div>
+            <Button
+              width="100%"
+              onClick={() => goToRegistration()}
+            >
+              To registration
             </Button>
           </div>
         </div>
@@ -101,4 +109,4 @@ const ProfileEdit = props => {
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default ProfileEdit;
+export default Home;

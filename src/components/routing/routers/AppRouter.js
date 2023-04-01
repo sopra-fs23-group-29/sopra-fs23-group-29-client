@@ -8,6 +8,11 @@ import {ProfileGuard} from "components/routing/routeProtectors/ProfileGuard";
 import Registration from "components/views/Registration";
 import Profile from "components/views/Profile"
 import ProfileEdit from "components/views/ProfileEdit"
+import Home from "../../views/Home";
+import Users from "../../views/Users";
+import HeaderHome from "../../views/HeaderHome";
+import Header from "../../views/Header";
+import HeaderGame from "../../views/HeaderGame";
 
 /**
  * Main router of your application.
@@ -25,30 +30,53 @@ const AppRouter = () => {
 
         <Route path="/game">
           <GameGuard>
+            <HeaderGame/>
             <GameRouter base="/game"/>
           </GameGuard>
         </Route>
 
         <Route exact path="/login">
           <LoginGuard>
+            <Header height="100"/>
             <Login/>
           </LoginGuard>
         </Route>
 
         <Route exact path="/registration">
           <RegistrationGuard>
+            <Header height="100"/>
             <Registration/>
           </RegistrationGuard>
         </Route>
 
         <Route exact path="/">
-          <Redirect to="/game"/>
+          <GameGuard>
+            <HeaderHome height="100"/>
+              <Home/>
+          </GameGuard>
         </Route>
-        
-        <ProfileGuard>
-          <Route exact path = "/profile/:id" component={Profile}/>
-          <Route exact path = "/profile/:id/edit" component={ProfileEdit} />
-        </ProfileGuard>
+
+        <Route exact path="/profile/:id">
+          <ProfileGuard>
+            <HeaderHome height="100"/>
+            <Profile/>
+          </ProfileGuard>
+        </Route>
+
+        <Route exact path="/profile/:id/edit">
+          <ProfileGuard>
+            <HeaderHome height="100"/>
+            <ProfileEdit/>
+          </ProfileGuard>
+        </Route>
+
+        <Route exact path="/users">
+          <GameGuard>
+            <HeaderHome height="100"/>
+            <Users/>
+          </GameGuard>
+        </Route>
+
 
       </Switch>
     </BrowserRouter>

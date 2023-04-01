@@ -2,19 +2,18 @@ import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Spinner} from 'components/ui/Spinner';
 import {Button} from 'components/ui/Button';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 
 
-const Game = props => {
+const Users = props => {
 
   const Player = ({user}) => (
-    <div className="player container">
-      <div className="player username">{<Button width = "100%" onClick={() => goToProfile(user.id)}>{user.username}</Button>}</div>
-      <div className="player id">ID: {user.id}</div>
-      <div className="player id">{user.status}</div>
+    <div className="player container" onClick={() => goToProfile(user.id)}>
+      <div className="player username">{user.username}</div>
+      <div className="player status">{user.status}</div>
     </div>
   );
 
@@ -22,17 +21,10 @@ const Game = props => {
     user: PropTypes.object
   };  
 
-  // use react-router-dom's hook to access the history
   const history = useHistory();
+  const id = useParams().id;
 
-  // define a state variable (using the state hook).
-  // if this variable changes, the component will re-render, but the variable will
-  // keep its value throughout render cycles.
-  // a component can have as many state variables as you like.
-  // more information can be found under https://reactjs.org/docs/hooks-state.html
   const [users, setUsers] = useState(null);
-  const [loggedinUserId, setLoggedinUserId] = useState(null);
-  const [loggedinUserName, setLoggedinUserName] = useState(null);
 
   const doLogout = async () => {
 
@@ -58,15 +50,15 @@ const Game = props => {
   };
 
   const goToProfile = (id) => {
-    history.push(`/profile/${id}`);
+      try {
+          // Redirecting to profile page successfully worked
+          history.push(`/users/${id}`);
+      } catch (error) {
+          alert(`Something went wrong during redirecting to the profile page: \n${handleError(error)}`);
+      }
   }
 
-  // the effect hook can be used to react to change in your component.
-  // in this case, the effect hook is only run once, the first time the component is mounted
-  // this can be achieved by leaving the second argument an empty array.
-  // for more information on the effect hook, please see https://reactjs.org/docs/hooks-effect.html
   useEffect(() => {
-    // effect callbacks are synchronous to prevent race conditions. So we put the async function inside:
     async function fetchData() {
       try {
         const response = await api.get(
@@ -119,14 +111,13 @@ const Game = props => {
         >
           Logout
         </Button>
-
       </div>
     );
   }
 
   return (
     <BaseContainer className="game container">
-      <h2>Happy Coding!</h2>
+      <h2>Users -> WIP</h2>
       <p className="game paragraph">
         Get all users from secure endpoint:
       </p>
@@ -135,4 +126,4 @@ const Game = props => {
   );
 }
 
-export default Game;
+export default Users;

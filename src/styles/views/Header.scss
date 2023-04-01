@@ -2,12 +2,24 @@
 
 .header {
   &.container {
-    @include center;
+    @include left;
   }
 
   &.title {
     font-weight: bold;
-    color: $background;
-    text-align: center;
+    color: $textColor;
+    text-align: left;
+  }
+
+  &.username-home {
+    font-weight: bold;
+    color: $accent;
+    text-align: left;
+  }
+
+  &.username-game {
+    font-weight: bold;
+    color: $player1;
+    text-align: left;
   }
 }

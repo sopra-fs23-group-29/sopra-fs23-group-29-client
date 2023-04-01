@@ -1,17 +1,14 @@
 import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
-import {useHistory} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
 import "styles/views/Profile.scss";
 
-const Profile = props => {
+const Profile = () => {
 
-  console.log(props);
-
-  // Get the id param from the URL.
-  let id = props.match.params.id;
+  const id = useParams().id;
 
   // use react-router-dom's hook to access the history
   const history = useHistory();

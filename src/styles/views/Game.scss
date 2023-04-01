@@ -9,7 +9,7 @@
 
 .game {
   &.container {
-    background: $background;
+    background: $accent;
     padding: 1.5em;
     border-radius: $borderRadius;
     display: flex;
@@ -40,7 +40,7 @@
     border-radius: $borderRadius;
     display: flex;
     align-items: center;
-    background: lighten($background, 5);
+    background: lighten($accent, 5);
   }
   &.name {
     font-weight: 300;
@@ -48,7 +48,7 @@
   }
   &.username {
     font-weight: 500;
-    color: $accent;
+    color: $accentDark;
   }
   &.id {
     margin-left: auto;

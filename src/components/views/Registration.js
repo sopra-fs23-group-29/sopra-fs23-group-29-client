@@ -59,7 +59,7 @@ const Registration = props => {
       localStorage.setItem('token', JSON.stringify({"token":token, "id":user.id, "username":user.username}));
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
-      history.push(`/game`);
+      history.push(`/`);
     } catch (error) {
       alert(`Something went wrong during the registration: \n${handleError(error)}`);
     }
