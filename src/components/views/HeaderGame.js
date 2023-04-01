@@ -9,7 +9,7 @@ const HeaderGame = props => (
       <h2 className="header game username">[USERNAME]</h2>
       <p className="header game barrier-counter">[Barrier Counter]</p>
       <p className="header game round-counter">[Round Counter]</p>
-      <i className="material-icons">logout</i>
+      <i className="header game icon">logout</i>
   </div>
 );
 
