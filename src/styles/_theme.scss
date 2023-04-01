@@ -36,6 +36,7 @@ $dropShadow: 0 0.25em 0.25em rgba(0, 0, 0, 0.25);
 
 $borderRadius: 0.75em;
 $borderRadiusSmaller: 0.25em;
+$borderRadiusRound: 6.25em;
 
 /* mixins
 
@@ -65,4 +66,28 @@ $borderRadiusSmaller: 0.25em;
   gap: 1em;
   padding-left: 5%;
   padding-right: 5%;
+}
+
+@mixin icon {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1em;  /* Preferred icon size */
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
 }
