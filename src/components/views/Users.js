@@ -7,6 +7,11 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 
+import { getWS } from "../../helpers/getDomain";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+
+import Stomper from "helpers/Stomp";
 
 const Users = props => {
 
@@ -92,6 +97,33 @@ const Users = props => {
 
     fetchData();
   }, []);
+
+  let stompClient = null;
+  const subscribeToUsers = () => {
+      try {
+          const wss = getWS();
+          let socket = new SockJS(wss);
+          stompClient = Stomp.over(socket);
+          stompClient.connect({}, function (frame) {
+              console.log('Connected: ' + frame);
+              stompClient.subscribe("/topic/users", function (greeting) {
+                  console.log(JSON.parse(greeting.body).content);
+              });
+          });
+
+      } catch (error) {
+          /*
+          console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
+          console.error("Details:", error);
+          alert("Something went wrong while connecting to the websocket! See the console for details.");
+           */
+
+          alert(`Bad stuff: \n${handleError(error)}`)
+      }
+  }
+  subscribeToUsers();
+
+  let userSocket = new Stomper("/users");
 
   let content = <Spinner/>;
 
