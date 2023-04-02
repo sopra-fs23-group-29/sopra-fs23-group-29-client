@@ -26,38 +26,28 @@
 }
 
 .player {
+  @include left
   &.container {
     margin: 0.5em 0;
     width: 20em;
-    padding: 10px;
+    padding: 1em;
     border-radius: $borderRadius;
-    display: flex;
-    align-items: center;
-    background: lighten($accent, 5);
+    justify-content: space-between;
+    background: $accentDark;
     cursor: pointer;
     transition: all 0.3s ease;
     &:hover {
       transform: scale(1.05);
       &:active {
-        background: $accent;
+        background: $accentDark;
       }
     }
   }
-  &.name {
-    font-weight: 300;
-    margin-left: 5px;
-  }
   &.username {
     font-weight: 500;
-    color: $accentDark;
+    color: $textColor;
   }
   &.status {
-    //TODO set status to the right side
-    position: absolute;
-    right: 0em;
-    margin-left: auto;
-    margin-right: 10px;
-    font-family: $fontMono;
-    font-weight: 300;
-  }
+    color: $accent;
+    }
 }
