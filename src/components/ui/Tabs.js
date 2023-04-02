@@ -1,5 +1,6 @@
 import {Tab} from "./Tab";
-import {useHistory, useParams} from "react-router-dom";
+import {useHistory} from "react-router-dom";
+import {api, handleError} from "../../helpers/api";
 
 export default function Tabs() {
     const history = useHistory();
@@ -16,6 +17,29 @@ export default function Tabs() {
     const goToUsers = () => {
         history.push("/users");
     }
+
+    const doLogout = async () => {
+
+        // set status to offline
+        try {
+
+            // set status to offline
+            await api.put(
+                '/users/logout',
+                {},
+                {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
+            );
+
+        } catch (error) {
+            alert(`Something went wrong during the logout: \n${handleError(error)}`);
+        }
+
+        // remove the token
+        localStorage.removeItem('token');
+
+        history.push('/login');
+
+    };
 
   return (
       //TODO tabs should show on which side user is
@@ -37,6 +61,12 @@ export default function Tabs() {
                 onClick={() => goToUsers()}
             >
               User
+            </Tab>
+            <Tab
+                className="tab primary-tab"
+                onClick={() => doLogout()}
+            >
+                Logout
             </Tab>
         </Tab>
   );
