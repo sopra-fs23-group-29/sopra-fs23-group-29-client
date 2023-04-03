@@ -9,52 +9,39 @@
 
 .profile {
   &.container {
-    background: $accent;
-    padding: 1.5em;
+    background-color: $containerColor;
     border-radius: $borderRadius;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: left;
     box-shadow: $dropShadow;
-  }
-  &.user-list {
-    list-style: none;
-    padding-left: 0;
-  }
-  &.user-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  & p,h2 {
-    margin: 0.5em 0;
-    align-items: left;
-  }
-}
-
-.player {
-  &.container {
-    margin: 0.5em 0;
-    width: 20em;
-    padding: 10px;
-    border-radius: $borderRadius;
-    display: flex;
-    align-items: center;
-    background: lighten($accent, 5);
-  }
-  &.name {
-    font-weight: 300;
-    margin-left: 5px;
+    height: fit-content;
+    width: fit-content;
+    &.sections {
+      padding: 1.5em;
+      background: none;
+      box-shadow: none;
+      flex-direction: column;
+      width: auto;
+      &.row {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+    &.picture {
+      align-items: center;
+      justify-content: center;
+      background: none;
+      box-shadow: none;
+      width: 15em;
+      height: auto;
+    }
   }
   &.username {
-    font-weight: 500;
-    color: $accentDark;
+    font-weight: 700;
+    color: $textColor;
   }
-  &.id {
-    margin-left: auto;
-    margin-right: 10px;
-    font-family: $fontMono;
-    font-weight: 300;
+  & p,h2 {
+    align-items: left;
   }
 }

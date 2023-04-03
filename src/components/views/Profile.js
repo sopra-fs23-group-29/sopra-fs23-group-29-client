@@ -8,21 +8,10 @@ import "styles/views/Profile.scss";
 
 const Profile = () => {
 
+  const history = useHistory();
   const id = useParams().id;
 
-  // use react-router-dom's hook to access the history
-  const history = useHistory();
-
-  const [userid, setUserid] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [token, setToken] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [creationDate, setCreationDate] = useState(null);
-  const [birthday, setBirthday] = useState(null);
-
-  const backToGame = () => {
-    history.push('/game');
-  }
+  const [aUser, setAUser] = useState(null);
 
   const edit = (id) => {
     history.push(`/profile/${id}/edit`);
@@ -41,12 +30,8 @@ const Profile = () => {
           `/users/${id}`,
           {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
         );
-        
-        setUserid(response.data.id);
-        setUsername(response.data.username);
-        setStatus(response.data.status);
-        setCreationDate(response.data.creationDate);
-        setBirthday(response.data.birthday);
+
+        setAUser(response.data);
 
       } catch (error) {
         console.error(`Something went wrong while fetching the user: \n${handleError(error)}`);
@@ -58,55 +43,45 @@ const Profile = () => {
     fetchData();
   }, [id]);
 
-  return (
+  let content = null;
 
-    <div>
-      <BaseContainer className="profile container">
-        <h2>Profile Page</h2>
-        <div className="profile paragraph">
-          {`User ID: ${userid}`}
-        </div>
-        <div className="profile paragraph">
-          {`Username: ${username}`}
-        </div>
-        <div className="profile paragraph">
-          {`Status: ${status}`}
-        </div>
-        <div className="profile paragraph">
-          {`User Created: ${creationDate}`}
-        </div>
-        <div className="profile paragraph">
-          {`Birthday: ${birthday}`}
-        </div>
-
-      </BaseContainer>
-
-      <BaseContainer className = "game container">
+  if (aUser) {
+    content = (
         <div>
-          <Button
-            widht = "100%"
-            disabled = {token !== JSON.parse(localStorage.getItem('token')).token}
-            onClick = {() => edit(id)}
-          >
-            Edit Profile (only for own profile)
-          </Button>
+            <div className="profile container sections">
+                <div className="profile container sections row">
+                    <h2 className="profile username">{aUser.username}</h2>
+                    <div>
+                        <Button className="primary-button"
+                                disabled={false}
+                                onClick={() => edit()}
+                        >
+                            Edit Profile
+                        </Button>
+                    </div>
+                </div>
+                <div className="profile container sections row">
+                    <div className="profile container sections">
+                        <p>Visited Countries: {aUser.birthday}</p>
+                        <p>Birthday: {aUser.birthday}</p>
+                        <p>About Me: {aUser.birthday}</p>
+                    </div>
+                    <div className="profile container sections">
+                        <p>[STRING]</p>
+                        <p>[DATE]</p>
+                        <p>[STRING]</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div>
-          <Button width = "100%" onClick = {() => backToGame()}>Back to the Dashboard</Button>
-        </div>
-
-        <div>
-          {`Logged in with ID - Username`}
-        </div>
-        <div>
-          {`${JSON.parse(localStorage.getItem('token')).id} - ${JSON.parse(localStorage.getItem('token')).username}`}
-        </div>
-        
-      </BaseContainer>
-    </div>
     );
+  }
 
+  return (
+      <BaseContainer className="profile container">
+          {content}
+      </BaseContainer>
+  );
 }
 
 export default Profile;
