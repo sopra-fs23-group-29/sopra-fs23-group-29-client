@@ -5,6 +5,7 @@ tab {
 
   &.container {
     position: absolute;
+    padding: 1.5em;
     right: 0em;
   }
 
@@ -23,7 +24,7 @@ tab {
     text-align: center;
     height: 1em;
     border: none;
-    border-radius: 6.25em;
+    border-radius: $borderRadiusRound;
     cursor: pointer;
     opacity: 1;
     color: $textColor;

@@ -7,11 +7,6 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 
-import { getWS } from "../../helpers/getDomain";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
-
-import Stomper from "helpers/Stomp";
 
 const Users = props => {
 
@@ -97,8 +92,6 @@ const Users = props => {
 
     fetchData();
   }, []);
-
-  let userSocket = new Stomper("/users");
 
   let content = <Spinner/>;
 

@@ -42,7 +42,7 @@ const Registration = props => {
   const [username, setUsername] = useState(null);
 
   const goToLogin = () => {
-    history.push("/users/login");
+    history.push("/login");
   }
 
   const doRegistration = async () => {
