@@ -2,13 +2,15 @@
 
 .game {
   &.container {
-    background: $accent;
+    background-color: $containerColor;
     padding: 1.5em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-shadow: $dropShadow;
+    height: fit-content;
+    width: fit-content;
   }
   &.user-list {
     list-style: none;
