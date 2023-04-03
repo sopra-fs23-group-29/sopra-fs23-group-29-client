@@ -5,6 +5,7 @@ import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Users.scss";
+import Stomper from "../../helpers/Stomp";
 
 
 const Users = () => {
@@ -63,6 +64,7 @@ const Users = () => {
         fetchData();
     }, []);
 
+    let webSocket = new Stomper("/topics/users");
     let content = <Spinner/>;
 
     if (users) {
