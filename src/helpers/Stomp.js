@@ -5,44 +5,73 @@ import Stomp from "stompjs";
 import { getWS } from "./getDomain";
 
 class Stomper {
+
+    static instance = null;
+
+    static getInstance() {
+        if (!Stomper.instance) {
+        Stomper.instance = new Stomper();
+        Stomper.instance.connect();
+        }
+        return Stomper.instance;
+    }
+
     socket;
     stompClient;
     openChannels = [];
 
-    constructor(channel) {
+    constructor() {
         this.listeners = [];
-        this.connect()
-        this.join(channel)
     }
 
-    join(channel) {
-        this.openChannels.push(channel);
-    }
-    leave(channel) {
-        this.openChannels = this.openChannels.filter((l) => l !== channel);
-    }
-
-    async connect() {
-            try {
-            this.socket.close();
-        } catch {
+    join(endpoint, callback) {
+        if (this.openChannels.indexOf(endpoint) === -1) {
+            this.openChannels.push(endpoint);
+            this.stompClient.subscribe(endpoint, callback);
+            console.log("Subscribed to " + endpoint);
         }
-
-        this.socket = new SockJS(getWS());
-
-        this.stompClient = Stomp.over(this.socket);
-        this.stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame);
-            this.stompClient.subscribe("/topic/users", function (greeting) {
-                console.log(JSON.parse(greeting.body).content);
-            });
-        });
-
-        this.socket.onclose = () => {
-            this._handleDisconnect("Socket closed.");
-        };
-        this.socket.onerror = (e) => this._handleError(e);
     }
+
+    leave(endpoint) {
+        let index = this.openChannels.indexOf(endpoint);
+        if (index !== -1) {
+            this.stompClient.unsubscribe(endpoint);
+            this.openChannels.splice(index, 1);
+            console.log("Unsubscribed from " + endpoint);
+        }
+    }
+
+    leaveAll() {
+        this.openChannels.forEach((endpoint) => {
+            this.stompClient.unsubscribe(endpoint);
+            console.log("Unsubscribed from " + endpoint);
+        });
+        this.openChannels = [];
+    }
+
+    connect() {
+        return new Promise((resolve, reject) => {
+            try {
+                this.socket.close();
+            } catch (e) {}
+    
+            this.socket = new SockJS(getWS());
+            this.stompClient = Stomp.over(this.socket);
+    
+            this.stompClient.connect({}, (frame) => {
+                console.log('Connected: ' + frame);
+                resolve();
+            }, (error) => {
+                reject(error);
+            });
+    
+            this.socket.onclose = () => {
+                this._handleDisconnect("Socket closed.");
+            };
+            this.socket.onerror = (e) => this._handleError(e);
+        });
+    }
+    
 
     disconnect = (reason) => {
         try {
@@ -56,6 +85,7 @@ class Stomper {
     _handleDisconnect = (reason) => {
         console.log(reason);
     }
+
     _handleError = (error) => {
         console.log(handleError(error));
     }

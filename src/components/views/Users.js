@@ -64,7 +64,7 @@ const Users = () => {
         fetchData();
     }, []);
 
-    let webSocket = new Stomper("/topics/users");
+    let webSocket = Stomper.getInstance();
     let content = <Spinner/>;
 
     if (users) {
