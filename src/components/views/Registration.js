@@ -79,12 +79,12 @@ const Registration = props => {
       <div className="login container">
         <div className="login form">
           <FormField
-            label="Username "
+            label="Username"
             value={username}
             onChange={un => setUsername(un)}
           />
           <FormField
-            label="Password "
+            label="Password"
             value={password}
             onChange={n => setPassword(n)}
           />
@@ -96,12 +96,9 @@ const Registration = props => {
             >
               Registration
             </Button>
-          </div>
-
-          <div>
             <Button
-              width="100%"
-              onClick={() => goToLogin()}
+                width="100%"
+                onClick={() => goToLogin()}
             >
               To login
             </Button>
