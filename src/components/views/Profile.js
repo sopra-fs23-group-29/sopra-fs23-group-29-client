@@ -10,13 +10,14 @@ const Profile = () => {
 
   const history = useHistory();
   const id = useParams().id;
+  const activeId = JSON.parse(localStorage.getItem('token')).id;
 
   const [aUser, setAUser] = useState(null);
 
   const edit = (id) => {
     history.push(`/profile/${id}/edit`);
   }
-  
+
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
   // this can be achieved by leaving the second argument an empty array.
@@ -43,6 +44,18 @@ const Profile = () => {
     fetchData();
   }, [id]);
 
+    let editButton = null;
+
+    if (activeId.toString().valueOf() === id.valueOf()) {
+        editButton = (
+            <Button className="primary-button"
+                    onClick={() => edit()}
+            >
+                Edit Profile
+            </Button>
+        );
+    }
+
   let content = null;
 
   if (aUser) {
@@ -51,25 +64,13 @@ const Profile = () => {
             <div className="profile container sections">
                 <div className="profile container sections row">
                     <h2 className="profile username">{aUser.username}</h2>
-                    <div>
-                        <Button className="primary-button"
-                                disabled={false}
-                                onClick={() => edit()}
-                        >
-                            Edit Profile
-                        </Button>
-                    </div>
+                        {editButton}
                 </div>
                 <div className="profile container sections row">
                     <div className="profile container sections">
-                        <p>Visited Countries: {aUser.birthday}</p>
-                        <p>Birthday: {aUser.birthday}</p>
-                        <p>About Me: {aUser.birthday}</p>
-                    </div>
-                    <div className="profile container sections">
-                        <p>[STRING]</p>
-                        <p>[DATE]</p>
-                        <p>[STRING]</p>
+                        <p>Visited Countries: [STRING]</p>
+                        <p>Birthday: [DATE]</p>
+                        <p>About Me: [STRING]</p>
 
                     </div>
                 </div>
