@@ -14,7 +14,7 @@ const Profile = () => {
 
   const [aUser, setAUser] = useState(null);
 
-  const edit = (id) => {
+  const edit = () => {
     history.push(`/profile/${id}/edit`);
   }
 
@@ -69,7 +69,7 @@ const Profile = () => {
                 <div className="profile container sections row">
                     <div className="profile container sections">
                         <p>Visited Countries: [STRING]</p>
-                        <p>Birthday: [DATE]</p>
+                        <p>Birthday: [{aUser.birthday}]</p>
                         <p>About Me: [STRING]</p>
 
                     </div>
