@@ -61,13 +61,13 @@ const Profile = () => {
   if (aUser) {
     content = (
         <div>
-            <div className="profile container sections">
-                <div className="profile container sections row">
+            <div className="profile sections">
+                <div className="profile row">
                     <h2 className="profile username">{aUser.username}</h2>
                         {editButton}
                 </div>
-                <div className="profile container sections row">
-                    <div className="profile container sections">
+                <div className="profile row">
+                    <div className="profile sections">
                         <p>Visited Countries: [STRING]</p>
                         <p>Birthday: [{aUser.birthday}]</p>
                         <p>About Me: [STRING]</p>
