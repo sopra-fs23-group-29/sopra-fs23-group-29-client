@@ -70,6 +70,7 @@ const Profile = () => {
                         <p>[STRING]</p>
                         <p>[DATE]</p>
                         <p>[STRING]</p>
+
                     </div>
                 </div>
             </div>

@@ -6,6 +6,7 @@ import {Button} from 'components/ui/Button';
 import 'styles/views/Login.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import Stomper from "../../helpers/Stomp";
 
 /*
 It is possible to add multiple components inside a single file,
@@ -59,7 +60,12 @@ const Login = props => {
       // currently in use: token
       const token = response.headers["authorization"];
       localStorage.setItem('token', JSON.stringify({"token":token, "id":user.id, "username":user.username}));
-      
+      let webSocket = Stomper.getInstance();
+      webSocket.connect().then(() => {
+        webSocket.join("/topic/users", function(payload){
+          console.log(JSON.parse(payload.body).content);
+        });
+      });
       // Login successfully worked --> navigate to the route /game in the GameRouter
       history.push(`/`);
     } catch (error) {

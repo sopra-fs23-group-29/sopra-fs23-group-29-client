@@ -1,11 +1,12 @@
 import {Tab} from "./Tab";
 import {useHistory} from "react-router-dom";
 import {api, handleError} from "../../helpers/api";
+import Stomper from "../../helpers/Stomp";
 
 export default function Tabs() {
     const history = useHistory();
     const id = JSON.parse(localStorage.getItem('token')).id;
-
+    let webSocket = Stomper.getInstance();
     const goToHome = () => {
         history.push("/");
     }
@@ -36,6 +37,10 @@ export default function Tabs() {
 
         // remove the token
         localStorage.removeItem('token');
+
+        // remove websocket connection
+        webSocket.leaveAll()
+        webSocket.disconnect("User logged out");
 
         history.push('/login');
 
