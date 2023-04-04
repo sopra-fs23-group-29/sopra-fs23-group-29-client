@@ -32,7 +32,7 @@ export default function Tabs() {
             );
 
         } catch (error) {
-            alert(`Something went wrong during the logout: \n${handleError(error)}`);
+            console.log(`Something went wrong during the logout: \n${handleError(error)}`);
         }
 
         // remove the token
