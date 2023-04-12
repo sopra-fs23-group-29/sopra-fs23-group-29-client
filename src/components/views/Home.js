@@ -19,7 +19,7 @@ specific components that belong to the main one in the same file.
 const DisplayLobby = (props) => {
   return (
     <div className="home lobby-container">
-      <div>Existing Lobby free to join</div>
+      <div>Name of an existing Lobby free to join</div>
       <button className="home lobby-container button">Join Lobby</button>
     </div>
   );
