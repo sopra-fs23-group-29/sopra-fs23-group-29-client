@@ -7,6 +7,8 @@ import "styles/views/Home.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
+import Stomper from "../../helpers/Stomp";
+
 /*
 It is possible to add multiple components inside a single file,
 however be sure not to clutter your files with an endless amount!
@@ -43,6 +45,21 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
+  /* Fake call to start game with ID 1
+  */
+  const startGame1 = () => {
+    let webSocket = Stomper.getInstance();
+
+    webSocket.connect().then(() => {
+      webSocket.join("/topic/users", function(payload){
+        console.log(JSON.parse(payload.body).content);
+      });
+      webSocket.send("/app/games/1/startGame", {message : "START GAME 1"});
+    });
+
+    
+  };
+
   return (
     <BaseContainer className="home container">
       <h2>PvP Lobbies</h2>
@@ -54,6 +71,15 @@ const Home = (props) => {
       >
         Create Lobby
       </Button>
+      
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => startGame1()}
+      >
+        Start Game 1
+      </Button>
+
     </BaseContainer>
   );
 };
