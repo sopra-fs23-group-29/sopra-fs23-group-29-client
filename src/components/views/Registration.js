@@ -67,6 +67,11 @@ const Registration = props => {
         });
       });
 
+      webSocket.connect().then(() => {
+        webSocket.send("/app/users", {message : "I JUST REGISTERED"});
+      });
+
+      
       // Login successfully worked --> navigate to the route /game in the GameRouter
       history.push(`/`);
     } catch (error) {

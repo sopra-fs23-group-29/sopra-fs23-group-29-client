@@ -32,6 +32,11 @@ class Stomper {
         }
     }
 
+    send(destination, message) {
+        this.stompClient.send(destination, {}, JSON.stringify(message));
+        console.log("Sent message " + message + " to " + destination);
+    }
+
     leave(endpoint) {
         let index = this.openChannels.indexOf(endpoint);
         if (index !== -1) {

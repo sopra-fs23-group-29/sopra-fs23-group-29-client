@@ -66,6 +66,11 @@ const Login = props => {
           console.log(JSON.parse(payload.body).content);
         });
       });
+
+      webSocket.connect().then(() => {
+        webSocket.send("/app/users", {message : "I JUST LOGGED IN"});
+      });
+
       // Login successfully worked --> navigate to the route /game in the GameRouter
       history.push(`/`);
     } catch (error) {
