@@ -13,7 +13,8 @@ import Users from "../../views/Users";
 import HeaderHome from "../../views/HeaderHome";
 import Header from "../../views/Header";
 import HeaderGame from "../../views/HeaderGame";
-import Lobby from "../../views/Lobby";
+import LobbySettings from "../../views/LobbySettings";
+import PvPLobby from "../../views/PvPLobby";
 
 /**
  * Main router of your application.
@@ -59,7 +60,14 @@ const AppRouter = () => {
         <Route exact path="/lobby">
           <GameGuard>
             <HeaderHome height="100" />
-            <Lobby />
+            <LobbySettings />
+          </GameGuard>
+        </Route>
+
+        <Route exact path="/lobby/:id">
+          <GameGuard>
+            <HeaderHome height="100" />
+            <PvPLobby />
           </GameGuard>
         </Route>
 

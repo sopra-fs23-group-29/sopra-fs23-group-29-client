@@ -40,6 +40,12 @@ const Lobby = (props) => {
   };
 
   const startGame = () => {
+    /* Call to server sending gameName, gameMode PVP, and player info for the person creating the lobby */
+
+    /* push to lobby screen using the id we got as response from the server once the game is started there*/
+    // history.push(`/lobby/${game.id}`);
+
+    // take this out once everything above works
     console.log("Game has been started");
   };
 
