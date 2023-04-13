@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {api, handleError} from 'helpers/api';
-import User from 'models/User';
-import {useHistory} from 'react-router-dom';
-import {Button} from 'components/ui/Button';
-import 'styles/views/Login.scss';
+import React, { useState } from "react";
+import { api, handleError } from "helpers/api";
+import User from "models/User";
+import { useHistory } from "react-router-dom";
+import { Button } from "components/ui/Button";
+import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Stomper from "../../helpers/Stomp";
@@ -14,17 +14,15 @@ however be sure not to clutter your files with an endless amount!
 As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
-const FormField = props => {
+const FormField = (props) => {
   return (
     <div className="login field">
-      <label className="login label">
-        {props.label}
-      </label>
+      <label className="login label">{props.label}</label>
       <input
         className="login input"
         placeholder="enter here.."
         value={props.value}
-        onChange={e => props.onChange(e.target.value)}
+        onChange={(e) => props.onChange(e.target.value)}
       />
     </div>
   );
@@ -33,25 +31,23 @@ const FormField = props => {
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
-const Login = props => {
-
+const Login = (props) => {
   const history = useHistory();
   const [password, setPassword] = useState(null);
   const [username, setUsername] = useState(null);
 
   const goToRegistration = () => {
     history.push("/registration");
-  }
+  };
 
   const doLogin = async () => {
     try {
-      
       // Check if a user comes back, meaning the user exists and pw is correct
-      const requestBody = JSON.stringify({password, username});
-      const response = await api.put('/users/login', requestBody);
+      const requestBody = JSON.stringify({ password, username });
+      const response = await api.put("/users/login", requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
@@ -59,10 +55,13 @@ const Login = props => {
       // Store a token into the local storage for verification if logged in
       // currently in use: token
       const token = response.headers["authorization"];
-      localStorage.setItem('token', JSON.stringify({"token":token, "id":user.id, "username":user.username}));
+      localStorage.setItem(
+        "token",
+        JSON.stringify({ token: token, id: user.id, username: user.username })
+      );
       let webSocket = Stomper.getInstance();
       webSocket.connect().then(() => {
-        webSocket.join("/topic/users", function(payload){
+        webSocket.join("/topic/users", function (payload) {
           console.log(JSON.parse(payload.body).content);
         });
       });
@@ -80,12 +79,12 @@ const Login = props => {
           <FormField
             label="Username"
             value={username}
-            onChange={un => setUsername(un)}
+            onChange={(un) => setUsername(un)}
           />
           <FormField
             label="Password"
             value={password}
-            onChange={n => setPassword(n)}
+            onChange={(n) => setPassword(n)}
           />
           <div className="login button-container">
             <Button
@@ -95,10 +94,7 @@ const Login = props => {
             >
               Login
             </Button>
-            <Button
-                width="100%"
-                onClick={() => goToRegistration()}
-            >
+            <Button width="100%" onClick={() => goToRegistration()}>
               To registration
             </Button>
           </div>
