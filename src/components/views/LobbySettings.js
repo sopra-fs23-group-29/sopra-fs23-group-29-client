@@ -6,9 +6,10 @@ import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import LobbyModel from "models/LobbyModel";
 import Stomper from "../../helpers/Stomp";
 
-/* This is the view for a PvP Game Lobby */
+/* This is the view for creating a PvP Game Lobby by entering the name first */
 
 const NameFormField = (props) => {
   return (
@@ -29,21 +30,30 @@ NameFormField.propTypes = {
   onChange: PropTypes.func,
 };
 
-const Lobby = (props) => {
+const LobbySettings = (props) => {
   const history = useHistory();
   const [gameName, setGameName] = useState(null);
+  let webSocket = Stomper.getInstance();
 
-  const createLobby = () => {
+  const createLobby = async () => {
     /* Call to server sending gameName, gameMode PVP, and player info for the person creating the lobby */
+    const requestBody = JSON.stringify({
+      gameName: gameName,
+      gameMode: "PVP",
+      // add player info
+    });
 
-    /* Map answer from server to get the game id, game name and current players */
+    const response = await api.post(`/games/`, requestBody, {
+      headers: {
+        Authorization: JSON.parse(localStorage.getItem("token")).token,
+      },
+    });
+
+    /* Map answer from server to get the game id */
+    const gameId = response.data;
 
     /* push to lobby screen using the id we got as response from the server once the game is created there*/
-    // history.push(`/lobby/${game.id}`);
-    history.push(`/lobby/1`);
-
-    // const name = gameName;
-    // console.log(name);
+    history.push(`/lobby/${gameId}`);
   };
 
   const backToLobbyOverview = () => {
@@ -62,4 +72,4 @@ const Lobby = (props) => {
   );
 };
 
-export default Lobby;
+export default LobbySettings;

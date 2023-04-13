@@ -19,10 +19,20 @@ specific components that belong to the main one in the same file.
 /* Displays the lobbies that people can join*/
 // right now with dummy data, change to real once websockets work
 const DisplayLobby = (props) => {
+  // must take id of the lobby as props but how?
+  const joinLobby = () => {
+    console.log("You joined a lobby.");
+  };
+
   return (
     <div className="home lobby-container">
       <div>Name of an existing Lobby free to join</div>
-      <button className="home lobby-container button">Join Lobby</button>
+      <button
+        className="home lobby-container button"
+        onClick={() => joinLobby()}
+      >
+        Join Lobby
+      </button>
     </div>
   );
 };

@@ -1,22 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api, handleError } from "helpers/api";
 import User from "models/User";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import Stomper from "../../helpers/Stomp";
 
+/* This is the view for an open PvP Game Lobby that displays its name and all players in the lobby  */
+
 const PvPLobby = (props) => {
   const history = useHistory();
+  const params = useParams();
+  let webSocket = Stomper.getInstance();
+
+  useEffect(() => {
+    async function fetchData() {
+      /* get gameId */
+      const gameId = params.id;
+
+      /* subscribe to topic/games/{gameId} */
+      webSocket.join("/topic/games/{gameId}", function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+    }
+    fetchData();
+  }, []);
 
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
-    let webSocket = Stomper.getInstance();
-    webSocket.join("/topic/games", function (payload) {
-      console.log(JSON.parse(payload.body).content);
-    });
+    // gameId als variable einfügen
     webSocket.send("/app/games/1/startGame", { message: "START GAME 1" });
 
     // take this out once everything above works
