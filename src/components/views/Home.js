@@ -56,8 +56,28 @@ const Home = (props) => {
       });
       webSocket.send("/app/games/1/startGame", {message : "START GAME 1"});
     });
+  };
+  
+  /* Fake call to save an answer
+  */
+  const saveAnswerGame1Turn1 = () => {
 
-    
+    let webSocket = Stomper.getInstance();
+
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/turn/1/player/1/saveAnswer",
+        {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : "0", guess : 99});
+    });
+  };
+  
+  /* Fake call to start game with ID 1
+  */
+  const endTurn1 = () => {
+    let webSocket = Stomper.getInstance();
+
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/endTurn", {message : "END TURN GAME 1"});
+    });
   };
 
   return (
@@ -78,6 +98,22 @@ const Home = (props) => {
         onClick={() => startGame1()}
       >
         Start Game 1
+      </Button>
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => saveAnswerGame1Turn1()}
+      >
+        Save Answer Game 1 Turn 1
+      </Button>
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => endTurn1()}
+      >
+        End Turn Game 1 Turn 1
       </Button>
 
     </BaseContainer>
