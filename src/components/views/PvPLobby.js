@@ -6,12 +6,19 @@ import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import Stomper from "../../helpers/Stomp";
 
 const PvPLobby = (props) => {
   const history = useHistory();
 
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
+    let webSocket = Stomper.getInstance();
+    webSocket.join("/topic/games", function (payload) {
+      console.log(JSON.parse(payload.body).content);
+    });
+    webSocket.send("/app/games/1/startGame", { message: "START GAME 1" });
+
     // take this out once everything above works
     console.log("Game has been started");
   };
