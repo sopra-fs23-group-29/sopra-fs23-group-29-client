@@ -34,19 +34,17 @@ const Lobby = (props) => {
   const [hasName, setHasName] = useState(false);
 
   const createLobby = () => {
+    /* Call to server sending gameName, gameMode PVP, and player info for the person creating the lobby */
+
+    /* Map answer from server to get the game id, game name and current players */
+
+    /* push to lobby screen using the id we got as response from the server once the game is created there*/
+    // history.push(`/lobby/${game.id}`);
+    history.push(`/lobby/1`);
+
     // const name = gameName;
     // console.log(name);
     setHasName(true);
-  };
-
-  const startGame = () => {
-    /* Call to server sending gameName, gameMode PVP, and player info for the person creating the lobby */
-
-    /* push to lobby screen using the id we got as response from the server once the game is started there*/
-    // history.push(`/lobby/${game.id}`);
-
-    // take this out once everything above works
-    console.log("Game has been started");
   };
 
   const backToLobbyOverview = () => {
@@ -55,24 +53,12 @@ const Lobby = (props) => {
 
   return (
     <BaseContainer className="home container">
-      {hasName ? (
-        <div>true</div>
-      ) : (
-        <ul>
-          <NameFormField value={gameName} onChange={(un) => setGameName(un)} />
-          <Button disabled={!gameName} onClick={() => createLobby()}>
-            Create PvP Lobby
-          </Button>
-        </ul>
-      )}
-      {hasName ? (
-        <ul>
-          <Button onClick={() => backToLobbyOverview()}>Exit Lobby</Button>
-          <Button onClick={() => startGame()}>Start Game</Button>
-        </ul>
-      ) : (
-        <Button onClick={() => backToLobbyOverview()}>Cancel</Button>
-      )}
+      <NameFormField value={gameName} onChange={(un) => setGameName(un)} />
+      <Button disabled={!gameName} onClick={() => createLobby()}>
+        Create PvP Lobby
+      </Button>
+
+      <Button onClick={() => backToLobbyOverview()}>Cancel</Button>
     </BaseContainer>
   );
 };

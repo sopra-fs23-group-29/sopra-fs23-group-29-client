@@ -8,8 +8,33 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
 const PvPLobby = (props) => {
+  const history = useHistory();
+
+  /* starts the game with all the players that are currently in the lobby*/
+  const startGame = () => {
+    // take this out once everything above works
+    console.log("Game has been started");
+  };
+
+  const exitLobby = () => {
+    /* check if person who wants to exit is the creator of the lobby*/
+
+    /* if person exiting is creator of lobby: delete lobby (and game on server) and 
+        redirect all players to the home screen*/
+
+    /* if person exiting is just a player: delete them as player and redirect to home screen,
+        update player list for all remaining players */
+
+    //delete once everything above works
+    history.push(`/`);
+  };
+
   return (
-    <div>This is your Lobby with the name you gave it and you as a player</div>
+    <BaseContainer>
+      This is your Lobby with the name you gave it and you as a player
+      <Button onClick={() => startGame()}>Start Game</Button>
+      <Button onClick={() => exitLobby()}>Exit</Button>
+    </BaseContainer>
   );
 };
 
