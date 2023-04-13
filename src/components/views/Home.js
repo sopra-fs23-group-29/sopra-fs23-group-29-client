@@ -19,9 +19,11 @@ specific components that belong to the main one in the same file.
 /* Displays the lobbies that people can join*/
 // right now with dummy data, change to real once websockets work
 const DisplayLobby = (props) => {
+  const history = useHistory();
   // must take id of the lobby as props but how?
   const joinLobby = () => {
-    console.log("You joined a lobby.");
+    const gameId = 1;
+    history.push(`/lobby/${gameId}`);
   };
 
   return (
@@ -41,20 +43,20 @@ const Home = (props) => {
   const history = useHistory();
 
   useEffect(() => {
-    /* join the topic/games to get all open lobbies as soon as the home page is opened
-    update de display of all lobbies whenever they chang*/
-    let webSocket = Stomper.getInstance();
-    webSocket.join("/topic/games", function (payload) {
-      console.log(JSON.parse(payload.body).content);
-    });
+    async function fetchData() {
+      /* join the topic/games to get all open lobbies as soon as the home page is opened
+      update the display of all lobbies whenever they changee*/
+      let webSocket = Stomper.getInstance();
+      webSocket.join("/topic/games", function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+    }
   }, []);
 
-  /*
-  // Starts a solo Game by creating a game server side and opening a view where game settings can be changed.
+  /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
     history.push("/");
   };
-  */
 
   /* Opens the Lobbysettings page (PvP Game) where a name for the game can be entered.*/
   const createGameLobby = () => {
@@ -71,6 +73,13 @@ const Home = (props) => {
         onClick={() => createGameLobby()}
       >
         Create Lobby
+      </Button>
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => startSoloGame()}
+      >
+        Single Player Game
       </Button>
     </BaseContainer>
   );
