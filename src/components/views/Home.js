@@ -29,6 +29,8 @@ const DisplayLobby = (props) => {
 
 const Home = (props) => {
   const history = useHistory();
+  
+  let webSocket = Stomper.getInstance();
 
   /*
   // Starts a solo Game by creating a game server side and opening a view where game settings can be changed.
@@ -45,15 +47,32 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
+  /* Fake call to create a game
+  */
+  const createGame = async () => {
+    try {
+
+        const token = JSON.parse(localStorage.getItem('token')).token
+        const requestBody = JSON.stringify({gameName : "mygame", gameMode : "PVP"});
+        console.log(requestBody)
+        const response = await api.post(
+            `/games`,
+            requestBody,
+            {headers:{"Authorization": token}}
+        );
+
+        // Edit successfully worked --> navigate to the route /profile/id
+        console.log("Created game");
+
+    } catch (error) {
+        alert(`Something went wrong while creating game: \n${handleError(error)}`);
+    }
+  };
+
   /* Fake call to start game with ID 1
   */
   const startGame1 = () => {
-    let webSocket = Stomper.getInstance();
-
     webSocket.connect().then(() => {
-      webSocket.join("/topic/users", function(payload){
-        console.log(JSON.parse(payload.body).content);
-      });
       webSocket.send("/app/games/1/startGame", {message : "START GAME 1"});
     });
   };
@@ -61,9 +80,6 @@ const Home = (props) => {
   /* Fake call to save an answer
   */
   const saveAnswerGame1Turn1 = () => {
-
-    let webSocket = Stomper.getInstance();
-
     webSocket.connect().then(() => {
       webSocket.send("/app/games/1/turn/1/player/1/saveAnswer",
         {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : "0", guess : 99});
@@ -73,8 +89,6 @@ const Home = (props) => {
   /* Fake call to start game with ID 1
   */
   const endTurn1 = () => {
-    let webSocket = Stomper.getInstance();
-
     webSocket.connect().then(() => {
       webSocket.send("/app/games/1/endTurn", {message : "END TURN GAME 1"});
     });
@@ -92,6 +106,14 @@ const Home = (props) => {
         Create Lobby
       </Button>
       
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => createGame()}
+      >
+        Create Game
+      </Button>
+
       <Button
         className="primary-button"
         width="15%"
