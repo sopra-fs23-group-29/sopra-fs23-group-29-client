@@ -10,6 +10,11 @@ import Stomper from "../../helpers/Stomp";
 
 /* This is the view for an open PvP Game Lobby that displays its name and all players in the lobby  */
 
+const Players = (props) => {
+  // needs to be adaptive to display current players
+  return <div>Player 1</div>;
+};
+
 const PvPLobby = (props) => {
   const history = useHistory();
   const params = useParams();
@@ -31,7 +36,9 @@ const PvPLobby = (props) => {
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     // gameId als variable einfügen
-    webSocket.send("/app/games/1/startGame", { message: "START GAME 1" });
+    webSocket.send("/app/games/1/startGame", {
+      message: "START GAME 1",
+    });
 
     // take this out once everything above works
     console.log("Game has been started");
@@ -51,8 +58,9 @@ const PvPLobby = (props) => {
   };
 
   return (
-    <BaseContainer>
+    <BaseContainer className="home container">
       This is your Lobby with the name you gave it and you as a player
+      <Players />
       <Button onClick={() => startGame()}>Start Game</Button>
       <Button onClick={() => exitLobby()}>Exit</Button>
     </BaseContainer>
