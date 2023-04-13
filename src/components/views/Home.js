@@ -28,6 +28,15 @@ const DisplayLobby = (props) => {
 const Home = (props) => {
   const history = useHistory();
 
+  const getAllOpenLobbies = () => {
+    webSocket.join("/topic/games", function (payload) {
+      console.log(JSON.parse(payload.body).content);
+    });
+
+    // join the topic games (has to be done as soon as page is opened)
+    // update the display of all lobbies, is also always done when the lobbies change
+  };
+
   /*
   // Starts a solo Game by creating a game server side and opening a view where game settings can be changed.
   const startSoloGame = () => {
@@ -35,10 +44,7 @@ const Home = (props) => {
   };
   */
 
-  /* Opens a PvP Game Lobby where all game settings can be changed.
-  WebSocket Call that creates a new PvP in the server and returns the unique Game ID.
-  WebSocket Connection is then open and Lobby is updated with joining players.
-  */
+  /* Opens the Lobbysettings page (PvP Game) where a name for the game can be entered.*/
   const createGameLobby = () => {
     history.push(`/lobby`);
   };
