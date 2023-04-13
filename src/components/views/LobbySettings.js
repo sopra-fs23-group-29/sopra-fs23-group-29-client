@@ -6,6 +6,7 @@ import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import Stomper from "../../helpers/Stomp";
 
 /* This is the view for a PvP Game Lobby */
 
@@ -31,7 +32,6 @@ NameFormField.propTypes = {
 const Lobby = (props) => {
   const history = useHistory();
   const [gameName, setGameName] = useState(null);
-  const [hasName, setHasName] = useState(false);
 
   const createLobby = () => {
     /* Call to server sending gameName, gameMode PVP, and player info for the person creating the lobby */
@@ -44,7 +44,6 @@ const Lobby = (props) => {
 
     // const name = gameName;
     // console.log(name);
-    setHasName(true);
   };
 
   const backToLobbyOverview = () => {

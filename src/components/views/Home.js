@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import User from "models/User";
 import { useHistory } from "react-router-dom";
@@ -6,6 +6,8 @@ import { Button } from "components/ui/Button";
 import "styles/views/Home.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+
+import Stomper from "../../helpers/Stomp";
 
 /*
 It is possible to add multiple components inside a single file,
@@ -28,14 +30,14 @@ const DisplayLobby = (props) => {
 const Home = (props) => {
   const history = useHistory();
 
-  const getAllOpenLobbies = () => {
+  useEffect(() => {
+    /* join the topic/games to get all open lobbies as soon as the home page is opened
+    update de display of all lobbies whenever they chang*/
+    let webSocket = Stomper.getInstance();
     webSocket.join("/topic/games", function (payload) {
       console.log(JSON.parse(payload.body).content);
     });
-
-    // join the topic games (has to be done as soon as page is opened)
-    // update the display of all lobbies, is also always done when the lobbies change
-  };
+  }, []);
 
   /*
   // Starts a solo Game by creating a game server side and opening a view where game settings can be changed.
