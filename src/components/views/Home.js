@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import User from "models/User";
 import { useHistory } from "react-router-dom";
@@ -19,10 +19,22 @@ specific components that belong to the main one in the same file.
 /* Displays the lobbies that people can join*/
 // right now with dummy data, change to real once websockets work
 const DisplayLobby = (props) => {
+  const history = useHistory();
+  // must take id of the lobby as props but how?
+  const joinLobby = () => {
+    const gameId = 1;
+    history.push(`/lobby/${gameId}`);
+  };
+
   return (
     <div className="home lobby-container">
-      <div>Existing Lobby free to join</div>
-      <button className="home lobby-container button">Join Lobby</button>
+      <div>Name of an existing Lobby free to join</div>
+      <button
+        className="home lobby-container button"
+        onClick={() => joinLobby()}
+      >
+        Join Lobby
+      </button>
     </div>
   );
 };
@@ -56,17 +68,23 @@ const Home = (props) => {
   
   let webSocket = Stomper.getInstance();
 
-  /*
-  // Starts a solo Game by creating a game server side and opening a view where game settings can be changed.
+  useEffect(() => {
+    async function fetchData() {
+      /* join the topic/games to get all open lobbies as soon as the home page is opened
+      update the display of all lobbies whenever they changee*/
+      let webSocket = Stomper.getInstance();
+      webSocket.join("/topic/games", function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+    }
+  }, []);
+
+  /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
     history.push("/");
   };
-  */
 
-  /* Opens a PvP Game Lobby where all game settings can be changed.
-  WebSocket Call that creates a new PvP in the server and returns the unique Game ID.
-  WebSocket Connection is then open and Lobby is updated with joining players.
-  */
+  /* Opens the Lobbysettings page (PvP Game) where a name for the game can be entered.*/
   const createGameLobby = () => {
     history.push(`/lobby`);
   };
