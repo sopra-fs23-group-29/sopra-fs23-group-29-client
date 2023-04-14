@@ -27,8 +27,32 @@ const DisplayLobby = (props) => {
   );
 };
 
+const FormField = props => {
+  return (
+    <div className="login field">
+      <label className="login label">
+        {props.label}
+      </label>
+      <input
+        className="login input"
+        placeholder="enter here.."
+        value={props.value}
+        onChange={e => props.onChange(e.target.value)}
+      />
+    </div>
+  );
+};
+
+FormField.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func
+};
+
 const Home = (props) => {
   const history = useHistory();
+  const [countryCode, setCountryCode] = useState(null);
+  const [guess, setGuess] = useState(null);
   
   let webSocket = Stomper.getInstance();
 
@@ -82,7 +106,7 @@ const Home = (props) => {
   const saveAnswerGame1Turn1 = () => {
     webSocket.connect().then(() => {
       webSocket.send("/app/games/1/turn/1/player/1/saveAnswer",
-        {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : "0", guess : 99});
+        {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : countryCode, guess : guess});
     });
   };
   
@@ -129,6 +153,19 @@ const Home = (props) => {
       >
         Save Answer Game 1 Turn 1
       </Button>
+
+      <div className="login form">
+          <FormField
+            label="countryCode"
+            value={countryCode}
+            onChange={un => setCountryCode(un)}
+          />
+          <FormField
+            label="guess"
+            value={guess}
+            onChange={n => setGuess(n)}
+          />
+      </div>
 
       <Button
         className="primary-button"
