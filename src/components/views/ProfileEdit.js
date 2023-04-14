@@ -2,18 +2,18 @@ import React, {useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
-import 'styles/views/Login.scss';
+import 'styles/views/ProfileEdit.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
 const FormField = props => {
     return (
-        <div className="login field">
-            <label className="login label">
+        <div className="edit field">
+            <label className="edit label">
                 {props.label}
             </label>
             <input
-                className="login input"
+                className="edit input"
                 placeholder="enter here.."
                 value={props.value}
                 onChange={e => props.onChange(e.target.value)}
@@ -91,9 +91,9 @@ const ProfileEdit = props => {
 
     return (
         <BaseContainer>
-            <div className="login container">
-                <div className="login label">Please enter new Username and Birthday. Empty means unchanged</div>
-                <div className="login form">
+            <div className="edit container">
+                <div className="edit head-line">Please enter new Username and Birthday. Empty means unchanged</div>
+                <div className="edit form">
                     <FormField
                         label="New Username"
                         value={username}
@@ -104,7 +104,7 @@ const ProfileEdit = props => {
                         value={birthday}
                         onChange={b => setBirthday(b)}
                     />
-                    <div className="login button-container">
+                    <div className="edit button-container">
                         <Button
                             width="100%"
                             onClick={() => doEdit()}
@@ -117,8 +117,9 @@ const ProfileEdit = props => {
                         label="Enter password to delete profile:"
                         value={password}
                         onChange={un => setPassword(un)}
+                        margin-top="10em"
                     />
-                    <div className="login button-container">
+                    <div className="edit delete-button-container">
                         <Button
                             width="100%"
                             disabled={!password}

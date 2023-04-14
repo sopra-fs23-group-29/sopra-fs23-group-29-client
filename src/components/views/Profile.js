@@ -3,7 +3,6 @@ import {api, handleError} from 'helpers/api';
 import {useHistory, useParams} from 'react-router-dom';
 import {Button} from 'components/ui/Button';
 import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/Game.scss";
 import "styles/views/Profile.scss";
 
 const Profile = () => {
