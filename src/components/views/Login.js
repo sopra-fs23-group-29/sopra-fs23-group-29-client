@@ -64,8 +64,10 @@ const Login = (props) => {
         webSocket.join("/topic/users", function (payload) {
           console.log(JSON.parse(payload.body).content);
         });
+        webSocket.send("/app/users", {message : "I JUST LOGGED IN"});
         history.push(`/`);
       });
+
       // Login successfully worked --> navigate to the route /game in the GameRouter
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);

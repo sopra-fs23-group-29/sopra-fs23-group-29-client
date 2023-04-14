@@ -39,8 +39,34 @@ const DisplayLobby = (props) => {
   );
 };
 
+const FormField = props => {
+  return (
+    <div className="login field">
+      <label className="login label">
+        {props.label}
+      </label>
+      <input
+        className="login input"
+        placeholder="enter here.."
+        value={props.value}
+        onChange={e => props.onChange(e.target.value)}
+      />
+    </div>
+  );
+};
+
+FormField.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func
+};
+
 const Home = (props) => {
   const history = useHistory();
+  const [countryCode, setCountryCode] = useState(null);
+  const [guess, setGuess] = useState(null);
+  
+  let webSocket = Stomper.getInstance();
 
   useEffect(() => {
     async function fetchData() {
@@ -63,6 +89,53 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
+  /* Fake call to create a game
+  */
+  const createGame = async () => {
+    try {
+
+        const token = JSON.parse(localStorage.getItem('token')).token
+        const requestBody = JSON.stringify({gameName : "mygame", gameMode : "PVP"});
+        console.log(requestBody)
+        const response = await api.post(
+            `/games`,
+            requestBody,
+            {headers:{"Authorization": token}}
+        );
+
+        // Edit successfully worked --> navigate to the route /profile/id
+        console.log("Created game");
+
+    } catch (error) {
+        alert(`Something went wrong while creating game: \n${handleError(error)}`);
+    }
+  };
+
+  /* Fake call to start game with ID 1
+  */
+  const startGame1 = () => {
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/startGame", {message : "START GAME 1"});
+    });
+  };
+  
+  /* Fake call to save an answer
+  */
+  const saveAnswerGame1Turn1 = () => {
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/turn/1/player/1/saveAnswer",
+        {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : countryCode, guess : guess});
+    });
+  };
+  
+  /* Fake call to start game with ID 1
+  */
+  const endTurn1 = () => {
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/endTurn", {message : "END TURN GAME 1"});
+    });
+  };
+
   return (
     <BaseContainer className="home container">
       <h2>PvP Lobbies</h2>
@@ -74,13 +147,52 @@ const Home = (props) => {
       >
         Create Lobby
       </Button>
+      
       <Button
         className="primary-button"
         width="15%"
-        onClick={() => startSoloGame()}
+        onClick={() => createGame()}
       >
-        Single Player Game
+        Create Game
       </Button>
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => startGame1()}
+      >
+        Start Game 1
+      </Button>
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => saveAnswerGame1Turn1()}
+      >
+        Save Answer Game 1 Turn 1
+      </Button>
+
+      <div className="login form">
+          <FormField
+            label="countryCode"
+            value={countryCode}
+            onChange={un => setCountryCode(un)}
+          />
+          <FormField
+            label="guess"
+            value={guess}
+            onChange={n => setGuess(n)}
+          />
+      </div>
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => endTurn1()}
+      >
+        End Turn Game 1 Turn 1
+      </Button>
+
     </BaseContainer>
   );
 };

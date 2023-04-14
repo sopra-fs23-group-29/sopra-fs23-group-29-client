@@ -65,6 +65,7 @@ const Registration = (props) => {
         webSocket.join("/topic/users", function (payload) {
           console.log(JSON.parse(payload.body).content);
         });
+        webSocket.send("/app/users", {message : "I JUST REGISTERED"});
         history.push(`/`);
       });
 
