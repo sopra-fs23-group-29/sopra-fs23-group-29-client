@@ -65,6 +65,7 @@ const Home = (props) => {
   const history = useHistory();
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
+  const [gameIdToJoin, setgameIdToJoin] = useState(null);
   
   let webSocket = Stomper.getInstance();
 
@@ -111,6 +112,26 @@ const Home = (props) => {
     }
   };
 
+  /* Fake call to join a game
+  */
+  const joinGame = async () => {
+    try {
+
+        const token = JSON.parse(localStorage.getItem('token')).token
+        const response = await api.post(
+            `/games/` + gameIdToJoin,
+            {},
+            {headers:{"Authorization": token}}
+        );
+
+        // Edit successfully worked --> navigate to the route /profile/id
+        console.log("Joined game");
+
+    } catch (error) {
+        alert(`Something went wrong while creating game: \n${handleError(error)}`);
+    }
+  };
+
   /* Fake call to start game with ID 1
   */
   const startGame1 = () => {
@@ -132,7 +153,15 @@ const Home = (props) => {
   */
   const endTurn1 = () => {
     webSocket.connect().then(() => {
-      webSocket.send("/app/games/1/endTurn", {message : "END TURN GAME 1"});
+      webSocket.send("/app/games/1/turn/1/endTurn", {message : "END TURN GAME 1"});
+    });
+  };
+  
+  /* Fake call to start game with ID 1
+  */
+  const movePlayer1 = () => {
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/player/1/moveByOne", {message : "MOVE PLAYER 1 BY ONE"});
     });
   };
 
@@ -148,6 +177,7 @@ const Home = (props) => {
         Create Lobby
       </Button>
       
+
       <Button
         className="primary-button"
         width="15%"
@@ -156,6 +186,26 @@ const Home = (props) => {
         Create Game
       </Button>
 
+
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => joinGame()}
+      >
+        Join game
+      </Button>
+
+      <div className="login form">
+        <FormField
+          label="gameToJoin"
+          value={gameIdToJoin}
+          onChange={un => setgameIdToJoin(un)}
+        />
+      </div>
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -163,6 +213,10 @@ const Home = (props) => {
       >
         Start Game 1
       </Button>
+
+
+
+
 
       <Button
         className="primary-button"
@@ -185,12 +239,24 @@ const Home = (props) => {
           />
       </div>
 
+
+
       <Button
         className="primary-button"
         width="15%"
         onClick={() => endTurn1()}
       >
         End Turn Game 1 Turn 1
+      </Button>
+
+
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => movePlayer1()}
+      >
+        Move Player 1
       </Button>
 
     </BaseContainer>
