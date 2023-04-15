@@ -6,9 +6,11 @@ import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
+import {Board} from "./Board";
 
 
 const Game = props => {
+    const board = new Board(10);
     const history = useHistory();
 
     let roundNumber = 1
@@ -26,8 +28,10 @@ const Game = props => {
         );
     }
 
+
     return (
         <BaseContainer className="game container">
+            {board.displayBoard()}
             {content}
         </BaseContainer>
     );

@@ -1,0 +1,91 @@
+@import 'styles/theme';
+
+$thickness: 4em;
+$tall: 70%;
+$wide: 85%;
+$top: 17.5%;
+$left: 7.5%;
+$side: 2%;
+
+.board {
+    &.container {
+        position: fixed;
+        top: 5%;
+        left: 5%;
+        height: fit-content;
+        width: fit-content;
+        display: flex;
+    }
+    &.left-column {
+        position: fixed;
+        top: $top;
+        left: $side;
+        height: $tall;
+        width: $thickness;
+        background: lightcoral;
+        border-radius: 2em;
+    }
+
+    &.top-row {
+        position: fixed;
+        top: 10%;
+        left: $left;
+        height: $thickness;
+        width: $wide;
+        background: lightcoral;
+        border-radius: 2em;
+    }
+
+    &.right-column {
+        position: fixed;
+        top: $top;
+        right: $side;
+        height: $tall;
+        width: $thickness;
+        background: lightcoral;
+        border-radius: 2em;
+    }
+
+    &.bottom-row {
+        position: fixed;
+        left: $left;
+        bottom: 5%;
+        height: $thickness;
+        width: $wide;
+        background: lightcoral;
+        border-radius: 2em;
+    }
+
+    &.middle {
+        position: fixed;
+        top: 25%;
+        left: 20%;
+        height: 55%;
+        width: 60%;
+        background: lightskyblue;
+        border-radius: 2em;
+    }
+}
+
+
+.field {
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    background: blue;
+}
+
+.barrier {
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
+    background: green;
+}
+
+.start {
+    background: yellow;
+}
+
+.end {
+    background: orange;
+}
