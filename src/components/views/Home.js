@@ -173,11 +173,36 @@ const Home = (props) => {
     });
   };
   
-  /* Fake call to start game with ID 1
+  /* Fake call to save a barrier answer
+  */
+  const saveBarrierAnswerGame1Player1 = () => {
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/player/1/resolveBarrierAnswer",
+        {userToken : JSON.parse(localStorage.getItem('token')).token, guess : barrierAnswer});
+    });
+  };
+
+  /* Fake call to end the current turn in game with ID 1
   */
   const endTurn1 = () => {
     webSocket.connect().then(() => {
-      webSocket.send("/app/games/1/endTurn", {message : "END TURN GAME 1"});
+      webSocket.send("/app/games/1/turn/1/endTurn", {message : "END TURN GAME 1"});
+    });
+  };
+  
+  /* Fake call to move player with ID 1 in game 1
+  */
+  const movePlayer1 = () => {
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {message : "MOVE PLAYER" + playerToMove + "BY ONE"});
+    });
+  };
+
+  /* Fake call to start next turn in game with ID 1
+  */
+  const nextTurn = () => {
+    webSocket.connect().then(() => {
+      webSocket.send("/app/games/1/nextTurn", {message : "START NEXT TURN"});
     });
   };
 
@@ -193,6 +218,7 @@ const Home = (props) => {
         Create Lobby
       </Button>
       
+
       <Button
         className="primary-button"
         width="15%"
@@ -247,6 +273,10 @@ const Home = (props) => {
         Start Game 1
       </Button>
 
+
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -268,6 +298,27 @@ const Home = (props) => {
           />
       </div>
 
+
+
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => saveBarrierAnswerGame1Player1()}
+      >
+        Save Barrier Answer Game 1 Player 1
+      </Button>
+
+      <div className="login form">
+          <FormField
+            label="barrierAnswer"
+            value={barrierAnswer}
+            onChange={un => setBarrierAnswer(un)}
+          />
+      </div>
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -275,6 +326,34 @@ const Home = (props) => {
       >
         End Turn Game 1 Turn 1
       </Button>
+
+
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => movePlayer1()}
+      >
+        Move Player 1
+      </Button>
+      <div className="login form">
+          <FormField
+            label="movePlayer"
+            value={playerToMove}
+            onChange={un => setPlayerToMove(un)}
+          />
+      </div>
+
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => nextTurn()}
+      >
+        Start Next Turn
+      </Button>
+
+
 
     </BaseContainer>
   );

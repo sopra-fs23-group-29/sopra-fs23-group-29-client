@@ -26,7 +26,7 @@ const PvPLobby = (props) => {
       const gameId = params.id;
 
       /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/{gameId}", function (payload) {
+      webSocket.join("/topic/games/" + gameId, function (payload) {
         console.log(JSON.parse(payload.body).content);
       });
     }
@@ -35,8 +35,8 @@ const PvPLobby = (props) => {
 
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
-    // gameId als variable einfügen
-    webSocket.send("/app/games/1/startGame", {
+    const gameId = params.id;
+    webSocket.send("/app/games/" + gameId + "/startGame", {
       message: "START GAME 1",
     });
 
