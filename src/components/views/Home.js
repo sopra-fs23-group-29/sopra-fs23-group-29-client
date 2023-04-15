@@ -65,6 +65,10 @@ const Home = (props) => {
   const history = useHistory();
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
+  const [gameIdToJoin, setgameIdToJoin] = useState(null);
+  const [gameIdToLeave, setGameIdToLeave] = useState(null);
+  const [barrierAnswer, setBarrierAnswer] = useState(null);
+  const [playerToMove, setPlayerToMove] = useState(null);
   
   let webSocket = Stomper.getInstance();
 
@@ -108,6 +112,47 @@ const Home = (props) => {
 
     } catch (error) {
         alert(`Something went wrong while creating game: \n${handleError(error)}`);
+    }
+  };
+
+  /* Fake call to join a game
+  */
+  const joinGame = async () => {
+    try {
+
+        const token = JSON.parse(localStorage.getItem('token')).token;
+        const response = await api.post(
+            `/games/` + gameIdToJoin,
+            {},
+            {headers:{"Authorization": token}}
+        );
+
+        // Edit successfully worked --> navigate to the route /profile/id
+        console.log("Joined game");
+
+    } catch (error) {
+        alert(`Something went wrong while creating game: \n${handleError(error)}`);
+    }
+  };
+
+  /* Fake call to leave a game
+  */
+  const leaveGame = async () => {
+    try {
+
+        const token = JSON.parse(localStorage.getItem('token')).token;
+        console.log("leave game: token " + token);
+        const response = await api.delete(
+            `/games/` + gameIdToLeave,
+            {},
+            {headers:{"Authorization": token}}
+        );
+
+        // Edit successfully worked --> navigate to the route /profile/id
+        console.log("Left game");
+
+    } catch (error) {
+        alert(`Something went wrong while leaving game: \n${handleError(error)}`);
     }
   };
 
@@ -155,6 +200,44 @@ const Home = (props) => {
       >
         Create Game
       </Button>
+
+
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => joinGame()}
+      >
+        Join game
+      </Button>
+
+      <div className="login form">
+        <FormField
+          label="gameToJoin"
+          value={gameIdToJoin}
+          onChange={un => setgameIdToJoin(un)}
+        />
+      </div>
+      
+      
+      
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => leaveGame()}
+      >
+        Leave game
+      </Button>
+
+      <div className="login form">
+        <FormField
+          label="gameToLeave"
+          value={gameIdToLeave}
+          onChange={un => setGameIdToLeave(un)}
+        />
+      </div>
+
+
 
       <Button
         className="primary-button"
