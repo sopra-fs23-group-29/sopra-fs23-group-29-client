@@ -73,6 +73,8 @@ $side: 2%;
     justify-content: center;
     border-radius: 50%;
     background: blue;
+    height: $thickness;
+    width: $thickness;
 }
 
 .barrier {
@@ -80,12 +82,24 @@ $side: 2%;
     justify-content: center;
     border-radius: 50%;
     background: green;
+    height: $thickness;
+    width: $thickness;
 }
 
 .start {
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
     background: yellow;
+    height: $thickness*2;
+    width: $thickness*2;
 }
 
 .end {
+    display: flex;
+    justify-content: center;
+    border-radius: 50%;
     background: orange;
+    height: $thickness*2;
+    width: $thickness*2;
 }

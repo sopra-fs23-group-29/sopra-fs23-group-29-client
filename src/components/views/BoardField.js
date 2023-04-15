@@ -1,18 +1,18 @@
+import React from "react";
 import "styles/views/Board.scss";
 import BaseContainer from "../ui/BaseContainer";
 
 /**
  * Abstract Class BoardField
  */
-class BoardField {
+class BoardField extends React.Component{
     baseColour;
     colours;
-    size;
 
-    constructor(size, baseColour) {
+    constructor(baseColour) {
+        super(null);
         this.baseColour = baseColour;
         this.colours = [this.baseColour];
-        this.size = size;
     }
 
     addColour(newColour) {
@@ -51,38 +51,50 @@ class BoardField {
         }
     }
 
-    displayField() {
-        throw new Error("Method 'displayField()' must be implemented");
+    render() {
+        return (
+            <div color="red">
+                BoardField should not get rendered!
+            </div>
+        )
     }
 }
 class Field extends BoardField {
-    displayField = () => (
-        <BaseContainer className="field">
-            color={this.colours[0]}
-        </BaseContainer>
-    );
+    render() {
+        return (
+            <div color={this.colours[0]} className="field">
+                _
+            </div>
+        )
+    }
 }
 class Barrier extends BoardField {
-    displayField = () => (
-        <BaseContainer className="barrier">
-            color={this.colours[0]}
-        </BaseContainer>
-    );
+    render() {
+        return (
+            <div color={this.colours[0]} className="Barrier">
+                !
+            </div>
+        )
+    }
 }
 
 class Start extends BoardField {
-    displayField = () => (
-        <BaseContainer className="start">
-            color={this.colours[0]}
-        </BaseContainer>
-    );
+    render() {
+        return (
+            <div color={this.colours[0]} className="start">
+                T
+            </div>
+        )
+    }
 }
 
 class End extends BoardField {
-    displayField = () => (
-        <BaseContainer className="end">
-            color={this.colours[0]}
-        </BaseContainer>
-    );
+    render() {
+        return (
+            <div color={this.colours[0]} className="end">
+                =
+            </div>
+        )
+    }
 }
 export {Field, Barrier, Start, End};

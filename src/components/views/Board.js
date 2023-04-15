@@ -2,13 +2,12 @@ import {Field, Barrier, Start, End} from "./BoardField";
 import "styles/views/Board.scss";
 import BaseContainer from "components/ui/BaseContainer";
 
-export class Board {
+export class Board{
 
     numFields;
     arrangement = [];
     fields = [];
     barriers = [];
-    fieldSize = "20px";
 
     constructor(numFields) {
         this.numFields = numFields;
@@ -22,7 +21,7 @@ export class Board {
         let barrier;
 
         // add the start field at the start
-        const start = new Start(this.fieldSize*2, "purple");
+        const start = new Start("purple");
         this.arrangement.push(start);
         this.placeField(start, 0);
 
@@ -32,21 +31,21 @@ export class Board {
             index = this.fields.length + this.barriers.length + 1; // +1 because of start
 
             // place a normal field
-            field = new Field(this.fieldSize, "lightblue");
+            field = new Field("lightblue");
             this.fields.push(field);
             this.placeField(field, index)
             numPlacedFields += 1;
 
             // behind the 3rd and thereafter behind every 2nd field is a barrier
             if ((numPlacedFields - 3)%2 === 0) {
-                barrier = new Barrier(this.fieldSize, "lightgreen");
+                barrier = new Barrier("lightgreen");
                 this.barriers.push(barrier);
                 this.placeField(barrier, index+1)
             }
         }
 
         // add the end field at the end
-        const end = new End(this.fieldSize*2, "indigo");
+        const end = new End("indigo");
         this.placeField(end, this.fields.length + this.barriers.length + 1);
     }
 
@@ -87,28 +86,26 @@ export class Board {
     }
 
     displayBoard() {
-        return (
-            <BaseContainer className="board container">
-                <div className="board left-column">
+        return <BaseContainer className="board container">
+            <div className="board left-column">
 
-                </div>
+            </div>
 
-                <div className="board top-row">
+            <div className="board top-row">
 
-                </div>
+            </div>
 
-                <div className="board right-column">
+            <div className="board right-column">
 
-                </div>
+            </div>
 
-                <div className="board bottom-row">
+            <div className="board bottom-row">
 
-                </div>
+            </div>
 
-                <div className="board middle">
+            <div className="board middle">
 
-                </div>
-            </BaseContainer>
-        )
+            </div>
+        </BaseContainer>
     }
 }
