@@ -144,7 +144,6 @@ const Home = (props) => {
         console.log("leave game: token " + token);
         const response = await api.delete(
             `/games/` + gameIdToLeave,
-            {},
             {headers:{"Authorization": token}}
         );
 
