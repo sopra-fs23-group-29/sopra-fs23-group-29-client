@@ -9,13 +9,13 @@
 
 .game {
   &.container {
-    background: $accent;
+    margin-top: 2em;
+    background: none;
     padding: 1.5em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: $dropShadow;
   }
   &.user-list {
     list-style: none;
@@ -55,5 +55,41 @@
     margin-right: 10px;
     font-family: $fontMono;
     font-weight: 300;
+  }
+}
+
+.middle {
+  &.container {
+    margin-top: 20%;
+    background: $containerColor;
+    padding: 1.5em;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+    height: 40vw;
+    width: 60vh;
+  }
+}
+
+.round {
+  &.container {
+    // centering the box
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -1em;
+    margin-left: -2.5em;
+    // text and container styling
+    font-weight: bold;
+    font-size: 2em;
+    background: $accentDarkContainerColor;
+    padding: 0.7em;
+    border-radius: $borderRadius;
+    display: flex;
+    box-shadow: $dropShadow;
+    height: fit-content;
+    width: fit-content;
   }
 }
