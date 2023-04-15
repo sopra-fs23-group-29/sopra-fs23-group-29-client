@@ -11,17 +11,24 @@ import "styles/views/Game.scss";
 const Game = props => {
     const history = useHistory();
 
-    let content = <Spinner/>;
+    let roundNumber = 1
+    let content = (
+        <BaseContainer className="round container">
+            Round {roundNumber}
+        </BaseContainer>);
 
     if (0) {
 
-        content = (0
+        content = (
+            <BaseContainer className="middle container">
+                <h2>Happy Coding!</h2>
+            </BaseContainer>
         );
     }
 
     return (
         <BaseContainer className="game container">
-            <h2>Happy Coding!</h2>
+            {content}
         </BaseContainer>
     );
 }
