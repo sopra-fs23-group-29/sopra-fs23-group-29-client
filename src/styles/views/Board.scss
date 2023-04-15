@@ -1,6 +1,5 @@
-@import 'styles/theme';
-
 $thickness: 4em;
+$borderRadius: $thickness/2;
 $tall: 70%;
 $wide: 85%;
 $top: 17.5%;
@@ -23,7 +22,7 @@ $side: 2%;
         height: $tall;
         width: $thickness;
         background: lightcoral;
-        border-radius: 2em;
+        border-radius: $borderRadius;
     }
 
     &.top-row {
@@ -33,7 +32,7 @@ $side: 2%;
         height: $thickness;
         width: $wide;
         background: lightcoral;
-        border-radius: 2em;
+        border-radius: $borderRadius;
     }
 
     &.right-column {
@@ -43,7 +42,7 @@ $side: 2%;
         height: $tall;
         width: $thickness;
         background: lightcoral;
-        border-radius: 2em;
+        border-radius: $borderRadius;
     }
 
     &.bottom-row {
@@ -53,7 +52,7 @@ $side: 2%;
         height: $thickness;
         width: $wide;
         background: lightcoral;
-        border-radius: 2em;
+        border-radius: $borderRadius;
     }
 
     &.middle {
@@ -63,12 +62,11 @@ $side: 2%;
         height: 55%;
         width: 60%;
         background: lightskyblue;
-        border-radius: 2em;
+        border-radius: $borderRadius;
     }
 }
 
-
-.field {
+.position {
     display: flex;
     justify-content: center;
     border-radius: 50%;
@@ -93,6 +91,8 @@ $side: 2%;
     background: yellow;
     height: $thickness*2;
     width: $thickness*2;
+    margin-top: 0;
+    margin-left: -$thickness/2;
 }
 
 .end {
@@ -102,4 +102,6 @@ $side: 2%;
     background: orange;
     height: $thickness*2;
     width: $thickness*2;
+    margin-top: -$thickness/2;
+    margin-left: -$thickness/2;
 }

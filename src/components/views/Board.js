@@ -28,7 +28,7 @@ export class Board{
         // add the normal fields and barriers
         while (numPlacedFields < this.numFields-1) {
             // we use the number of already placed fields as index when placing the new fields on the board
-            index = this.fields.length + this.barriers.length + 1; // +1 because of start
+            index = this.fields.length + this.barriers.length + 1; // +1 due to start
 
             // place a normal field
             field = new Field("lightblue");
@@ -59,29 +59,29 @@ export class Board{
         }
 
 
-        // left column (start up)
+        // left column (from start up)
         if (index < 5) {
-
+            field.setPosition(0, `${(4 - index)*100/9}%`);
         }
 
-        // top row
+        // top row (left to right)
         else if (index < 21) {
-
+            field.setPosition(`${(index - 5)*100/16}%`, 0)
         }
 
-        // right column
+        // right column (top to bottom)
         else if (index < 30) {
-
+            field.setPosition(0, `${(index - 21)*100/9}%`);
         }
 
-        // bottom column
+        // bottom column (right to left)
         else if (index < 46) {
-
+            field.setPosition(`${(45 - index)*100/16}%`, 0)
         }
 
-        // left column (bottom up)
+        // left column (from bottom up)
         if (index < 48)  {
-
+            field.setPosition(0, `${(54 - index)*100/9}%`);
         }
     }
 

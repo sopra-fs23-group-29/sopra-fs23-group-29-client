@@ -15,6 +15,11 @@ class BoardField extends React.Component{
         this.colours = [this.baseColour];
     }
 
+    setPosition(left, top) {
+        this.left = left;
+        this.top = top;
+    }
+
     addColour(newColour) {
         // no need to add the colour if it is already present
         if (this.colours.indexOf(newColour) !== -1) {
@@ -62,8 +67,14 @@ class BoardField extends React.Component{
 class Field extends BoardField {
     render() {
         return (
-            <div color={this.colours[0]} className="field">
-                _
+            <div className="position">
+                field
+                style={{
+                    color: `${this.colours[0]}`,
+                    position: "absolute",
+                    left: `${this.left}`,
+                    top: `${this.top}`
+            }}
             </div>
         )
     }
@@ -71,8 +82,14 @@ class Field extends BoardField {
 class Barrier extends BoardField {
     render() {
         return (
-            <div color={this.colours[0]} className="Barrier">
-                !
+            <div className="barrier">
+                barrier
+                style={{
+                    color: `${this.colours[0]}`,
+                    position: "absolute",
+                    left: `${this.left}`,
+                    top: `${this.top}`
+            }}
             </div>
         )
     }
@@ -81,8 +98,14 @@ class Barrier extends BoardField {
 class Start extends BoardField {
     render() {
         return (
-            <div color={this.colours[0]} className="start">
-                T
+            <div  className="start">
+                start
+                style={{
+                    color: `${this.colours[0]}`,
+                    position: "absolute",
+                    left: `${this.left}`,
+                    top: `${this.top}`
+                }}
             </div>
         )
     }
@@ -91,8 +114,14 @@ class Start extends BoardField {
 class End extends BoardField {
     render() {
         return (
-            <div color={this.colours[0]} className="end">
-                =
+            <div className="end">
+                end
+                style={{
+                    color: `${this.colours[0]}`,
+                    position: "absolute",
+                    left: `${this.left}`,
+                    top: `${this.top}`
+            }}
             </div>
         )
     }
