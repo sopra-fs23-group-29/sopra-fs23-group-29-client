@@ -72,9 +72,13 @@ const Home = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      /* join the topic/games to get all open lobbies as soon as the home page is opened
-      update the display of all lobbies whenever they changee*/
       let webSocket = Stomper.getInstance();
+
+      // REMOVE join topic/users later
+
+      /* join the topic/games to get all open lobbies as soon as the home page is opened
+      update the display of all lobbies whenever they change
+      */
       webSocket.connect().then(() => {
         webSocket.join("/topic/games", function (payload) {
           console.log(JSON.parse(payload.body).content);
@@ -88,7 +92,7 @@ const Home = (props) => {
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
-    history.push("/");
+    history.push("/sologame");
   };
 
   /* Opens the Lobbysettings page (PvP Game) where a name for the game can be entered.*/
@@ -186,10 +190,18 @@ const Home = (props) => {
       <DisplayLobby />
       <Button
         className="primary-button"
-        width="15%"
+        width="20%"
         onClick={() => createGameLobby()}
       >
-        Create Lobby
+        Create Multiplayer Lobby
+      </Button>
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => startSoloGame()}
+      >
+        Single Player Game
       </Button>
 
       <Button className="primary-button" width="15%" onClick={() => joinGame()}>
