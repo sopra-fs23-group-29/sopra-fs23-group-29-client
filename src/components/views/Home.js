@@ -66,6 +66,7 @@ const Home = (props) => {
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
   const [gameIdToJoin, setgameIdToJoin] = useState(null);
+  const [gameIdToLeave, setGameIdToLeave] = useState(null);
   const [barrierAnswer, setBarrierAnswer] = useState(null);
   const [playerToMove, setPlayerToMove] = useState(null);
   
@@ -76,11 +77,17 @@ const Home = (props) => {
       /* join the topic/games to get all open lobbies as soon as the home page is opened
       update the display of all lobbies whenever they changee*/
       let webSocket = Stomper.getInstance();
-      webSocket.join("/topic/games", function (payload) {
-        console.log(JSON.parse(payload.body).content);
-      });
+      webSocket.connect().then(() => {
+        webSocket.join("/topic/games", function (payload) {
+          console.log(JSON.parse(payload.body).content);
+        });
+        webSocket.join("/topic/users", function (payload) {
+          console.log(JSON.parse(payload.body).content);
+        });
+      })
     }
   }, []);
+
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
@@ -108,6 +115,7 @@ const Home = (props) => {
 
         // Edit successfully worked --> navigate to the route /profile/id
         console.log("Created game");
+        console.log("Game ID : " + JSON.stringify(response.data));
 
     } catch (error) {
         alert(`Something went wrong while creating game: \n${handleError(error)}`);
@@ -119,7 +127,7 @@ const Home = (props) => {
   const joinGame = async () => {
     try {
 
-        const token = JSON.parse(localStorage.getItem('token')).token
+        const token = JSON.parse(localStorage.getItem('token')).token;
         const response = await api.post(
             `/games/` + gameIdToJoin,
             {},
@@ -134,54 +142,62 @@ const Home = (props) => {
     }
   };
 
+  /* Fake call to leave a game
+  */
+  const leaveGame = async () => {
+    try {
+
+        const token = JSON.parse(localStorage.getItem('token')).token;
+        console.log("leave game: token " + token);
+        const response = await api.delete(
+            `/games/` + gameIdToLeave,
+            {headers:{"Authorization": token}}
+        );
+
+        // Edit successfully worked --> navigate to the route /profile/id
+        console.log("Left game");
+
+    } catch (error) {
+        alert(`Something went wrong while leaving game: \n${handleError(error)}`);
+    }
+  };
+
   /* Fake call to start game with ID 1
   */
   const startGame1 = () => {
-    webSocket.connect().then(() => {
-      webSocket.send("/app/games/1/startGame", {message : "START GAME 1"});
-    });
+    webSocket.send("/app/games/1/startGame", {message : "START GAME 1"});
   };
   
   /* Fake call to save an answer
   */
   const saveAnswerGame1Turn1 = () => {
-    webSocket.connect().then(() => {
-      webSocket.send("/app/games/1/turn/1/player/1/saveAnswer",
-        {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : countryCode, guess : guess});
-    });
+    webSocket.send("/app/games/1/turn/1/player/1/saveAnswer",
+      {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : countryCode, guess : guess});
   };
   
   /* Fake call to save a barrier answer
   */
   const saveBarrierAnswerGame1Player1 = () => {
-    webSocket.connect().then(() => {
-      webSocket.send("/app/games/1/player/1/resolveBarrierAnswer",
-        {userToken : JSON.parse(localStorage.getItem('token')).token, guess : barrierAnswer});
-    });
+    webSocket.send("/app/games/1/player/1/resolveBarrierAnswer",
+      {userToken : JSON.parse(localStorage.getItem('token')).token, guess : barrierAnswer});
   };
 
   /* Fake call to end the current turn in game with ID 1
   */
   const endTurn1 = () => {
-    webSocket.connect().then(() => {
-      webSocket.send("/app/games/1/turn/1/endTurn", {message : "END TURN GAME 1"});
-    });
+    webSocket.send("/app/games/1/turn/1/endTurn", {message : "END TURN GAME 1"});
   };
   
   /* Fake call to move player with ID 1 in game 1
   */
   const movePlayer1 = () => {
-    webSocket.connect().then(() => {
-      webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {message : "MOVE PLAYER" + playerToMove + "BY ONE"});
-    });
+    webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {message : "MOVE PLAYER" + playerToMove + "BY ONE"});
   };
 
   /* Fake call to start next turn in game with ID 1
   */
   const nextTurn = () => {
-    webSocket.connect().then(() => {
       webSocket.send("/app/games/1/nextTurn", {message : "START NEXT TURN"});
-    });
   };
 
   return (
@@ -220,6 +236,24 @@ const Home = (props) => {
           label="gameToJoin"
           value={gameIdToJoin}
           onChange={un => setgameIdToJoin(un)}
+        />
+      </div>
+      
+      
+      
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => leaveGame()}
+      >
+        Leave game
+      </Button>
+
+      <div className="login form">
+        <FormField
+          label="gameToLeave"
+          value={gameIdToLeave}
+          onChange={un => setGameIdToLeave(un)}
         />
       </div>
 
