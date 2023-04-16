@@ -92,8 +92,8 @@ const ProfileEdit = props => {
     return (
         <BaseContainer>
             <div className="login container">
-                <div className="login label">Please enter new Username and Birthday. Empty means unchanged</div>
                 <div className="login form">
+                    <div>Please enter new Username and Birthday. Empty means unchanged</div>
                     <FormField
                         label="New Username"
                         value={username}
@@ -112,7 +112,6 @@ const ProfileEdit = props => {
                             Edit Profile
                         </Button>
                     </div>
-
                     <FormField
                         label="Enter password to delete profile:"
                         value={password}
