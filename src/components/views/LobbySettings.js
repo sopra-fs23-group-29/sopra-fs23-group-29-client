@@ -7,7 +7,6 @@ import "styles/views/Login.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import LobbyModel from "models/LobbyModel";
-import Stomper from "../../helpers/Stomp";
 
 /* This is the view for creating a PvP Game Lobby by entering the name first */
 
@@ -33,27 +32,37 @@ NameFormField.propTypes = {
 const LobbySettings = (props) => {
   const history = useHistory();
   const [gameName, setGameName] = useState(null);
-  let webSocket = Stomper.getInstance();
 
   const createLobby = async () => {
-    /* Call to server sending gameName, gameMode PVP, and player info for the person creating the lobby */
-    const requestBody = JSON.stringify({
-      gameName: gameName,
-      gameMode: "PVP",
-      // add player info
-    });
+    try {
+      const requestBody = JSON.stringify({
+        gameName: gameName,
+        gameMode: "PVP",
+      });
+      const token = JSON.parse(localStorage.getItem("token")).token;
+      console.log(requestBody);
 
-    const response = await api.post(`/games/`, requestBody, {
-      headers: {
-        Authorization: JSON.parse(localStorage.getItem("token")).token,
-      },
-    });
+      /* Call to server sending gameName and gameMode PVP to create the lobby */
+      const response = await api.post(`/games`, requestBody, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
-    /* Map answer from server to get the game id */
-    const gameId = response.data;
+      /* Take out later */
+      console.log("Created game");
+      console.log("Game ID : " + JSON.stringify(response.data.gameId));
 
-    /* push to lobby screen using the id we got as response from the server once the game is created there*/
-    history.push(`/lobby/${gameId}`);
+      /* Map answer from server to get the game id */
+      const gameId = response.data.gameId;
+
+      /* push to lobby screen using the id we got as response from the server once the game is created there*/
+      history.push(`/lobby/${gameId}`);
+    } catch (error) {
+      alert(
+        `Something went wrong while creating game: \n${handleError(error)}`
+      );
+    }
   };
 
   const backToLobbyOverview = () => {

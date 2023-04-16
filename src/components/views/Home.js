@@ -39,17 +39,15 @@ const DisplayLobby = (props) => {
   );
 };
 
-const FormField = props => {
+const FormField = (props) => {
   return (
     <div className="login field">
-      <label className="login label">
-        {props.label}
-      </label>
+      <label className="login label">{props.label}</label>
       <input
         className="login input"
         placeholder="enter here.."
         value={props.value}
-        onChange={e => props.onChange(e.target.value)}
+        onChange={(e) => props.onChange(e.target.value)}
       />
     </div>
   );
@@ -58,7 +56,7 @@ const FormField = props => {
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 const Home = (props) => {
@@ -69,7 +67,7 @@ const Home = (props) => {
   const [gameIdToLeave, setGameIdToLeave] = useState(null);
   const [barrierAnswer, setBarrierAnswer] = useState(null);
   const [playerToMove, setPlayerToMove] = useState(null);
-  
+
   let webSocket = Stomper.getInstance();
 
   useEffect(() => {
@@ -84,10 +82,9 @@ const Home = (props) => {
         webSocket.join("/topic/users", function (payload) {
           console.log(JSON.parse(payload.body).content);
         });
-      })
+      });
     }
   }, []);
-
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
@@ -99,105 +96,88 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
-  /* Fake call to create a game
-  */
-  const createGame = async () => {
-    try {
-
-        const token = JSON.parse(localStorage.getItem('token')).token
-        const requestBody = JSON.stringify({gameName : "mygame", gameMode : "PVP"});
-        console.log(requestBody)
-        const response = await api.post(
-            `/games`,
-            requestBody,
-            {headers:{"Authorization": token}}
-        );
-
-        // Edit successfully worked --> navigate to the route /profile/id
-        console.log("Created game");
-        console.log("Game ID : " + JSON.stringify(response.data));
-
-    } catch (error) {
-        alert(`Something went wrong while creating game: \n${handleError(error)}`);
-    }
-  };
-
   /* Fake call to join a game
-  */
+   */
   const joinGame = async () => {
     try {
+      const token = JSON.parse(localStorage.getItem("token")).token;
+      const response = await api.post(
+        `/games/` + gameIdToJoin,
+        {},
+        { headers: { Authorization: token } }
+      );
 
-        const token = JSON.parse(localStorage.getItem('token')).token;
-        const response = await api.post(
-            `/games/` + gameIdToJoin,
-            {},
-            {headers:{"Authorization": token}}
-        );
-
-        // Edit successfully worked --> navigate to the route /profile/id
-        console.log("Joined game");
-
+      // Edit successfully worked --> navigate to the route /profile/id
+      console.log("Joined game");
     } catch (error) {
-        alert(`Something went wrong while creating game: \n${handleError(error)}`);
+      alert(
+        `Something went wrong while creating game: \n${handleError(error)}`
+      );
     }
   };
 
   /* Fake call to leave a game
-  */
+   */
   const leaveGame = async () => {
     try {
+      const token = JSON.parse(localStorage.getItem("token")).token;
+      console.log("leave game: token " + token);
+      const response = await api.delete(`/games/` + gameIdToLeave, {
+        headers: { Authorization: token },
+      });
 
-        const token = JSON.parse(localStorage.getItem('token')).token;
-        console.log("leave game: token " + token);
-        const response = await api.delete(
-            `/games/` + gameIdToLeave,
-            {headers:{"Authorization": token}}
-        );
-
-        // Edit successfully worked --> navigate to the route /profile/id
-        console.log("Left game");
-
+      // Edit successfully worked --> navigate to the route /profile/id
+      console.log("Left game");
     } catch (error) {
-        alert(`Something went wrong while leaving game: \n${handleError(error)}`);
+      alert(`Something went wrong while leaving game: \n${handleError(error)}`);
     }
   };
 
   /* Fake call to start game with ID 1
-  */
+   */
   const startGame1 = () => {
-    webSocket.send("/app/games/1/startGame", {message : "START GAME 1"});
+    webSocket.send("/app/games/1/startGame", { message: "START GAME 1" });
   };
-  
+
   /* Fake call to save an answer
-  */
+   */
   const saveAnswerGame1Turn1 = () => {
-    webSocket.send("/app/games/1/turn/1/player/1/saveAnswer",
-      {userToken : JSON.parse(localStorage.getItem('token')).token, countryCode : countryCode, guess : guess});
+    webSocket.send("/app/games/1/turn/1/player/1/saveAnswer", {
+      userToken: JSON.parse(localStorage.getItem("token")).token,
+      countryCode: countryCode,
+      guess: guess,
+    });
   };
-  
+
   /* Fake call to save a barrier answer
-  */
+   */
   const saveBarrierAnswerGame1Player1 = () => {
-    webSocket.send("/app/games/1/player/1/resolveBarrierAnswer",
-      {userToken : JSON.parse(localStorage.getItem('token')).token, guess : barrierAnswer});
+    webSocket.send("/app/games/1/player/1/resolveBarrierAnswer", {
+      userToken: JSON.parse(localStorage.getItem("token")).token,
+      guess: barrierAnswer,
+    });
   };
 
   /* Fake call to end the current turn in game with ID 1
-  */
+   */
   const endTurn1 = () => {
-    webSocket.send("/app/games/1/turn/1/endTurn", {message : "END TURN GAME 1"});
+    webSocket.send("/app/games/1/turn/1/endTurn", {
+      message: "END TURN GAME 1",
+    });
   };
-  
+
   /* Fake call to move player with ID 1 in game 1
-  */
+   */
   const movePlayer1 = () => {
-    webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {message : "MOVE PLAYER" + playerToMove + "BY ONE"});
+    webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {
+      message: "MOVE PLAYER" + playerToMove + "BY ONE",
+    });
   };
 
   /* Fake call to start next turn in game with ID 1
-  */
+   */
   const nextTurn = () => {
-      webSocket.send("/app/games/1/nextTurn", {message : "START NEXT TURN"});
+    webSocket.send("/app/games/1/nextTurn", { message: "START NEXT TURN" });
   };
 
   return (
@@ -211,23 +191,8 @@ const Home = (props) => {
       >
         Create Lobby
       </Button>
-      
 
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => createGame()}
-      >
-        Create Game
-      </Button>
-
-
-
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => joinGame()}
-      >
+      <Button className="primary-button" width="15%" onClick={() => joinGame()}>
         Join game
       </Button>
 
@@ -235,12 +200,10 @@ const Home = (props) => {
         <FormField
           label="gameToJoin"
           value={gameIdToJoin}
-          onChange={un => setgameIdToJoin(un)}
+          onChange={(un) => setgameIdToJoin(un)}
         />
       </div>
-      
-      
-      
+
       <Button
         className="primary-button"
         width="15%"
@@ -253,11 +216,9 @@ const Home = (props) => {
         <FormField
           label="gameToLeave"
           value={gameIdToLeave}
-          onChange={un => setGameIdToLeave(un)}
+          onChange={(un) => setGameIdToLeave(un)}
         />
       </div>
-
-
 
       <Button
         className="primary-button"
@@ -266,10 +227,6 @@ const Home = (props) => {
       >
         Start Game 1
       </Button>
-
-
-
-
 
       <Button
         className="primary-button"
@@ -280,20 +237,13 @@ const Home = (props) => {
       </Button>
 
       <div className="login form">
-          <FormField
-            label="countryCode"
-            value={countryCode}
-            onChange={un => setCountryCode(un)}
-          />
-          <FormField
-            label="guess"
-            value={guess}
-            onChange={n => setGuess(n)}
-          />
+        <FormField
+          label="countryCode"
+          value={countryCode}
+          onChange={(un) => setCountryCode(un)}
+        />
+        <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
       </div>
-
-
-
 
       <Button
         className="primary-button"
@@ -304,24 +254,16 @@ const Home = (props) => {
       </Button>
 
       <div className="login form">
-          <FormField
-            label="barrierAnswer"
-            value={barrierAnswer}
-            onChange={un => setBarrierAnswer(un)}
-          />
+        <FormField
+          label="barrierAnswer"
+          value={barrierAnswer}
+          onChange={(un) => setBarrierAnswer(un)}
+        />
       </div>
 
-
-
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => endTurn1()}
-      >
+      <Button className="primary-button" width="15%" onClick={() => endTurn1()}>
         End Turn Game 1 Turn 1
       </Button>
-
-
 
       <Button
         className="primary-button"
@@ -331,24 +273,16 @@ const Home = (props) => {
         Move Player 1
       </Button>
       <div className="login form">
-          <FormField
-            label="movePlayer"
-            value={playerToMove}
-            onChange={un => setPlayerToMove(un)}
-          />
+        <FormField
+          label="movePlayer"
+          value={playerToMove}
+          onChange={(un) => setPlayerToMove(un)}
+        />
       </div>
 
-
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => nextTurn()}
-      >
+      <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
         Start Next Turn
       </Button>
-
-
-
     </BaseContainer>
   );
 };
