@@ -93,7 +93,7 @@ const ProfileEdit = props => {
         <BaseContainer>
             <div className="edit container">
                 <div className="edit head-line">Please enter new Username and Birthday. Empty means unchanged</div>
-                    <div className="edit form">
+                <div className="edit form">
                     <FormField
                         label="New Username"
                         value={username}
