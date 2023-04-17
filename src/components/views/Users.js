@@ -54,6 +54,13 @@ const Users = () => {
 
                 // See here to get more data.
                 console.log(response);
+                
+                // subscribe to /users - no .connect() needed
+                let webSocket = Stomper.getInstance();
+                webSocket.join("/topic/users", function (payload) {
+                    console.log(JSON.parse(payload.body).content);
+                });
+
             } catch (error) {
                 console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
                 console.error("Details:", error);
@@ -64,7 +71,6 @@ const Users = () => {
         fetchData();
     }, []);
 
-    let webSocket = Stomper.getInstance();
     let content = <Spinner/>;
 
     if (users) {

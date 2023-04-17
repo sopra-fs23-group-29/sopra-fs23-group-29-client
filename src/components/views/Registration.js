@@ -44,6 +44,14 @@ const Registration = (props) => {
     history.push("/login");
   };
 
+  // Test function to count the number of games received through /topic/games
+  const countNumberOfLobbies = (message) => {
+    if (message.body) {
+      var games = JSON.parse(message.body);
+      console.log("Number of games received: " + games.length);
+    }
+  }
+
   const doRegistration = async () => {
     try {
       const requestBody = JSON.stringify({ password, username });
@@ -62,14 +70,10 @@ const Registration = (props) => {
 
       let webSocket = Stomper.getInstance();
       webSocket.connect().then(() => {
-        webSocket.join("/topic/users", function (payload) {
-          console.log(JSON.parse(payload.body).content);
-        });
-        webSocket.send("/app/users", {message : "I JUST REGISTERED"});
         history.push(`/`);
       });
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
+      // Registration successfully worked --> navigate to the route /game in the GameRouter
     } catch (error) {
       alert(
         `Something went wrong during the registration: \n${handleError(error)}`
