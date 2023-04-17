@@ -60,7 +60,8 @@ const Registration = (props) => {
         JSON.stringify({ token: token, id: user.id, username: user.username })
       );
       
-      let webSocket = Stomper.getInstance().then(() => {
+      let webSocket = Stomper.getInstance();
+      webSocket.connect().then(() => {
         webSocket.join("/topic/games", function (payload) {
           console.log(JSON.parse(payload.body).content);
         });

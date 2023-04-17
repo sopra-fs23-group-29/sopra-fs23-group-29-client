@@ -7,15 +7,17 @@ import { getWS } from "./getDomain";
 class Stomper {
   static instance = null;
 
-  static async getInstance() {
+  static getInstance() {
     if (!Stomper.instance) {
       Stomper.instance = new Stomper();
-      Stomper.instance.connect().then(() => {
-        return Stomper.instance;
-      });
     }
     return Stomper.instance;
   }
+
+
+  // Stomper.instance.connect().then(() => {
+  //   return Stomper.instance;
+  // });
 
   // static async getInstanceFirst() {
   //   Stomper.instance = new Stomper();
@@ -66,7 +68,7 @@ class Stomper {
     this.openChannels = [];
   }
 
-  connect() {
+  async connect() {
     return new Promise((resolve, reject) => {
       try {
         this.socket.close();
