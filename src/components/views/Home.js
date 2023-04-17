@@ -86,6 +86,7 @@ const Home = (props) => {
         console.log(JSON.parse(payload.body).content);
       });
     }
+    fetchData();
   }, []);
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
