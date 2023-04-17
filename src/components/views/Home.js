@@ -79,13 +79,11 @@ const Home = (props) => {
       /* join the topic/games to get all open lobbies as soon as the home page is opened
       update the display of all lobbies whenever they change
       */
-      webSocket.connect().then(() => {
-        webSocket.join("/topic/games", function (payload) {
-          console.log(JSON.parse(payload.body).content);
-        });
-        webSocket.join("/topic/users", function (payload) {
-          console.log(JSON.parse(payload.body).content);
-        });
+      webSocket.join("/topic/games", function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+      webSocket.join("/topic/users", function (payload) {
+        console.log(JSON.parse(payload.body).content);
       });
     }
   }, []);
