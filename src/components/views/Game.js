@@ -23,7 +23,8 @@ const Game = props => {
         <BaseContainer className="round container">
             Round {roundNumber}
         </BaseContainer>);
-    const roundTimeout = setTimeout(content, 1000);
+
+    //const roundTimeout = setTimeout(content, 1000);
 
     // End Turn
     const endTurn = () => {

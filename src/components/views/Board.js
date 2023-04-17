@@ -1,131 +1,102 @@
-import {SimpleField, Field, Barrier, Start, End} from "./BoardField";
+import {Start, Field, Barrier, End} from "./BoardField";
+import React from 'react';
 import "styles/views/Board.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import { useState } from "react";
+
+
 export class Board {
 
-    numFields;
+    numFields = 29;
     arrangement = [];
     fields = [];
     barriers = [];
 
-    constructor(numFields) {
-        this.numFields = numFields;
-        this.createArrangement();
+    withBarriers = true;
+
+
+    getBoardParams(gamemode) {
+        switch (gamemode) {
+            case "pvp":
+                return [0, 5, 15, 20, 30];
+        }
     }
 
-    createArrangement() {
-        let numPlacedFields = 0;
-        let index;
-        let field;
-        let barrier;
+    fieldMapper(min, max) {
+        if (max <= min) {
+            throw new Error("max needs to be larger than min!")
+        }
+        let index = min
+        let fields = [];
 
-        // add the start field at the start
-        // const start = new Start("purple");
-        // this.arrangement.push(start);
-        // this.placeField(start, 0);
+        while (index < max) {
+            // start
+            if (index === 0) {
+                fields.push(
+                    <Start key={index}>
 
-        // add the normal fields and barriers
-        while (numPlacedFields < this.numFields-1) {
-            // we use the number of already placed fields as index when placing the new fields on the board
-            index = this.fields.length + this.barriers.length + 1; // +1 due to start
-
-            // place a normal field
-            this.placeNormalField(index);
-            numPlacedFields += 1;
-            continue;
-
-            // behind the 3rd and thereafter behind every 2nd field is a barrier
-            if ((numPlacedFields - 3)%2 === 0) {
-                barrier = new Barrier("lightgreen");
-                this.barriers.push(barrier);
-                this.placeField(barrier, index+1)
+                    </Start>
+                )
             }
-        }
+            // end
+            else if (index === this.numFields) {
+                fields.push(
+                    <End key={index}>
 
-        // add the end field at the end
-        // const end = new End("indigo");
-        // this.arrangement.push(end);
-        // this.placeField(end, this.fields.length + this.barriers.length + 1);
+                    </End>
+                )
+            }
+            // barriers
+            else if (this.withBarriers && ((index - 3)%3 === 0)) {
+                fields.push(
+                    <Barrier key={index}>
+
+                    </Barrier>
+                )
+            }
+            // normal fields
+            else {
+                fields.push(
+                    <Field key={index}>
+
+                    </Field>
+                )
+            }
+            index += 1;
+        }
+        return fields;
     }
 
-    placeNormalField(index) {
-        const field = new Field("lightblue");
-        this.fields.push(field);
-        this.arrangement.push(field);
-        this.placeField(field, index);
-    }
-
-    placeField(field, index) {
-        // throw error for non-valid index
-        if (typeof index !== "number") {
-            throw new Error("'index' needs to be a number!")
-        }
-        if ((index < 0) || (index > 47)) {
-            throw new Error(`'index' needs to be in the range: [0, 47]`)
-        }
-
-
-        // left column (from start up)
-        if (index < 5) {
-            return [0, `${(4 - index)*100/9}%`];
-            field.setPosition(0, `${(4 - index)*100/9}%`);
-        }
-
-        // top row (left to right)
-        else if (index < 21) {
-            return [`${(index - 5)*100/16}%`, 0];
-            field.setPosition(`${(index - 5)*100/16}%`, 0)
-        }
-
-        // right column (top to bottom)
-        else if (index < 30) {
-            field.setPosition(0, `${(index - 21)*100/9}%`);
-        }
-
-        // bottom column (right to left)
-        else if (index < 46) {
-            field.setPosition(`${(45 - index)*100/16}%`, 0)
-        }
-
-        // left column (from bottom up)
-        if (index < 48)  {
-            field.setPosition(0, `${(54 - index)*100/9}%`);
-        }
-    }
 
     displayBoard() {
+        const boardParams = this.getBoardParams("pvp");
         return <BaseContainer className="board container">
-            <div className="board left-column">
-
+            <div className="board left-column container">
+                {
+                    // these are bottom up, hence reverse()
+                    this.fieldMapper(boardParams[0], boardParams[1]).reverse()
+                }
             </div>
 
-            <div className="board top-row">
-
+            <div className="board top-row container">
+                {
+                    // left to right
+                    this.fieldMapper(boardParams[1], boardParams[2])
+                }
             </div>
 
-            <div className="board right-column">
-
+            <div className="board right-column container">
+                {
+                    // top to bottom
+                    this.fieldMapper(boardParams[2], boardParams[3])
+                }
             </div>
 
-            <div className="board bottom-row">
-
-            </div>
-
-            <div>
-
+            <div className="board bottom-row container">
+                {
+                    // right to left, hence reverse()
+                    this.fieldMapper(boardParams[3], boardParams[4]).reverse()
+                }
             </div>
         </BaseContainer>
-    }
-
-    test() {
-        return (
-            <SimpleField
-                left={this.placeField(0, 5)[0]}
-                top={this.placeField(0, 5)[1]}
-                    >
-
-            </SimpleField>
-        )
     }
 }

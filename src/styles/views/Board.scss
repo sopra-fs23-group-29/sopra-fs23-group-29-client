@@ -5,6 +5,7 @@ $wide: 85%;
 $top: 17.5%;
 $left: 7.5%;
 $side: 2%;
+$margin: 1em;
 
 .board {
     &.container {
@@ -16,92 +17,112 @@ $side: 2%;
         display: flex;
     }
     &.left-column {
-        position: fixed;
-        top: $top;
-        left: $side;
-        height: $tall;
-        width: $thickness;
-        background: lightcoral;
-        border-radius: $borderRadius;
+        &.container {
+            position: fixed;
+            top: $top;
+            left: $side;
+
+            height: $tall;
+            width: $thickness;
+            border-radius: $borderRadius;
+            flex-direction: column;
+            justify-content: space-between;
+
+            //background: lightcoral;
+        }
     }
 
     &.top-row {
-        position: fixed;
-        top: 10%;
-        left: $left;
-        height: $thickness;
-        width: $wide;
-        background: lightcoral;
-        border-radius: $borderRadius;
+        &.container {
+            position: fixed;
+            top: 10%;
+            left: $left;
+
+            height: $thickness;
+            width: $wide;
+            border-radius: $borderRadius;
+            flex-direction: row;
+            justify-content: space-between;
+
+            //background: lightcoral;
+        }
     }
 
     &.right-column {
-        position: fixed;
-        top: $top;
-        right: $side;
-        height: $tall;
-        width: $thickness;
-        background: lightcoral;
-        border-radius: $borderRadius;
+        &.container {
+            position: fixed;
+            top: $top;
+            left: 100 - $side;
+            margin-left: -$thickness;
+
+            height: $tall;
+            width: $thickness;
+            border-radius: $borderRadius;
+            flex-direction: column;
+            justify-content: space-between;
+
+            //background: lightcoral;
+        }
     }
 
     &.bottom-row {
-        position: fixed;
-        left: $left;
-        bottom: 5%;
-        height: $thickness;
-        width: $wide;
-        background: lightcoral;
-        border-radius: $borderRadius;
-    }
+        &.container {
+            position: fixed;
+            left: $left;
+            top: 87.5%;
+            bottom-margin: -$thickness;
 
-    &.middle {
-        position: fixed;
-        top: 25%;
-        left: 20%;
-        height: 55%;
-        width: 60%;
-        background: lightskyblue;
-        border-radius: $borderRadius;
+            height: $thickness;
+            width: $wide;
+            border-radius: $borderRadius;
+            flex-direction: row;
+            justify-content: space-between;
+
+            //background: lightcoral;
+        }
+    }
+}
+
+.start {
+    &.container {
+        display: flex;
+        justify-content: center;
+        border-radius: 50%;
+        background: red;
+        height: $thickness;
+        width: $thickness;
     }
 }
 
 .position {
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    background: blue;
-    height: $thickness;
-    width: $thickness;
+    &.container {
+        display: flex;
+        justify-content: center;
+        border-radius: 50%;
+        background: blue;
+        height: $thickness;
+        width: $thickness;
+    }
 }
 
 .barrier {
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    background: green;
-    height: $thickness;
-    width: $thickness;
-}
-
-.start {
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    background: yellow;
-    height: $thickness*2;
-    width: $thickness*2;
-    margin-top: 0;
-    margin-left: -$thickness/2;
+    &.container {
+        display: flex;
+        justify-content: center;
+        border-radius: 50%;
+        background: green;
+        height: $thickness;
+        width: $thickness;
+    }
 }
 
 .end {
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
-    background: orange;
-    height: $thickness*2;
-    width: $thickness*2;
-    margin-top: -$thickness/2;
-    margin-left: -$thickness/2;
+    &.container {
+        display: flex;
+        justify-content: center;
+        border-radius: 50%;
+        background: orange;
+        height: $thickness;
+        width: $thickness;
+    }
 }
