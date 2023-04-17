@@ -87,9 +87,23 @@ const Home = (props) => {
   let webSocket = Stomper.getInstance();
 
   useEffect(() => {
-    async function fetchData() {}
+    async function fetchData() {
+
+      webSocket.join("/topic/games", countNumberOfLobbies);
+
+      webSocket.send("/app/games/getAllGames", { message: "GET ALL GAMES" });
+
+    }
     fetchData();
   }, []);
+
+  // Test function to count the number of games received through /topic/games
+  const countNumberOfLobbies = (message) => {
+    if (message.body) {
+      var games = JSON.parse(message.body);
+      console.log("Number of games received: " + games.length);
+    }
+  }
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
@@ -105,6 +119,12 @@ const Home = (props) => {
    */
   const joinGame = async () => {
     try {
+
+      /* subscribe to topic/games/{gameId} */
+      webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+
       const token = JSON.parse(localStorage.getItem("token")).token;
       const response = await api.post(
         `/games/` + gameIdToJoin,
@@ -305,14 +325,11 @@ const Home = (props) => {
         width="15%"
         onClick={() => movePlayer()}
       >
-        Move Player 1
+        Move Player
       </Button>
       <div className="login form">
-        <FormField
-          label="movePlayer"
-          value={playerToMove}
-          onChange={(un) => setPlayerToMove(un)}
-        />
+        <FormField label="moveGame" value={gameToMove} onChange={(un) => setGameToMove(un)} />
+        <FormField label="movePlayer" value={playerToMove} onChange={(un) => setPlayerToMove(un)} />
       </div>
 
       <Button className="primary-button" width="15%" onClick={() => nextTurn()}>

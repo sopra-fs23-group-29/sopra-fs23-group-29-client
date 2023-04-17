@@ -67,13 +67,11 @@ const Registration = (props) => {
         "token",
         JSON.stringify({ token: token, id: user.id, username: user.username })
       );
-      
+
       let webSocket = Stomper.getInstance();
       webSocket.connect().then(() => {
-        webSocket.join("/topic/games", countNumberOfLobbies);
+        history.push(`/`);
       });
-
-      history.push(`/`);
 
       // Registration successfully worked --> navigate to the route /game in the GameRouter
     } catch (error) {
