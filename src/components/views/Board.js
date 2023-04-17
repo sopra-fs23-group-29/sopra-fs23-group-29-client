@@ -102,10 +102,6 @@ export class Board{
             <div className="board bottom-row">
 
             </div>
-
-            <div className="board middle">
-
-            </div>
         </BaseContainer>
     }
 }
