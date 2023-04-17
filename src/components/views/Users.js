@@ -55,7 +55,7 @@ const Users = () => {
                 // See here to get more data.
                 console.log(response);
                 
-                // subscribe to /users
+                // subscribe to /users - no .connect() needed
                 let webSocket = Stomper.getInstance();
                 webSocket.join("/topic/users", function (payload) {
                     console.log(JSON.parse(payload.body).content);

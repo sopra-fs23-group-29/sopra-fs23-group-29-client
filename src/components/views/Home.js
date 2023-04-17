@@ -68,37 +68,12 @@ const Home = (props) => {
   const [barrierAnswer, setBarrierAnswer] = useState(null);
   const [playerToMove, setPlayerToMove] = useState(null);
 
-  // let webSocket = Stomper.getInstance();
+  let webSocket = Stomper.getInstance();
 
   useEffect(() => {
-    async function fetchData() {
-      
-      /* join the topic/games to get all open lobbies as soon as the home page is opened
-      update the display of all lobbies whenever they change
-      */
-      // console.log("Joining /topic/games from Home.js...")
-      
-      // webSocket.connect().then(() => {
-      //   webSocket.join("/topic/games", function (payload) {
-      //     console.log(JSON.parse(payload.body).content);
-      //   });
-      // });
-      // webSocket.join("/topic/games", function (payload) {
-      //   console.log(JSON.parse(payload.body).content);
-      // });
-
-      console.log("asdf");
-
-    }
+    async function fetchData() {}
     fetchData();
   }, []);
-
-  const countNumberOfLobbies = (message) => {
-    if (message.body) {
-      var games = JSON.parse(message.body);
-      console.log("Number of games received: " + games.length);
-    }
-  }
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
@@ -150,48 +125,48 @@ const Home = (props) => {
   /* Fake call to start game with ID 1
    */
   const startGame1 = () => {
-    // webSocket.send("/app/games/1/startGame", { message: "START GAME 1" });
+    webSocket.send("/app/games/1/startGame", { message: "START GAME 1" });
   };
 
   /* Fake call to save an answer
    */
   const saveAnswerGame1Turn1 = () => {
-    // webSocket.send("/app/games/1/turn/1/player/1/saveAnswer", {
-    //   userToken: JSON.parse(localStorage.getItem("token")).token,
-    //   countryCode: countryCode,
-    //   guess: guess,
-    // });
+    webSocket.send("/app/games/1/turn/1/player/1/saveAnswer", {
+      userToken: JSON.parse(localStorage.getItem("token")).token,
+      countryCode: countryCode,
+      guess: guess,
+    });
   };
 
   /* Fake call to save a barrier answer
    */
   const saveBarrierAnswerGame1Player1 = () => {
-    // webSocket.send("/app/games/1/player/1/resolveBarrierAnswer", {
-    //   userToken: JSON.parse(localStorage.getItem("token")).token,
-    //   guess: barrierAnswer,
-    // });
+    webSocket.send("/app/games/1/player/1/resolveBarrierAnswer", {
+      userToken: JSON.parse(localStorage.getItem("token")).token,
+      guess: barrierAnswer,
+    });
   };
 
   /* Fake call to end the current turn in game with ID 1
    */
   const endTurn1 = () => {
-    // webSocket.send("/app/games/1/turn/1/endTurn", {
-    //   message: "END TURN GAME 1",
-    // });
+    webSocket.send("/app/games/1/turn/1/endTurn", {
+      message: "END TURN GAME 1",
+    });
   };
 
   /* Fake call to move player with ID 1 in game 1
    */
   const movePlayer1 = () => {
-    // webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {
-    //   message: "MOVE PLAYER" + playerToMove + "BY ONE",
-    // });
+    webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {
+      message: "MOVE PLAYER" + playerToMove + "BY ONE",
+    });
   };
 
   /* Fake call to start next turn in game with ID 1
    */
   const nextTurn = () => {
-    // webSocket.send("/app/games/1/nextTurn", { message: "START NEXT TURN" });
+    webSocket.send("/app/games/1/nextTurn", { message: "START NEXT TURN" });
   };
 
   return (

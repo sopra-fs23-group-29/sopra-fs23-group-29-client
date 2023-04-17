@@ -43,6 +43,14 @@ const Login = (props) => {
     history.push("/registration");
   };
 
+  // Test function to count the number of games received through /topic/games
+  const countNumberOfLobbies = (message) => {
+    if (message.body) {
+      var games = JSON.parse(message.body);
+      console.log("Number of games received: " + games.length);
+    }
+  }
+
   const doLogin = async () => {
     try {
       // Check if a user comes back, meaning the user exists and pw is correct
@@ -62,22 +70,9 @@ const Login = (props) => {
 
       let webSocket = Stomper.getInstance();
       webSocket.connect().then(() => {
-        webSocket.join("/topic/games", function (payload) {
-          console.log(JSON.parse(payload.body).content);
-        });
+        webSocket.join("/topic/games", countNumberOfLobbies);
       });
 
-      // let webSocket = Stomper.getInstance().then(() => {
-      //   webSocket.join("/topic/games", function (payload) {
-      //     console.log(JSON.parse(payload.body).content);
-      //   });
-      // });
-
-      // let webSocket = Stomper.getInstance().then(() => {});
-      // webSocket.join("/topic/games", function (payload) {
-      //   console.log(JSON.parse(payload.body).content);
-      // });
-    
       history.push(`/`);
 
       // Login successfully worked --> navigate to the route /game in the GameRouter

@@ -44,6 +44,14 @@ const Registration = (props) => {
     history.push("/login");
   };
 
+  // Test function to count the number of games received through /topic/games
+  const countNumberOfLobbies = (message) => {
+    if (message.body) {
+      var games = JSON.parse(message.body);
+      console.log("Number of games received: " + games.length);
+    }
+  }
+
   const doRegistration = async () => {
     try {
       const requestBody = JSON.stringify({ password, username });
@@ -62,9 +70,7 @@ const Registration = (props) => {
       
       let webSocket = Stomper.getInstance();
       webSocket.connect().then(() => {
-        webSocket.join("/topic/games", function (payload) {
-          console.log(JSON.parse(payload.body).content);
-        });
+        webSocket.join("/topic/games", countNumberOfLobbies);
       });
 
       history.push(`/`);
