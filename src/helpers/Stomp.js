@@ -7,16 +7,22 @@ import { getWS } from "./getDomain";
 class Stomper {
   static instance = null;
 
-  static getInstance() {
+  static async getInstance() {
+    if (!Stomper.instance) {
+      Stomper.instance = new Stomper();
+      Stomper.instance.connect().then(() => {
+        return Stomper.instance;
+      });
+    }
     return Stomper.instance;
   }
 
-  static async getInstanceFirst() {
-    Stomper.instance = new Stomper();
-    Stomper.instance.connect().then(() => {
-      return Stomper.instance;
-    });
-  }
+  // static async getInstanceFirst() {
+  //   Stomper.instance = new Stomper();
+  //   Stomper.instance.connect().then(() => {
+  //     return Stomper.instance;
+  //   });
+  // }
 
   socket;
   stompClient;

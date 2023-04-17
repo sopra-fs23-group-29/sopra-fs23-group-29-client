@@ -43,6 +43,14 @@ const Login = (props) => {
     history.push("/registration");
   };
 
+  const connectWebSocket = async () => {
+    let webSocket = Stomper.getInstance().then(() => {
+      webSocket.join("/topic/games", function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+    });
+  }
+
   const doLogin = async () => {
     try {
       // Check if a user comes back, meaning the user exists and pw is correct
@@ -59,12 +67,16 @@ const Login = (props) => {
         "token",
         JSON.stringify({ token: token, id: user.id, username: user.username })
       );
-      let webSocket = Stomper.getInstance().then(() => {
-        webSocket.join("/topic/games", function (payload) {
-          console.log(JSON.parse(payload.body).content);
-        });
-      });
-      
+
+      connectWebSocket().then(() => {});
+
+      // let webSocket = Stomper.getInstance().then(() => {
+      //   webSocket.join("/topic/games", function (payload) {
+      //     console.log(JSON.parse(payload.body).content);
+      //   });
+      // });
+
+      // let webSocket = Stomper.getInstance().then(() => {});
       // webSocket.join("/topic/games", function (payload) {
       //   console.log(JSON.parse(payload.body).content);
       // });
