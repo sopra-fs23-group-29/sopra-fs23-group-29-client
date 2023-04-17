@@ -30,10 +30,10 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/game">
+        <Route path="/games">
           <GameGuard>
             <HeaderGame />
-            <GameRouter base="/game" />
+            <GameRouter base="/games" />
           </GameGuard>
         </Route>
 

@@ -1,6 +1,6 @@
 @import 'styles/theme';
 
-.game {
+.users {
   &.container {
     margin-top: 2em;
     background-color: $containerColor;
@@ -29,7 +29,7 @@
 }
 
 .player {
-  @include left
+  @include left;
   &.container {
     margin: 0.5em 0;
     width: 20em;

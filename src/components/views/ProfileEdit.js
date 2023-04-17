@@ -112,7 +112,6 @@ const ProfileEdit = props => {
                             Edit Profile
                         </Button>
                     </div>
-
                     <FormField
                         label="Enter password to delete profile:"
                         value={password}
