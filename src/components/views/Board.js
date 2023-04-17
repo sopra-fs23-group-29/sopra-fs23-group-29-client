@@ -1,8 +1,8 @@
-import {Field, Barrier, Start, End} from "./BoardField";
+import {SimpleField, Field, Barrier, Start, End} from "./BoardField";
 import "styles/views/Board.scss";
 import BaseContainer from "components/ui/BaseContainer";
-
-export class Board{
+import { useState } from "react";
+export class Board {
 
     numFields;
     arrangement = [];
@@ -21,9 +21,9 @@ export class Board{
         let barrier;
 
         // add the start field at the start
-        const start = new Start("purple");
-        this.arrangement.push(start);
-        this.placeField(start, 0);
+        // const start = new Start("purple");
+        // this.arrangement.push(start);
+        // this.placeField(start, 0);
 
         // add the normal fields and barriers
         while (numPlacedFields < this.numFields-1) {
@@ -31,10 +31,9 @@ export class Board{
             index = this.fields.length + this.barriers.length + 1; // +1 due to start
 
             // place a normal field
-            field = new Field("lightblue");
-            this.fields.push(field);
-            this.placeField(field, index)
+            this.placeNormalField(index);
             numPlacedFields += 1;
+            continue;
 
             // behind the 3rd and thereafter behind every 2nd field is a barrier
             if ((numPlacedFields - 3)%2 === 0) {
@@ -45,8 +44,16 @@ export class Board{
         }
 
         // add the end field at the end
-        const end = new End("indigo");
-        this.placeField(end, this.fields.length + this.barriers.length + 1);
+        // const end = new End("indigo");
+        // this.arrangement.push(end);
+        // this.placeField(end, this.fields.length + this.barriers.length + 1);
+    }
+
+    placeNormalField(index) {
+        const field = new Field("lightblue");
+        this.fields.push(field);
+        this.arrangement.push(field);
+        this.placeField(field, index);
     }
 
     placeField(field, index) {
@@ -61,11 +68,13 @@ export class Board{
 
         // left column (from start up)
         if (index < 5) {
+            return [0, `${(4 - index)*100/9}%`];
             field.setPosition(0, `${(4 - index)*100/9}%`);
         }
 
         // top row (left to right)
         else if (index < 21) {
+            return [`${(index - 5)*100/16}%`, 0];
             field.setPosition(`${(index - 5)*100/16}%`, 0)
         }
 
@@ -102,6 +111,25 @@ export class Board{
             <div className="board bottom-row">
 
             </div>
+
+            <div>
+
+            </div>
+
+            <div className="board middle">
+
+            </div>
         </BaseContainer>
+    }
+
+    test() {
+        return (
+            <SimpleField
+                left={this.placeField(0, 5)[0]}
+                top={this.placeField(0, 5)[1]}
+                    >
+
+            </SimpleField>
+        )
     }
 }

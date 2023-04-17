@@ -74,7 +74,7 @@ class Field extends BoardField {
                     position: "absolute",
                     left: `${this.left}`,
                     top: `${this.top}`
-            }}
+                }}
             </div>
         )
     }
@@ -89,7 +89,7 @@ class Barrier extends BoardField {
                     position: "absolute",
                     left: `${this.left}`,
                     top: `${this.top}`
-            }}
+                }}
             </div>
         )
     }
@@ -121,9 +121,17 @@ class End extends BoardField {
                     position: "absolute",
                     left: `${this.left}`,
                     top: `${this.top}`
-            }}
+                }}
             </div>
         )
     }
 }
-export {Field, Barrier, Start, End};
+const SimpleField = () => {
+    return (
+        <div className="position">
+
+        </div>
+    )
+}
+
+export {SimpleField, Field, Barrier, Start, End};
