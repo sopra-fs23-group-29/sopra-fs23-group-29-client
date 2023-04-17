@@ -59,14 +59,17 @@ const Login = (props) => {
         "token",
         JSON.stringify({ token: token, id: user.id, username: user.username })
       );
-      let webSocket = Stomper.getInstance();
-      webSocket.connect().then(() => {
-        webSocket.join("/topic/users", function (payload) {
+      let webSocket = Stomper.getInstance().then(() => {
+        webSocket.join("/topic/games", function (payload) {
           console.log(JSON.parse(payload.body).content);
         });
-        webSocket.send("/app/users", {message : "I JUST LOGGED IN"});
-        history.push(`/`);
       });
+      
+      // webSocket.join("/topic/games", function (payload) {
+      //   console.log(JSON.parse(payload.body).content);
+      // });
+    
+      history.push(`/`);
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
     } catch (error) {
