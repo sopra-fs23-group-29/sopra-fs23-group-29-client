@@ -10,7 +10,6 @@ class Stomper {
   static getInstance() {
     if (!Stomper.instance) {
       Stomper.instance = new Stomper();
-      Stomper.instance.connect();
     }
     return Stomper.instance;
   }
@@ -53,7 +52,7 @@ class Stomper {
     this.openChannels = [];
   }
 
-  connect() {
+  async connect() {
     return new Promise((resolve, reject) => {
       try {
         this.socket.close();

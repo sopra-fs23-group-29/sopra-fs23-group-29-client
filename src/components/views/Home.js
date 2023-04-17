@@ -61,32 +61,49 @@ FormField.propTypes = {
 
 const Home = (props) => {
   const history = useHistory();
+
+  const [gameToAnswer, setGameToAnswer] = useState(null);
+  const [turnToAnswer, setTurnToAnswer] = useState(null);
+  const [playerToAnswer, setPlayerToAnswer] = useState(null);
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
+
   const [gameIdToJoin, setgameIdToJoin] = useState(null);
+
   const [gameIdToLeave, setGameIdToLeave] = useState(null);
+
+  const [gameToStart, setGameToStart] = useState(null);
+
+  const [gameBarrierAnswer, setGameBarrierAnswer] = useState(null);
+  const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null);
   const [barrierAnswer, setBarrierAnswer] = useState(null);
+  
+  const [gameEndTurn, setGameEndTurn] = useState(null);
+  const [turnEndTurn, setTurnEndTurn] = useState(null);
+
+  const [gameToMove, setGameToMove] = useState(null);
   const [playerToMove, setPlayerToMove] = useState(null);
 
   let webSocket = Stomper.getInstance();
 
   useEffect(() => {
     async function fetchData() {
-      let webSocket = Stomper.getInstance();
 
-      // REMOVE join topic/users later
+      webSocket.join("/topic/games", countNumberOfLobbies);
 
-      /* join the topic/games to get all open lobbies as soon as the home page is opened
-      update the display of all lobbies whenever they change
-      */
-      webSocket.join("/topic/games", function (payload) {
-        console.log(JSON.parse(payload.body).content);
-      });
-      webSocket.join("/topic/users", function (payload) {
-        console.log(JSON.parse(payload.body).content);
-      });
+      webSocket.send("/app/games/getAllGames", { message: "GET ALL GAMES" });
+
     }
+    fetchData();
   }, []);
+
+  // Test function to count the number of games received through /topic/games
+  const countNumberOfLobbies = (message) => {
+    if (message.body) {
+      var games = JSON.parse(message.body);
+      console.log("Number of games received: " + games.length);
+    }
+  }
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
@@ -102,6 +119,12 @@ const Home = (props) => {
    */
   const joinGame = async () => {
     try {
+
+      /* subscribe to topic/games/{gameId} */
+      webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+
       const token = JSON.parse(localStorage.getItem("token")).token;
       const response = await api.post(
         `/games/` + gameIdToJoin,
@@ -137,14 +160,14 @@ const Home = (props) => {
 
   /* Fake call to start game with ID 1
    */
-  const startGame1 = () => {
-    webSocket.send("/app/games/1/startGame", { message: "START GAME 1" });
+  const startGame = () => {
+    webSocket.send("/app/games/" + gameToStart +"/startGame", { message: "START GAME " + gameToStart});
   };
 
   /* Fake call to save an answer
    */
-  const saveAnswerGame1Turn1 = () => {
-    webSocket.send("/app/games/1/turn/1/player/1/saveAnswer", {
+  const saveAnswer = () => {
+    webSocket.send(`/app/games/${gameToAnswer}/turn/${turnToAnswer}/player/${playerToAnswer}/saveAnswer`, {
       userToken: JSON.parse(localStorage.getItem("token")).token,
       countryCode: countryCode,
       guess: guess,
@@ -153,8 +176,8 @@ const Home = (props) => {
 
   /* Fake call to save a barrier answer
    */
-  const saveBarrierAnswerGame1Player1 = () => {
-    webSocket.send("/app/games/1/player/1/resolveBarrierAnswer", {
+  const saveBarrierAnswer = () => {
+    webSocket.send(`/app/games/${gameBarrierAnswer}/player/${playerBarrierAnswer}/resolveBarrierAnswer`, {
       userToken: JSON.parse(localStorage.getItem("token")).token,
       guess: barrierAnswer,
     });
@@ -162,16 +185,16 @@ const Home = (props) => {
 
   /* Fake call to end the current turn in game with ID 1
    */
-  const endTurn1 = () => {
-    webSocket.send("/app/games/1/turn/1/endTurn", {
-      message: "END TURN GAME 1",
+  const endTurn = () => {
+    webSocket.send(`/app/games/${gameEndTurn}/turn/${turnEndTurn}/endTurn`, {
+      message: `End turn game ${gameEndTurn}, turn ${turnEndTurn}`,
     });
   };
 
   /* Fake call to move player with ID 1 in game 1
    */
-  const movePlayer1 = () => {
-    webSocket.send("/app/games/1/player/" + playerToMove + "/moveByOne", {
+  const movePlayer = () => {
+    webSocket.send(`/app/games/${gameToMove}/player/${playerToMove}/moveByOne`, {
       message: "MOVE PLAYER" + playerToMove + "BY ONE",
     });
   };
@@ -194,6 +217,8 @@ const Home = (props) => {
         Create Multiplayer Lobby
       </Button>
 
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -202,10 +227,11 @@ const Home = (props) => {
         Single Player Game
       </Button>
 
+
+
       <Button className="primary-button" width="15%" onClick={() => joinGame()}>
         Join game
       </Button>
-
       <div className="login form">
         <FormField
           label="gameToJoin"
@@ -214,6 +240,8 @@ const Home = (props) => {
         />
       </div>
 
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -221,7 +249,6 @@ const Home = (props) => {
       >
         Leave game
       </Button>
-
       <div className="login form">
         <FormField
           label="gameToLeave"
@@ -229,65 +256,80 @@ const Home = (props) => {
           onChange={(un) => setGameIdToLeave(un)}
         />
       </div>
+      
 
       <Button
         className="primary-button"
         width="15%"
-        onClick={() => startGame1()}
+        onClick={() => startGame()}
       >
-        Start Game 1
+        Start game
       </Button>
-
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => saveAnswerGame1Turn1()}
-      >
-        Save Answer Game 1 Turn 1
-      </Button>
-
       <div className="login form">
         <FormField
-          label="countryCode"
-          value={countryCode}
-          onChange={(un) => setCountryCode(un)}
+          label="gameToStart"
+          value={gameIdToLeave}
+          onChange={(un) => setGameToStart(un)}
         />
+      </div>
+
+
+
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => saveAnswer()}
+      >
+        Save Answer
+      </Button>
+      <div className="login form">
+        <FormField label="game" value={gameToAnswer} onChange={(un) => setGameToAnswer(un)} />
+        <FormField label="turn" value={turnToAnswer} onChange={(n) => setTurnToAnswer(n)} />
+        <FormField label="player" value={playerToAnswer} onChange={(n) => setPlayerToAnswer(n)} />
+        <FormField label="countryCode" value={countryCode} onChange={(n) => setCountryCode(n)} />
         <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
       </div>
 
+
+
+
       <Button
         className="primary-button"
         width="15%"
-        onClick={() => saveBarrierAnswerGame1Player1()}
+        onClick={() => saveBarrierAnswer()}
       >
-        Save Barrier Answer Game 1 Player 1
+        Save Barrier Answer
       </Button>
-
       <div className="login form">
-        <FormField
-          label="barrierAnswer"
-          value={barrierAnswer}
-          onChange={(un) => setBarrierAnswer(un)}
-        />
+        <FormField label="gameBarrierAnswer" value={gameBarrierAnswer} onChange={(un) => setGameBarrierAnswer(un)} />
+        <FormField label="playerBarrierAnswer" value={playerBarrierAnswer} onChange={(un) => setplayerBarrierAnswer(un)} />
+        <FormField label="barrierAnswer" value={barrierAnswer} onChange={(un) => setBarrierAnswer(un)} />
       </div>
 
-      <Button className="primary-button" width="15%" onClick={() => endTurn1()}>
-        End Turn Game 1 Turn 1
+
+
+
+      <Button className="primary-button" width="15%" onClick={() => endTurn()}>
+        End Turn
       </Button>
+      <div className="login form">
+        <FormField label="gameEndTurn" value={gameEndTurn} onChange={(un) => setGameEndTurn(un)} />
+        <FormField label="turnEndTurn" value={turnEndTurn} onChange={(un) => setTurnEndTurn(un)} />
+      </div>
+
+
+
 
       <Button
         className="primary-button"
         width="15%"
-        onClick={() => movePlayer1()}
+        onClick={() => movePlayer()}
       >
-        Move Player 1
+        Move Player
       </Button>
       <div className="login form">
-        <FormField
-          label="movePlayer"
-          value={playerToMove}
-          onChange={(un) => setPlayerToMove(un)}
-        />
+        <FormField label="moveGame" value={gameToMove} onChange={(un) => setGameToMove(un)} />
+        <FormField label="movePlayer" value={playerToMove} onChange={(un) => setPlayerToMove(un)} />
       </div>
 
       <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
