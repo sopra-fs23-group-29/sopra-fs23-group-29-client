@@ -9,51 +9,183 @@
 
 .game {
   &.container {
-    background: $accent;
+    margin-top: 2em;
+    background: none;
     padding: 1.5em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: $dropShadow;
-  }
-  &.user-list {
-    list-style: none;
-    padding-left: 0;
-  }
-  &.user-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
   }
   & p,h2 {
     margin: 0.5em 0;
   }
 }
 
-.player {
+.middle {
+
+  &.countries {
+    &.container {
+      background: $containerColor;
+      padding: 2em;
+      border-radius: $borderRadius;
+      border-style: solid;
+      border-color: $player1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: $dropShadow;
+      position: fixed;
+      top: 25%;
+      left: 20%;
+      height: 55%;
+      width: 60%;
+    }
+    &.flag-rows {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      height: 100%;
+      width: 100%;
+      margin-bottom: 1em;
+      gap: 1em;
+      justify-content: space-between;
+    }
+    &.flag-container {
+      background: $accentDarkContainerColor;
+      padding: 0.5em;
+      border-radius: $borderRadius;
+      border-style: solid;
+      border-color: $player1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      width: 30%;
+      cursor: pointer;
+    }
+    &.bottom-row {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: row;
+      height: fit-content;
+      width: 100%;
+      margin-bottom: 1em;
+      gap: 1em;
+      justify-content: space-between;
+    }
+    &.number-row {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      height: fit-content;
+    }
+  }
+
+  &.score {
+    &.container {
+      background: $containerColor;
+      padding: 2em;
+      border-radius: $borderRadius;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: $dropShadow;
+      position: fixed;
+      top: 25%;
+      left: 20%;
+      height: 55%;
+      width: 60%;
+    }
+    &.score-rows {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: row;
+      height: 100%;
+      width: 100%;
+      gap: 1em;
+    }
+    &.country-rank {
+      width: fit-content;
+    }
+    &.score-flag {
+      width: fit-content;
+    }
+    &.country-name {
+      width: 12.5em;
+    }
+    &.number-by-player {
+      width: fit-content;
+    }
+    &.score-icon {
+      @include icon;
+      font-size: 1.5em; /* Preferred icon size */
+      color: $accentDark;
+    }
+    &.points-received {
+      width: 6.25em;
+    }
+    &.stats {
+    }
+  }
+
+  &.barrier {
+    &.container {
+      background: $containerColor;
+      padding: 2em;
+      border-radius: $borderRadius;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: $dropShadow;
+      position: fixed;
+      top: 25%;
+      left: 20%;
+      height: 55%;
+      width: 60%;
+    }
+  }
+}
+
+hr.divider {
+  border: 1px solid $accentDarkContainerColor;
+  border-radius: $borderRadius;
+  width: 100%;
+}
+
+.round {
   &.container {
-    margin: 0.5em 0;
-    width: 20em;
-    padding: 10px;
+    // centering the box
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -1em;
+    margin-left: -2.5em;
+    // text and container styling
+    font-weight: bold;
+    font-size: 2em;
+    background: $accentDarkContainerColor;
+    padding: 0.7em;
     border-radius: $borderRadius;
     display: flex;
-    align-items: center;
-    background: lighten($accent, 5);
+    box-shadow: $dropShadow;
+    height: fit-content;
+    width: fit-content;
   }
-  &.name {
-    font-weight: 300;
-    margin-left: 5px;
-  }
-  &.username {
-    font-weight: 500;
-    color: $accentDark;
-  }
-  &.id {
-    margin-left: auto;
-    margin-right: 10px;
-    font-family: $fontMono;
-    font-weight: 300;
+}
+
+.order {
+  &.container {
+    // centering the box
+    position: fixed;
+    top: 96%;
+    margin-top: -1em;
+    // text and container styling
+    font-size: 1em;
+    padding: 0.7em;
+    display: flex;
+    justify-content: space-between;
+    height: fit-content;
+    width: 80%;
   }
 }

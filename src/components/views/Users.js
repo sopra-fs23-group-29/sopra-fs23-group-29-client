@@ -70,8 +70,8 @@ const Users = () => {
     if (users) {
 
         content = (
-            <div className="game">
-                <ul className="game user-list">
+            <div className="users">
+                <ul className="users user-list">
                     {users.map(user => (
                         <Player user={user} key={user.id}/>
                     ))}
@@ -81,7 +81,7 @@ const Users = () => {
     }
 
     return (
-        <BaseContainer className="game container">
+        <BaseContainer className="users container">
             <h2>User</h2>
             {content}
         </BaseContainer>
