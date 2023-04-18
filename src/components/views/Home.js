@@ -33,7 +33,7 @@ const DisplayLobby = ({ lobbies }) => {
   console.log(lobbies);
 
   return (
-    <div width="100%">
+    <ul>
       {lobbies.map((lobby) => (
         <div className="home lobby-container" key={lobbies.gameId}>
           <div>{lobby.gameName}</div>
@@ -45,7 +45,7 @@ const DisplayLobby = ({ lobbies }) => {
           </button>
         </div>
       ))}
-    </div>
+    </ul>
   );
 };
 
