@@ -138,6 +138,9 @@ const Home = (props) => {
    */
   const joinGame = async () => {
     try {
+      /* leave /games */
+      webSocket.leave("/topic/games");
+
       /* subscribe to topic/games/{gameId} */
       webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
         console.log(JSON.parse(payload.body).content);
@@ -163,6 +166,12 @@ const Home = (props) => {
    */
   const leaveGame = async () => {
     try {
+
+      /* unsubscribe to topic/games/{gameId} */
+      webSocket.leave("/topic/games/" + gameIdToLeave, function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+
       const token = JSON.parse(localStorage.getItem("token")).token;
       console.log("leave game: token " + token);
       const response = await api.delete(`/games/` + gameIdToLeave, {
