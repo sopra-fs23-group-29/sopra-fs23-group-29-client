@@ -44,6 +44,8 @@ const DisplayLobby = ({ lobby }) => {
         </button>
       </div>
     );
+  } else {
+    return <div></div>;
   }
 };
 
