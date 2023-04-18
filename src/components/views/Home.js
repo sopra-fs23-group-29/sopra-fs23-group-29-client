@@ -294,7 +294,7 @@ const Home = (props) => {
       </Button>
       <div className="login form">
         <FormField
-          label="gameToLeave"
+          label="gameToJoin"
           value={gameIdToLeave}
           onChange={(un) => setgameIdToJoin(un)}
         />

@@ -25,7 +25,7 @@ class Stomper {
   join(endpoint, callback) {
     if (this.openChannels.indexOf(endpoint) === -1) {
       this.openChannels.push(endpoint);
-      this.stompClient.subscribe(endpoint, callback);
+      this.stompClient.subscribe(endpoint, callback, {id : endpoint}); // add the endpoint also as ID
       console.log("Subscribed to " + endpoint);
     }
   }
