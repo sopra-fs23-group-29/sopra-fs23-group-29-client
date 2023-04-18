@@ -8,8 +8,8 @@ export const Board = (props) => {
     const withBarriers = true;
 
 
-    const getBoardParams = (gamemode) => {
-        switch (gamemode) {
+    const getBoardParams = (mode) => {
+        switch (mode) {
             case "pvp":
                 return [0, 5, 15, 20, 30, 29];
         }
@@ -54,7 +54,10 @@ export const Board = (props) => {
             // normal fields
             else {
                 fields.push(
-                    <Field key={index}>
+                    <Field
+                        key={index}
+                        color="blue"
+                    >
 
                     </Field>
                 )

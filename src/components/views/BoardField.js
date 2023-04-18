@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 const Field = (props) => {
     return (
         <div className="position container"
-            color={props.color}>
+             background={props.color}
+             onChange={(newColor) => props.onChange(props.color)}
+        >
         </div>
     )
 }
@@ -33,6 +35,7 @@ const Barrier = (props) => {
     return (
         <div className="barrier container"
              color={props.color}>
+            <i className="barrier icon">error_outlined</i>
         </div>
     )
 }

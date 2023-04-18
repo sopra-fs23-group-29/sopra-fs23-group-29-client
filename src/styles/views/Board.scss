@@ -1,3 +1,5 @@
+@import "../_theme";
+
 $thickness: 4em;
 $borderRadius: $thickness/2;
 $tall: 70%;
@@ -99,7 +101,7 @@ $margin: 1em;
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        background: blue;
+        background: $containerColor;
         height: $thickness;
         width: $thickness;
     }
@@ -109,10 +111,14 @@ $margin: 1em;
     &.container {
         display: flex;
         justify-content: center;
-        border-radius: 50%;
-        background: green;
         height: $thickness;
         width: $thickness;
+    }
+    &.icon {
+        @include icon;
+        font-size: 77px;
+        color: $textColor;
+        margin: -0.0825em 0 0 1em;
     }
 }
 
