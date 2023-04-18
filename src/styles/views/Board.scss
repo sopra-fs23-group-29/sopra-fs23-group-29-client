@@ -7,7 +7,6 @@ $wide: 85%;
 $top: 17.5%;
 $left: 7.5%;
 $side: 2%;
-$margin: 1em;
 
 .board {
     &.container {
@@ -72,7 +71,6 @@ $margin: 1em;
             position: fixed;
             left: $left;
             top: 87.5%;
-            bottom-margin: -$thickness;
 
             height: $thickness;
             width: $wide;
@@ -90,7 +88,7 @@ $margin: 1em;
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        background: red;
+        background-color: red;
         height: $thickness;
         width: $thickness;
     }
@@ -101,7 +99,7 @@ $margin: 1em;
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        background: $containerColor;
+        background-color: blue;
         height: $thickness;
         width: $thickness;
     }
@@ -117,7 +115,7 @@ $margin: 1em;
     &.icon {
         @include icon;
         font-size: 77px;
-        color: $textColor;
+        color: green;
         margin: -0.0825em 0 0 1em;
     }
 }
@@ -127,7 +125,7 @@ $margin: 1em;
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        background: orange;
+        background-color: orange;
         height: $thickness;
         width: $thickness;
     }

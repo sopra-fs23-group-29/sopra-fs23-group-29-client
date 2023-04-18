@@ -1,61 +1,45 @@
 import React from 'react';
 import "styles/views/Board.scss";
-import PropTypes from "prop-types";
 
-const Field = (props) => {
+const Field = ({color}) => {
     return (
         <div className="position container"
-             background={props.color}
-             onChange={(newColor) => props.onChange(props.color)}
+             style={{background: color}}
+             //onChange={(newColor) => props.onChange(props.color)}
         >
         </div>
     )
 }
 
-Field.propTypes = {
-    color: PropTypes.string,
-    onChange: PropTypes.func,
-};
-
-
-const Start = (props) => {
+const Start = ({color}) => {
     return (
         <div className="start container"
-             color={props.color}>
+             style={{background: color}}
+        >
         </div>
     )
 }
 
-Start.propTypes = {
-    color: PropTypes.string,
-    onChange: PropTypes.func,
-};
 
-const Barrier = (props) => {
+const Barrier = ({color}) => {
     return (
-        <div className="barrier container"
-             color={props.color}>
-            <i className="barrier icon">error_outlined</i>
+        <div className="barrier container">
+            <i className="barrier icon"
+                style={{color: color}}
+            >
+                error_outlined</i>
         </div>
     )
 }
 
-Barrier.propTypes = {
-    color: PropTypes.string,
-    onChange: PropTypes.func,
-};
 
-const End = (props) => {
+const End = ({color}) => {
     return (
         <div className="end container"
-             color={props.color}>
+             style={{background: color}}
+        >
         </div>
     )
 }
-
-End.propTypes = {
-    color: PropTypes.string,
-    onChange: PropTypes.func,
-};
 
 export {Start, Field, Barrier, End};
