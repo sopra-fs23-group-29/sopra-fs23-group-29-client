@@ -123,8 +123,8 @@ const Home = (props) => {
 
   // Test function to count the number of games received through /topic/games
   const displayOpenLobbies = (message) => {
-    if (message.body) {
-      var games = JSON.parse(message.body);
+    var games = JSON.parse(message.body);
+    if (games.length > 0) {
       setLobbies(games);
       setHasLobbies(true);
       console.log("Number of games received: " + games.length);
@@ -176,7 +176,6 @@ const Home = (props) => {
    */
   const leaveGame = async () => {
     try {
-
       /* unsubscribe to topic/games/{gameId} */
       webSocket.leave("/topic/games/" + gameIdToLeave, function (payload) {
         console.log(JSON.parse(payload.body).content);
@@ -263,7 +262,7 @@ const Home = (props) => {
           ))}
         </div>
       ) : (
-        <div>
+        <div className="home lobby-container">
           There are no multiplayer games to join. You can create your own or
           start a single player game below!
         </div>
@@ -282,14 +281,7 @@ const Home = (props) => {
       >
         Single Player Game
       </Button>
-
-
-      
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => joinGame()}
-      >
+      <Button className="primary-button" width="15%" onClick={() => joinGame()}>
         Join game
       </Button>
       <div className="login form">
@@ -299,9 +291,6 @@ const Home = (props) => {
           onChange={(un) => setgameIdToJoin(un)}
         />
       </div>
-      
-      
-      
       <Button
         className="primary-button"
         width="15%"
@@ -316,9 +305,6 @@ const Home = (props) => {
           onChange={(un) => setGameIdToLeave(un)}
         />
       </div>
-
-
-
       <Button
         className="primary-button"
         width="15%"
@@ -333,10 +319,6 @@ const Home = (props) => {
           onChange={(un) => setGameToStart(un)}
         />
       </div>
-
-
-
-
       <Button
         className="primary-button"
         width="15%"
@@ -367,11 +349,6 @@ const Home = (props) => {
         />
         <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
       </div>
-
-
-
-
-
       <Button
         className="primary-button"
         width="15%"
@@ -396,12 +373,6 @@ const Home = (props) => {
           onChange={(un) => setBarrierAnswer(un)}
         />
       </div>
-
-
-
-
-
-
       <Button className="primary-button" width="15%" onClick={() => endTurn()}>
         End Turn
       </Button>
@@ -417,11 +388,6 @@ const Home = (props) => {
           onChange={(un) => setTurnEndTurn(un)}
         />
       </div>
-
-
-
-
-
       <Button
         className="primary-button"
         width="15%"
@@ -441,10 +407,6 @@ const Home = (props) => {
           onChange={(un) => setPlayerToMove(un)}
         />
       </div>
-
-
-
-
       <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
         Start Next Turn
       </Button>
