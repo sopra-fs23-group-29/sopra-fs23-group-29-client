@@ -20,9 +20,15 @@ specific components that belong to the main one in the same file.
 // right now with dummy data, change to real once websockets work
 const DisplayLobby = (props) => {
   const history = useHistory();
-  // must take id of the lobby as props but how?
+
+  /* Joins the lobby and navigates to the lobby page */
   const joinLobby = () => {
+    /* get id from game that should be joined */
     const gameId = 1;
+    /* unsubscribe from topic/games */
+    let webSocket = Stomper.getInstance();
+    webSocket.leave("/topic/games");
+    /* navigate to lobby page */
     history.push(`/lobby/${gameId}`);
   };
 
@@ -77,7 +83,7 @@ const Home = (props) => {
   const [gameBarrierAnswer, setGameBarrierAnswer] = useState(null);
   const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null);
   const [barrierAnswer, setBarrierAnswer] = useState(null);
-  
+
   const [gameEndTurn, setGameEndTurn] = useState(null);
   const [turnEndTurn, setTurnEndTurn] = useState(null);
 
@@ -88,30 +94,33 @@ const Home = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-
       webSocket.join("/topic/games", countNumberOfLobbies);
 
       webSocket.send("/app/games/getAllGames", { message: "GET ALL GAMES" });
-
     }
     fetchData();
   }, []);
+
+  const displayOpenLobbies = (message) => {};
 
   // Test function to count the number of games received through /topic/games
   const countNumberOfLobbies = (message) => {
     if (message.body) {
       var games = JSON.parse(message.body);
       console.log("Number of games received: " + games.length);
+      console.log(games);
     }
-  }
+  };
 
   /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
   const startSoloGame = () => {
+    webSocket.leave("/topic/games");
     history.push("/sologame");
   };
 
   /* Opens the Lobbysettings page (PvP Game) where a name for the game can be entered.*/
   const createGameLobby = () => {
+    webSocket.leave("/topic/games");
     history.push(`/lobby`);
   };
 
@@ -119,7 +128,6 @@ const Home = (props) => {
    */
   const joinGame = async () => {
     try {
-
       /* subscribe to topic/games/{gameId} */
       webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
         console.log(JSON.parse(payload.body).content);
@@ -161,26 +169,34 @@ const Home = (props) => {
   /* Fake call to start game with ID 1
    */
   const startGame = () => {
-    webSocket.send("/app/games/" + gameToStart +"/startGame", { message: "START GAME " + gameToStart});
+    webSocket.send("/app/games/" + gameToStart + "/startGame", {
+      message: "START GAME " + gameToStart,
+    });
   };
 
   /* Fake call to save an answer
    */
   const saveAnswer = () => {
-    webSocket.send(`/app/games/${gameToAnswer}/turn/${turnToAnswer}/player/${playerToAnswer}/saveAnswer`, {
-      userToken: JSON.parse(localStorage.getItem("token")).token,
-      countryCode: countryCode,
-      guess: guess,
-    });
+    webSocket.send(
+      `/app/games/${gameToAnswer}/turn/${turnToAnswer}/player/${playerToAnswer}/saveAnswer`,
+      {
+        userToken: JSON.parse(localStorage.getItem("token")).token,
+        countryCode: countryCode,
+        guess: guess,
+      }
+    );
   };
 
   /* Fake call to save a barrier answer
    */
   const saveBarrierAnswer = () => {
-    webSocket.send(`/app/games/${gameBarrierAnswer}/player/${playerBarrierAnswer}/resolveBarrierAnswer`, {
-      userToken: JSON.parse(localStorage.getItem("token")).token,
-      guess: barrierAnswer,
-    });
+    webSocket.send(
+      `/app/games/${gameBarrierAnswer}/player/${playerBarrierAnswer}/resolveBarrierAnswer`,
+      {
+        userToken: JSON.parse(localStorage.getItem("token")).token,
+        guess: barrierAnswer,
+      }
+    );
   };
 
   /* Fake call to end the current turn in game with ID 1
@@ -194,9 +210,12 @@ const Home = (props) => {
   /* Fake call to move player with ID 1 in game 1
    */
   const movePlayer = () => {
-    webSocket.send(`/app/games/${gameToMove}/player/${playerToMove}/moveByOne`, {
-      message: "MOVE PLAYER" + playerToMove + "BY ONE",
-    });
+    webSocket.send(
+      `/app/games/${gameToMove}/player/${playerToMove}/moveByOne`,
+      {
+        message: "MOVE PLAYER" + playerToMove + "BY ONE",
+      }
+    );
   };
 
   /* Fake call to start next turn in game with ID 1
@@ -217,8 +236,6 @@ const Home = (props) => {
         Create Multiplayer Lobby
       </Button>
 
-
-
       <Button
         className="primary-button"
         width="15%"
@@ -226,8 +243,6 @@ const Home = (props) => {
       >
         Single Player Game
       </Button>
-
-
 
       <Button className="primary-button" width="15%" onClick={() => joinGame()}>
         Join game
@@ -239,8 +254,6 @@ const Home = (props) => {
           onChange={(un) => setgameIdToJoin(un)}
         />
       </div>
-
-
 
       <Button
         className="primary-button"
@@ -256,7 +269,6 @@ const Home = (props) => {
           onChange={(un) => setGameIdToLeave(un)}
         />
       </div>
-      
 
       <Button
         className="primary-button"
@@ -273,8 +285,6 @@ const Home = (props) => {
         />
       </div>
 
-
-
       <Button
         className="primary-button"
         width="15%"
@@ -283,15 +293,28 @@ const Home = (props) => {
         Save Answer
       </Button>
       <div className="login form">
-        <FormField label="game" value={gameToAnswer} onChange={(un) => setGameToAnswer(un)} />
-        <FormField label="turn" value={turnToAnswer} onChange={(n) => setTurnToAnswer(n)} />
-        <FormField label="player" value={playerToAnswer} onChange={(n) => setPlayerToAnswer(n)} />
-        <FormField label="countryCode" value={countryCode} onChange={(n) => setCountryCode(n)} />
+        <FormField
+          label="game"
+          value={gameToAnswer}
+          onChange={(un) => setGameToAnswer(un)}
+        />
+        <FormField
+          label="turn"
+          value={turnToAnswer}
+          onChange={(n) => setTurnToAnswer(n)}
+        />
+        <FormField
+          label="player"
+          value={playerToAnswer}
+          onChange={(n) => setPlayerToAnswer(n)}
+        />
+        <FormField
+          label="countryCode"
+          value={countryCode}
+          onChange={(n) => setCountryCode(n)}
+        />
         <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
       </div>
-
-
-
 
       <Button
         className="primary-button"
@@ -301,24 +324,38 @@ const Home = (props) => {
         Save Barrier Answer
       </Button>
       <div className="login form">
-        <FormField label="gameBarrierAnswer" value={gameBarrierAnswer} onChange={(un) => setGameBarrierAnswer(un)} />
-        <FormField label="playerBarrierAnswer" value={playerBarrierAnswer} onChange={(un) => setplayerBarrierAnswer(un)} />
-        <FormField label="barrierAnswer" value={barrierAnswer} onChange={(un) => setBarrierAnswer(un)} />
+        <FormField
+          label="gameBarrierAnswer"
+          value={gameBarrierAnswer}
+          onChange={(un) => setGameBarrierAnswer(un)}
+        />
+        <FormField
+          label="playerBarrierAnswer"
+          value={playerBarrierAnswer}
+          onChange={(un) => setplayerBarrierAnswer(un)}
+        />
+        <FormField
+          label="barrierAnswer"
+          value={barrierAnswer}
+          onChange={(un) => setBarrierAnswer(un)}
+        />
       </div>
-
-
-
 
       <Button className="primary-button" width="15%" onClick={() => endTurn()}>
         End Turn
       </Button>
       <div className="login form">
-        <FormField label="gameEndTurn" value={gameEndTurn} onChange={(un) => setGameEndTurn(un)} />
-        <FormField label="turnEndTurn" value={turnEndTurn} onChange={(un) => setTurnEndTurn(un)} />
+        <FormField
+          label="gameEndTurn"
+          value={gameEndTurn}
+          onChange={(un) => setGameEndTurn(un)}
+        />
+        <FormField
+          label="turnEndTurn"
+          value={turnEndTurn}
+          onChange={(un) => setTurnEndTurn(un)}
+        />
       </div>
-
-
-
 
       <Button
         className="primary-button"
@@ -328,8 +365,16 @@ const Home = (props) => {
         Move Player
       </Button>
       <div className="login form">
-        <FormField label="moveGame" value={gameToMove} onChange={(un) => setGameToMove(un)} />
-        <FormField label="movePlayer" value={playerToMove} onChange={(un) => setPlayerToMove(un)} />
+        <FormField
+          label="moveGame"
+          value={gameToMove}
+          onChange={(un) => setGameToMove(un)}
+        />
+        <FormField
+          label="movePlayer"
+          value={playerToMove}
+          onChange={(un) => setPlayerToMove(un)}
+        />
       </div>
 
       <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
