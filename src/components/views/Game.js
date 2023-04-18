@@ -10,7 +10,6 @@ import {Board} from "./Board";
 
 
 const Game = props => {
-    const board = new Board(10);
     const history = useHistory();
 
     // Variable to change right now
@@ -23,7 +22,8 @@ const Game = props => {
         <BaseContainer className="round container">
             Round {roundNumber}
         </BaseContainer>);
-    const roundTimeout = setTimeout(content, 1000);
+
+    //const roundTimeout = setTimeout(content, 1000);
 
     // End Turn
     const endTurn = () => {
@@ -170,7 +170,9 @@ const Game = props => {
 
     return (
         <BaseContainer className="game container">
-            {board.displayBoard()}
+            <Board>
+
+            </Board>
             {content}
             <BaseContainer className="order container">
                 <div>Username 1</div>
