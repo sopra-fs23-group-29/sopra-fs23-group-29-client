@@ -1,18 +1,44 @@
 import {Start, Field, Barrier, End} from "./BoardField";
 import React from 'react';
 import "styles/views/Board.scss";
+import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
+import PropTypes from "prop-types";
 
 
 export const Board = (props) => {
-    const withBarriers = true;
-
+    let withBarriers = true;
 
     const getBoardParams = (mode) => {
         switch (mode) {
-            case "pvp":
+            case "pvp-large":
                 return [0, 5, 15, 20, 30, 29];
+            case "pvp-small":
+                withBarriers = false;
+                return [0, 3, 8, 11, 16, 15];
         }
+    }
+
+    const isBarrier = (index, end) => {
+        return ((index - 1)%3 === 0)
+                && (index > 3)
+                && (end - index > 2)
+    }
+    function createColorArray(end) {
+        let index = 0;
+        let colorArray = [];
+        while (index <= end)  {
+            if (withBarriers && isBarrier(index, end)) {
+                colorArray.push(theme.textColor);
+                //colorArray.push("red");
+            } else {
+                colorArray.push(theme.containerColor)
+                //colorArray.push("blue");
+            }
+            index += 1;
+        }
+
+        return colorArray;
     }
 
     function fieldMapper(min, max, end) {
@@ -26,29 +52,28 @@ export const Board = (props) => {
             // start
             if (index === 0) {
                 fields.push(
-                    <Start key={index}>
-
-                    </Start>
+                    <Start
+                        key={index}
+                        color={colors[index]}
+                    />
                 )
             }
             // end
             else if (index === end) {
                 fields.push(
-                    <End key={index}>
-
-                    </End>
+                    <End
+                        key={index}
+                        color={colors[index]}
+                    />
                 )
             }
             // barriers
-            else if (withBarriers
-                        && ((index - 1)%3 === 0)
-                        && (index > 3)
-                        && (end - index > 2)
-            ) {
+            else if (withBarriers && isBarrier(index, end)) {
                 fields.push(
-                    <Barrier key={index}>
-
-                    </Barrier>
+                    <Barrier
+                        key={index}
+                        color={colors[index]}
+                    />
                 )
             }
             // normal fields
@@ -56,10 +81,8 @@ export const Board = (props) => {
                 fields.push(
                     <Field
                         key={index}
-                        color="blue"
-                    >
-
-                    </Field>
+                        color={colors[index]}
+                    />
                 )
             }
             index += 1;
@@ -67,12 +90,12 @@ export const Board = (props) => {
         return fields;
     }
 
-
-    const boardParams = getBoardParams("pvp");
+    const boardParams = getBoardParams("pvp-large");
+    const colors = createColorArray(boardParams[5])
     return <BaseContainer className="board container">
         <div className="board left-column container">
             {
-                // these are bottom up, hence reverse()
+                // bottom to top, hence reverse()
                 fieldMapper(boardParams[0], boardParams[1], boardParams[5]).reverse()
             }
         </div>
@@ -99,3 +122,8 @@ export const Board = (props) => {
         </div>
     </BaseContainer>
 }
+
+Board.propTypes = {
+    mode: PropTypes.string,
+    onChange: PropTypes.func,
+};

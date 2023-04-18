@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
-import User from "models/User";
+import { Spinner } from "components/ui/Spinner";
 import { useHistory } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Home.scss";
@@ -18,35 +18,44 @@ specific components that belong to the main one in the same file.
 
 /* Displays the lobbies that people can join*/
 // right now with dummy data, change to real once websockets work
-const DisplayLobby = ({ lobbies }) => {
+const DisplayLobby = ({ lobby }) => {
   const history = useHistory();
+  let players = lobby.players;
 
   /* Joins the lobby and navigates to the lobby page */
-  const joinLobby = (id) => {
-    /* unsubscribe from topic/games */
-    let webSocket = Stomper.getInstance();
-    webSocket.leave("/topic/games");
-    /* navigate to lobby page */
-    history.push(`/lobby/${id}`);
+  const joinLobby = async (id) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token")).token;
+      await api.post(`/games/${id}`, {}, { headers: { Authorization: token } });
+
+      /* unsubscribe from topic/games */
+      let webSocket = Stomper.getInstance();
+      webSocket.leave("/topic/games");
+      /* navigate to lobby page */
+      history.push(`/lobby/${id}`);
+    } catch (error) {
+      alert(
+        `Something went wrong while creating game: \n${handleError(error)}`
+      );
+    }
   };
 
-  console.log(lobbies);
-
-  return (
-    <ul>
-      {lobbies.map((lobby) => (
-        <div className="home lobby-container" key={lobbies.gameId}>
-          <div>{lobby.gameName}</div>
-          <button
-            className="home lobby-container button"
-            onClick={() => joinLobby(lobby.gameId)}
-          >
-            Join Lobby
-          </button>
-        </div>
-      ))}
-    </ul>
-  );
+  if (lobby.joinable) {
+    return (
+      <div className="home lobby-container">
+        <div>{lobby.gameName}</div>
+        <div>{players.length}/6</div>
+        <button
+          className="home lobby-container button"
+          onClick={() => joinLobby(lobby.gameId)}
+        >
+          Join Lobby
+        </button>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
 };
 
 const FormField = (props) => {
@@ -74,14 +83,13 @@ const Home = (props) => {
   let webSocket = Stomper.getInstance();
 
   const [lobbies, setLobbies] = useState([]);
+  const [hasLobbies, setHasLobbies] = useState(false);
 
   const [gameToAnswer, setGameToAnswer] = useState(null);
   const [turnToAnswer, setTurnToAnswer] = useState(null);
   const [playerToAnswer, setPlayerToAnswer] = useState(null);
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
-
-  const [gameIdToJoin, setgameIdToJoin] = useState(null);
 
   const [gameIdToLeave, setGameIdToLeave] = useState(null);
 
@@ -99,7 +107,7 @@ const Home = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      webSocket.join("/topic/games", countNumberOfLobbies);
+      webSocket.join("/topic/games", displayOpenLobbies);
 
       webSocket.send("/app/games/getAllGames", { message: "GET ALL GAMES" });
     }
@@ -108,15 +116,15 @@ const Home = (props) => {
 
   useEffect(() => {
     console.log(lobbies);
-  }, [lobbies]);
-
-  const displayOpenLobbies = (message) => {};
+    console.log(hasLobbies);
+  }, [lobbies, hasLobbies]);
 
   // Test function to count the number of games received through /topic/games
-  const countNumberOfLobbies = (message) => {
+  const displayOpenLobbies = (message) => {
     if (message.body) {
       var games = JSON.parse(message.body);
       setLobbies(games);
+      setHasLobbies(true);
       console.log("Number of games received: " + games.length);
       console.log(games);
     }
@@ -245,8 +253,19 @@ const Home = (props) => {
 
   return (
     <BaseContainer className="home container">
-      <h2>PvP Lobbies</h2>
-      <DisplayLobby lobbies={lobbies} />
+      <h2>PvP Lobbies</h2>{" "}
+      {hasLobbies ? (
+        <div>
+          {lobbies.map((lobby) => (
+            <DisplayLobby lobby={lobby} key={lobby.gameId} />
+          ))}
+        </div>
+      ) : (
+        <div>
+          There are no multiplayer games to join. You can create your own or
+          start a single player game below!
+        </div>
+      )}
       <Button
         className="primary-button"
         width="20%"
@@ -254,7 +273,6 @@ const Home = (props) => {
       >
         Create Multiplayer Lobby
       </Button>
-
       <Button
         className="primary-button"
         width="15%"
@@ -262,18 +280,6 @@ const Home = (props) => {
       >
         Single Player Game
       </Button>
-
-      <Button className="primary-button" width="15%" onClick={() => joinGame()}>
-        Join game
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameToJoin"
-          value={gameIdToJoin}
-          onChange={(un) => setgameIdToJoin(un)}
-        />
-      </div>
-
       <Button
         className="primary-button"
         width="15%"
@@ -288,7 +294,6 @@ const Home = (props) => {
           onChange={(un) => setGameIdToLeave(un)}
         />
       </div>
-
       <Button
         className="primary-button"
         width="15%"
@@ -303,7 +308,6 @@ const Home = (props) => {
           onChange={(un) => setGameToStart(un)}
         />
       </div>
-
       <Button
         className="primary-button"
         width="15%"
@@ -334,7 +338,6 @@ const Home = (props) => {
         />
         <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
       </div>
-
       <Button
         className="primary-button"
         width="15%"
@@ -359,7 +362,6 @@ const Home = (props) => {
           onChange={(un) => setBarrierAnswer(un)}
         />
       </div>
-
       <Button className="primary-button" width="15%" onClick={() => endTurn()}>
         End Turn
       </Button>
@@ -375,7 +377,6 @@ const Home = (props) => {
           onChange={(un) => setTurnEndTurn(un)}
         />
       </div>
-
       <Button
         className="primary-button"
         width="15%"
@@ -395,7 +396,6 @@ const Home = (props) => {
           onChange={(un) => setPlayerToMove(un)}
         />
       </div>
-
       <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
         Start Next Turn
       </Button>
