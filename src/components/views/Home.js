@@ -91,6 +91,8 @@ const Home = (props) => {
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
 
+  const [gameIdToJoin, setgameIdToJoin] = useState(null);
+
   const [gameIdToLeave, setGameIdToLeave] = useState(null);
 
   const [gameToStart, setGameToStart] = useState(null);
@@ -142,10 +144,44 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
+  /* Fake call to join a game
+   */
+  const joinGame = async () => {
+    try {
+      /* leave /games */
+      webSocket.leave("/topic/games");
+
+      /* subscribe to topic/games/{gameId} */
+      webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+
+      const token = JSON.parse(localStorage.getItem("token")).token;
+      const response = await api.post(
+        `/games/` + gameIdToJoin,
+        {},
+        { headers: { Authorization: token } }
+      );
+
+      // Edit successfully worked --> navigate to the route /profile/id
+      console.log("Joined game");
+    } catch (error) {
+      alert(
+        `Something went wrong while creating game: \n${handleError(error)}`
+      );
+    }
+  };
+
   /* Fake call to leave a game
    */
   const leaveGame = async () => {
     try {
+
+      /* unsubscribe to topic/games/{gameId} */
+      webSocket.leave("/topic/games/" + gameIdToLeave, function (payload) {
+        console.log(JSON.parse(payload.body).content);
+      });
+
       const token = JSON.parse(localStorage.getItem("token")).token;
       console.log("leave game: token " + token);
       const response = await api.delete(`/games/` + gameIdToLeave, {
@@ -246,6 +282,26 @@ const Home = (props) => {
       >
         Single Player Game
       </Button>
+
+
+      
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => joinGame()}
+      >
+        Join game
+      </Button>
+      <div className="login form">
+        <FormField
+          label="gameToJoin"
+          value={gameIdToLeave}
+          onChange={(un) => setgameIdToJoin(un)}
+        />
+      </div>
+      
+      
+      
       <Button
         className="primary-button"
         width="15%"
@@ -260,6 +316,9 @@ const Home = (props) => {
           onChange={(un) => setGameIdToLeave(un)}
         />
       </div>
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -274,6 +333,10 @@ const Home = (props) => {
           onChange={(un) => setGameToStart(un)}
         />
       </div>
+
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -304,6 +367,11 @@ const Home = (props) => {
         />
         <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
       </div>
+
+
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -328,6 +396,12 @@ const Home = (props) => {
           onChange={(un) => setBarrierAnswer(un)}
         />
       </div>
+
+
+
+
+
+
       <Button className="primary-button" width="15%" onClick={() => endTurn()}>
         End Turn
       </Button>
@@ -343,6 +417,11 @@ const Home = (props) => {
           onChange={(un) => setTurnEndTurn(un)}
         />
       </div>
+
+
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -362,6 +441,10 @@ const Home = (props) => {
           onChange={(un) => setPlayerToMove(un)}
         />
       </div>
+
+
+
+
       <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
         Start Next Turn
       </Button>
