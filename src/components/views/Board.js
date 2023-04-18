@@ -4,24 +4,18 @@ import "styles/views/Board.scss";
 import BaseContainer from "components/ui/BaseContainer";
 
 
-export class Board {
-
-    numFields = 29;
-    arrangement = [];
-    fields = [];
-    barriers = [];
-
-    withBarriers = true;
+export const Board = (props) => {
+    const withBarriers = true;
 
 
-    getBoardParams(gamemode) {
+    const getBoardParams = (gamemode) => {
         switch (gamemode) {
             case "pvp":
-                return [0, 5, 15, 20, 30];
+                return [0, 5, 15, 20, 30, 29];
         }
     }
 
-    fieldMapper(min, max) {
+    function fieldMapper(min, max, end) {
         if (max <= min) {
             throw new Error("max needs to be larger than min!")
         }
@@ -38,7 +32,7 @@ export class Board {
                 )
             }
             // end
-            else if (index === this.numFields) {
+            else if (index === end) {
                 fields.push(
                     <End key={index}>
 
@@ -46,7 +40,11 @@ export class Board {
                 )
             }
             // barriers
-            else if (this.withBarriers && ((index - 3)%3 === 0)) {
+            else if (withBarriers
+                        && ((index - 1)%3 === 0)
+                        && (index > 3)
+                        && (end - index > 2)
+            ) {
                 fields.push(
                     <Barrier key={index}>
 
@@ -67,36 +65,34 @@ export class Board {
     }
 
 
-    displayBoard() {
-        const boardParams = this.getBoardParams("pvp");
-        return <BaseContainer className="board container">
-            <div className="board left-column container">
-                {
-                    // these are bottom up, hence reverse()
-                    this.fieldMapper(boardParams[0], boardParams[1]).reverse()
-                }
-            </div>
+    const boardParams = getBoardParams("pvp");
+    return <BaseContainer className="board container">
+        <div className="board left-column container">
+            {
+                // these are bottom up, hence reverse()
+                fieldMapper(boardParams[0], boardParams[1], boardParams[5]).reverse()
+            }
+        </div>
 
-            <div className="board top-row container">
-                {
-                    // left to right
-                    this.fieldMapper(boardParams[1], boardParams[2])
-                }
-            </div>
+        <div className="board top-row container">
+            {
+                // left to right
+                fieldMapper(boardParams[1], boardParams[2], boardParams[5])
+            }
+        </div>
 
-            <div className="board right-column container">
-                {
-                    // top to bottom
-                    this.fieldMapper(boardParams[2], boardParams[3])
-                }
-            </div>
+        <div className="board right-column container">
+            {
+                // top to bottom
+                fieldMapper(boardParams[2], boardParams[3], boardParams[5])
+            }
+        </div>
 
-            <div className="board bottom-row container">
-                {
-                    // right to left, hence reverse()
-                    this.fieldMapper(boardParams[3], boardParams[4]).reverse()
-                }
-            </div>
-        </BaseContainer>
-    }
+        <div className="board bottom-row container">
+            {
+                // right to left, hence reverse()
+                fieldMapper(boardParams[3], boardParams[4], boardParams[5]).reverse()
+            }
+        </div>
+    </BaseContainer>
 }

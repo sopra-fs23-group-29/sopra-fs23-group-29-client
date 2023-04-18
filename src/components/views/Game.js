@@ -10,7 +10,6 @@ import {Board} from "./Board";
 
 
 const Game = props => {
-    const board = new Board(10);
     const history = useHistory();
 
     // Variable to change right now
@@ -171,7 +170,9 @@ const Game = props => {
 
     return (
         <BaseContainer className="game container">
-            {board.displayBoard()}
+            <Board>
+
+            </Board>
             {content}
             <BaseContainer className="order container">
                 <div>Username 1</div>
