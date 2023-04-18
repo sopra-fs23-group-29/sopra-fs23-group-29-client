@@ -18,30 +18,34 @@ specific components that belong to the main one in the same file.
 
 /* Displays the lobbies that people can join*/
 // right now with dummy data, change to real once websockets work
-const DisplayLobby = (props) => {
+const DisplayLobby = ({ lobbies }) => {
   const history = useHistory();
 
   /* Joins the lobby and navigates to the lobby page */
-  const joinLobby = () => {
-    /* get id from game that should be joined */
-    const gameId = 1;
+  const joinLobby = (id) => {
     /* unsubscribe from topic/games */
     let webSocket = Stomper.getInstance();
     webSocket.leave("/topic/games");
     /* navigate to lobby page */
-    history.push(`/lobby/${gameId}`);
+    history.push(`/lobby/${id}`);
   };
 
+  console.log(lobbies);
+
   return (
-    <div className="home lobby-container">
-      <div>Name of an existing Lobby free to join</div>
-      <button
-        className="home lobby-container button"
-        onClick={() => joinLobby()}
-      >
-        Join Lobby
-      </button>
-    </div>
+    <ul>
+      {lobbies.map((lobby) => (
+        <div className="home lobby-container" key={lobbies.gameId}>
+          <div>{lobby.gameName}</div>
+          <button
+            className="home lobby-container button"
+            onClick={() => joinLobby(lobby.gameId)}
+          >
+            Join Lobby
+          </button>
+        </div>
+      ))}
+    </ul>
   );
 };
 
@@ -67,6 +71,9 @@ FormField.propTypes = {
 
 const Home = (props) => {
   const history = useHistory();
+  let webSocket = Stomper.getInstance();
+
+  const [lobbies, setLobbies] = useState([]);
 
   const [gameToAnswer, setGameToAnswer] = useState(null);
   const [turnToAnswer, setTurnToAnswer] = useState(null);
@@ -90,8 +97,6 @@ const Home = (props) => {
   const [gameToMove, setGameToMove] = useState(null);
   const [playerToMove, setPlayerToMove] = useState(null);
 
-  let webSocket = Stomper.getInstance();
-
   useEffect(() => {
     async function fetchData() {
       webSocket.join("/topic/games", countNumberOfLobbies);
@@ -101,12 +106,17 @@ const Home = (props) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(lobbies);
+  }, [lobbies]);
+
   const displayOpenLobbies = (message) => {};
 
   // Test function to count the number of games received through /topic/games
   const countNumberOfLobbies = (message) => {
     if (message.body) {
       var games = JSON.parse(message.body);
+      setLobbies(games);
       console.log("Number of games received: " + games.length);
       console.log(games);
     }
@@ -227,7 +237,7 @@ const Home = (props) => {
   return (
     <BaseContainer className="home container">
       <h2>PvP Lobbies</h2>
-      <DisplayLobby />
+      <DisplayLobby lobbies={lobbies} />
       <Button
         className="primary-button"
         width="20%"
