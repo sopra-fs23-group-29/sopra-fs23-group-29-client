@@ -91,6 +91,8 @@ const Home = (props) => {
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
 
+  const [gameIdToJoin, setgameIdToJoin] = useState(null);
+
   const [gameIdToLeave, setGameIdToLeave] = useState(null);
 
   const [gameToStart, setGameToStart] = useState(null);
@@ -280,6 +282,26 @@ const Home = (props) => {
       >
         Single Player Game
       </Button>
+
+
+      
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => joinGame()}
+      >
+        Join game
+      </Button>
+      <div className="login form">
+        <FormField
+          label="gameToLeave"
+          value={gameIdToLeave}
+          onChange={(un) => setgameIdToJoin(un)}
+        />
+      </div>
+      
+      
+      
       <Button
         className="primary-button"
         width="15%"
@@ -294,6 +316,9 @@ const Home = (props) => {
           onChange={(un) => setGameIdToLeave(un)}
         />
       </div>
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -308,6 +333,10 @@ const Home = (props) => {
           onChange={(un) => setGameToStart(un)}
         />
       </div>
+
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -338,6 +367,11 @@ const Home = (props) => {
         />
         <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
       </div>
+
+
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -362,6 +396,12 @@ const Home = (props) => {
           onChange={(un) => setBarrierAnswer(un)}
         />
       </div>
+
+
+
+
+
+
       <Button className="primary-button" width="15%" onClick={() => endTurn()}>
         End Turn
       </Button>
@@ -377,6 +417,11 @@ const Home = (props) => {
           onChange={(un) => setTurnEndTurn(un)}
         />
       </div>
+
+
+
+
+
       <Button
         className="primary-button"
         width="15%"
@@ -396,6 +441,10 @@ const Home = (props) => {
           onChange={(un) => setPlayerToMove(un)}
         />
       </div>
+
+
+
+
       <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
         Start Next Turn
       </Button>
