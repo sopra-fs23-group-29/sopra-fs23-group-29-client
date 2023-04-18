@@ -20,22 +20,31 @@ specific components that belong to the main one in the same file.
 // right now with dummy data, change to real once websockets work
 const DisplayLobby = ({ lobby }) => {
   const history = useHistory();
+  let players = lobby.players;
 
   /* Joins the lobby and navigates to the lobby page */
-  const joinLobby = (id) => {
-    /* unsubscribe from topic/games */
-    let webSocket = Stomper.getInstance();
-    webSocket.leave("/topic/games");
-    /* navigate to lobby page */
-    history.push(`/lobby/${id}`);
-  };
+  const joinLobby = async (id) => {
+    try {
+      const token = JSON.parse(localStorage.getItem("token")).token;
+      await api.post(`/games/${id}`, {}, { headers: { Authorization: token } });
 
-  console.log(lobby);
+      /* unsubscribe from topic/games */
+      let webSocket = Stomper.getInstance();
+      webSocket.leave("/topic/games");
+      /* navigate to lobby page */
+      history.push(`/lobby/${id}`);
+    } catch (error) {
+      alert(
+        `Something went wrong while creating game: \n${handleError(error)}`
+      );
+    }
+  };
 
   if (lobby.joinable) {
     return (
       <div className="home lobby-container">
         <div>{lobby.gameName}</div>
+        <div>{players.length}/6</div>
         <button
           className="home lobby-container button"
           onClick={() => joinLobby(lobby.gameId)}
@@ -81,8 +90,6 @@ const Home = (props) => {
   const [playerToAnswer, setPlayerToAnswer] = useState(null);
   const [countryCode, setCountryCode] = useState(null);
   const [guess, setGuess] = useState(null);
-
-  const [gameIdToJoin, setgameIdToJoin] = useState(null);
 
   const [gameIdToLeave, setGameIdToLeave] = useState(null);
 
@@ -133,31 +140,6 @@ const Home = (props) => {
   const createGameLobby = () => {
     webSocket.leave("/topic/games");
     history.push(`/lobby`);
-  };
-
-  /* Fake call to join a game
-   */
-  const joinGame = async () => {
-    try {
-      /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
-        console.log(JSON.parse(payload.body).content);
-      });
-
-      const token = JSON.parse(localStorage.getItem("token")).token;
-      const response = await api.post(
-        `/games/` + gameIdToJoin,
-        {},
-        { headers: { Authorization: token } }
-      );
-
-      // Edit successfully worked --> navigate to the route /profile/id
-      console.log("Joined game");
-    } catch (error) {
-      alert(
-        `Something went wrong while creating game: \n${handleError(error)}`
-      );
-    }
   };
 
   /* Fake call to leave a game
@@ -264,16 +246,6 @@ const Home = (props) => {
       >
         Single Player Game
       </Button>
-      <Button className="primary-button" width="15%" onClick={() => joinGame()}>
-        Join game
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameToJoin"
-          value={gameIdToJoin}
-          onChange={(un) => setgameIdToJoin(un)}
-        />
-      </div>
       <Button
         className="primary-button"
         width="15%"
