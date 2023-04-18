@@ -123,8 +123,8 @@ const Home = (props) => {
 
   // Test function to count the number of games received through /topic/games
   const displayOpenLobbies = (message) => {
+    var games = JSON.parse(message.body);
     if (games.length > 0) {
-      var games = JSON.parse(message.body);
       setLobbies(games);
       setHasLobbies(true);
       console.log("Number of games received: " + games.length);
