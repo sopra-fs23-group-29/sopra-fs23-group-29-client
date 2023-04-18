@@ -29,6 +29,9 @@ const PvPLobby = (props) => {
       webSocket.join("/topic/games/" + gameId, function (payload) {
         console.log(JSON.parse(payload.body).content);
       });
+
+      /* Get the current game */
+      webSocket.send("/app/games/" + gameId + "/getGame", { message: "GET GAME " + gameId });
     }
     fetchData();
   }, []);
