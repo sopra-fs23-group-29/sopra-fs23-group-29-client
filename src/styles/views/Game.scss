@@ -66,19 +66,16 @@
     }
     &.bottom-row {
       display: flex;
-      align-items: flex-end;
       flex-direction: row;
-      height: fit-content;
+      border-style: solid;
       width: 100%;
-      margin-bottom: 1em;
-      gap: 1em;
       justify-content: space-between;
+      position: relative;
     }
     &.number-row {
       display: flex;
       align-items: center;
       flex-direction: row;
-      height: fit-content;
     }
   }
 

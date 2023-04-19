@@ -7,6 +7,7 @@ import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Board} from "./Board";
+import CountryRanking from "./CountryRanking";
 
 
 const Game = props => {
@@ -14,7 +15,7 @@ const Game = props => {
 
     // Variable to change right now
 
-    let change = "Barrier"
+    let change = "Score"
 
     // Round counter
     let roundNumber = 1
@@ -34,56 +35,9 @@ const Game = props => {
     // Countries popping up
     let category = "Population"
     let playerNumber = 4
+    let countries = "Switzerland"
 
-
-    // TODO: Put next three ifs in components
-    if (change === "Countries popping up") {
-
-        content = (
-            <BaseContainer className="middle countries container">
-                <h2>Category: {category}</h2>
-                <p>When it's your turn, click on a country and
-                    a number to rank the country in relation to
-                    the other countries. Each country can only be chosen once.</p>
-                <div className="middle countries flag-rows">
-                    <div className="middle countries flag-container">Switzerland</div>
-                    <div className="middle countries flag-container">Switzerland</div>
-                    <div className="middle countries flag-container">Switzerland</div>
-                </div>
-                <div className="middle countries flag-rows">
-                    <div className="middle countries flag-container">Switzerland</div>
-                    <div className="middle countries flag-container">Switzerland</div>
-                    <div className="middle countries flag-container">Switzerland</div>
-                </div>
-                <div className="middle countries bottom-row">
-                    <div>[ COUNTDOWN ]</div>
-                    <div className="middle countries number-row">
-                        <Button className="rank">
-                            1
-                        </Button>
-                        <Button className="rank">
-                            2
-                        </Button>
-                        <Button className="rank">
-                            3
-                        </Button>
-                        <Button className="rank">
-                            4
-                        </Button>
-                        <Button className="rank">
-                            5
-                        </Button>
-                        <Button className="rank">
-                            6
-                        </Button>
-                    </div>
-                    <Button onClick={() => endTurn()}>
-                        End Turn
-                    </Button>
-                </div>
-            </BaseContainer>
-        );
-    }
+    /*
 
     if (change ==="Score") {
 
@@ -154,6 +108,7 @@ const Game = props => {
         );
     }
 
+    Barrier
     if (change ==="Barrier") {
 
         content = (
@@ -166,7 +121,7 @@ const Game = props => {
             </BaseContainer>
         );
     }
-
+    */
 
     return (
         <BaseContainer className="game container">
