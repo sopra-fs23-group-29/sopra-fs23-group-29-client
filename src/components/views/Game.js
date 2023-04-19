@@ -24,7 +24,8 @@ const Game = props => {
         <BaseContainer className="round container">
             Round {roundNumber}
         </BaseContainer>);
-    // const roundTimeout = setTimeout(content, 1000);
+
+    //const roundTimeout = setTimeout(content, 1000);
 
     // End Turn
     const endTurn = () => {
@@ -125,8 +126,10 @@ const Game = props => {
 
     return (
         <BaseContainer className="game container">
-            {board.displayBoard()}
-            <CountryRanking></CountryRanking>
+            <Board>
+
+            </Board>
+            {content}
             <BaseContainer className="order container">
                 <div>Username 1</div>
                 <div>Username 2</div>
