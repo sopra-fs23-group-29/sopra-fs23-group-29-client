@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { api, handleError } from "helpers/api";
-import User from "models/User";
 import { useHistory, useParams } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
+import "styles/views/Home.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
 import Stomper from "../../helpers/Stomp";
 
 /* This is the view for an open PvP Game Lobby that displays its name and all players in the lobby  */
 
-const Players = (props) => {
-  // needs to be adaptive to display current players
-  return <div>Player 1</div>;
+const Players = ({ player }) => {
+  return (
+    <div className="home lobby-container" width="30%">
+      <div>{player.playerName}</div>
+    </div>
+  );
 };
 
 const PvPLobby = (props) => {
   const history = useHistory();
   const params = useParams();
   let webSocket = Stomper.getInstance();
+  const [players, setPlayers] = useState([]);
+  const [game, setGame] = useState(null);
+  const [hasFetchedGame, setHasFetchedGame] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -26,12 +30,35 @@ const PvPLobby = (props) => {
       const gameId = params.id;
 
       /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/" + gameId, function (payload) {
-        console.log(JSON.parse(payload.body).content);
+      webSocket.join("/topic/games/" + gameId, getGameInfo);
+
+      /* Get the current game */
+      webSocket.send("/app/games/" + gameId + "/getGame", {
+        message: "GET GAME " + gameId,
       });
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    async function setAllPlayers() {
+      /* error on line 47: uncaught TypeError game is null bc this function is executed before getGameInfo()
+      but everything still loads correctly bc function is executed again once game is set */
+      const plyrs = game.players;
+      setPlayers(plyrs);
+      console.log("Game:");
+      console.log(game);
+      console.log("Players:");
+      console.log(players);
+    }
+    setAllPlayers();
+  }, [game]);
+
+  /* get info form websockt message to display players in lobby */
+  const getGameInfo = (message) => {
+    setGame(JSON.parse(message.body));
+    setHasFetchedGame(true);
+  };
 
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
@@ -60,10 +87,23 @@ const PvPLobby = (props) => {
 
   return (
     <BaseContainer className="home container">
-      This is your Lobby with the name you gave it and you as a player
-      <Players />
-      <Button onClick={() => startGame()}>Start Game</Button>
-      <Button onClick={() => exitLobby()}>Exit</Button>
+      {hasFetchedGame ? (
+        <ul>
+          <div display="flex" flex-direction="row">
+            <h2>{game.gameName}</h2>
+            <div>{players.length}/6</div>
+          </div>
+          <div>
+            {players.map((player) => (
+              <Players player={player} key={player.id} />
+            ))}
+          </div>
+          <Button onClick={() => exitLobby()}>Leave Lobby</Button>
+          <Button onClick={() => startGame()}>Start Game</Button>
+        </ul>
+      ) : (
+        <div />
+      )}
     </BaseContainer>
   );
 };

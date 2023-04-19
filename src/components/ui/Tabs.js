@@ -31,19 +31,18 @@ export default function Tabs() {
                 {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
             );
 
+            // remove the token
+            localStorage.removeItem('token');
+
+            // remove websocket connection
+            webSocket.leaveAll()
+            webSocket.disconnect("User logged out");
+
         } catch (error) {
             console.log(`Something went wrong during the logout: \n${handleError(error)}`);
         }
 
-        // remove the token
-        localStorage.removeItem('token');
-
-        // remove websocket connection
-        webSocket.leaveAll()
-        webSocket.disconnect("User logged out");
-
         history.push('/login');
-
     };
 
   return (

@@ -10,7 +10,6 @@ class Stomper {
   static getInstance() {
     if (!Stomper.instance) {
       Stomper.instance = new Stomper();
-      Stomper.instance.connect();
     }
     return Stomper.instance;
   }
@@ -26,7 +25,7 @@ class Stomper {
   join(endpoint, callback) {
     if (this.openChannels.indexOf(endpoint) === -1) {
       this.openChannels.push(endpoint);
-      this.stompClient.subscribe(endpoint, callback);
+      this.stompClient.subscribe(endpoint, callback, {id : endpoint}); // add the endpoint also as ID
       console.log("Subscribed to " + endpoint);
     }
   }
@@ -53,7 +52,7 @@ class Stomper {
     this.openChannels = [];
   }
 
-  connect() {
+  async connect() {
     return new Promise((resolve, reject) => {
       try {
         this.socket.close();

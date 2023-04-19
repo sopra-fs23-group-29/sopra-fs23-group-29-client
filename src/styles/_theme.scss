@@ -89,3 +89,8 @@ $borderRadiusRound: 6.25em;
     /* Support for IE. */
     font-feature-settings: 'liga';
 }
+
+:export {
+    textColor: $textColor;
+    containerColor: $containerColor;
+}

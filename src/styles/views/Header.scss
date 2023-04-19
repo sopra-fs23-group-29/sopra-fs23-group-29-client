@@ -1,4 +1,4 @@
-@import 'styles/theme';
+@import "../_theme";
 
 .header {
   &.container {
@@ -32,6 +32,7 @@
     }
 
     &.round-counter {
+      margin-left: auto;
       color: $accent;
     }
 
