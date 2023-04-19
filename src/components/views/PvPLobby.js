@@ -42,6 +42,8 @@ const PvPLobby = (props) => {
 
   useEffect(() => {
     async function setAllPlayers() {
+      /* error on line 47: uncaught TypeError game is null bc this function is executed before getGameInfo()
+      but everything still loads correctly bc function is executed again once game is set */
       const plyrs = game.players;
       setPlayers(plyrs);
       console.log("Game:");
