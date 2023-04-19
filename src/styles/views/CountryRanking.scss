@@ -1,0 +1,154 @@
+@import '../_theme';
+
+.country-ranking {
+  &.container {
+    background: $containerColor;
+    padding: 2em;
+    border-radius: $borderRadius;
+    border-style: solid;
+    border-color: $player1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+    position: fixed;
+    top: 25%;
+    left: 20%;
+    height: 55%;
+    width: 60%;
+  }
+  &.flag-rows {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+    margin-bottom: 1em;
+    gap: 1em;
+    justify-content: space-between;
+  }
+  &.countries-container {
+    background: $accentDarkContainerColor;
+    border-radius: $borderRadius;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+  &.flag-container {
+    &:disabled {
+      cursor: default;
+      opacity: 0.4;
+    }
+    cursor: pointer;
+    opacity: 1;
+    transition: all 0.3s ease;
+    background: $accent;
+    border-radius: $borderRadius;
+    align-items: center;
+    height: 5em;
+    width: 13em;
+  }
+  &.country-name {
+    margin-top: 0.5em;
+    color: $textColor;
+    position: absolute;
+    cursor: pointer;
+    display: inline;
+  }
+  &.bottom-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+  }
+  &.number-row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    position: relative;
+  }
+  &.marker-container {
+    display: flex;
+    align-items: center;
+  }
+  &.marker-number {
+    color: $textColor;
+    position: absolute;
+    cursor: pointer;
+    display: inline;
+    margin-left: 1.65em;
+  }
+}
+
+input[type="radio"] {
+  appearance: none;
+}
+
+.marker-radio {
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+  &:hover {
+    transform: none;
+  }
+  align-self: end;
+  margin-right: 1em;
+  margin-left: 1em;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  text-align: center;
+  height: 3em;
+  width: 3em;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 1;
+  color: $textColor;
+  background-color: $accentDarkContainerColor;
+  transition: all 0.3s ease;
+}
+
+.country-radio {
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+  &:hover {
+    transform: none;
+  }
+  height: auto;
+  width: auto;
+  cursor: pointer;
+  opacity: 1;
+  background-color: $player1;
+  transition: all 0.3s ease;
+}
+
+input[value="player1"]:checked {
+  background-color: $player1;
+}
+
+input[value="player2"]:checked {
+  background-color: $player2;
+}
+
+input[value="player3"]:checked {
+  background-color: $player3;
+}
+
+input[value="player4"]:checked {
+  background-color: $player4;
+}
+
+input[value="player5"]:checked {
+  background-color: $player5;
+}
+
+input[value="player6"]:checked {
+  background-color: $player6;
+}
