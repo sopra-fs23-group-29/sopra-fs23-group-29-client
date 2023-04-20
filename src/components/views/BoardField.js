@@ -1,31 +1,41 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import "styles/views/Board.scss";
+import PropTypes from "prop-types";
 
-const Field = ({color}) => {
+const mixColors = (colorArray) => {
+    // no need to do something fancy if there is just one color
+    if (colorArray.length === 1) {
+        return colorArray[0];
+    }
+    // need to mix multiple colors
+    else {
+        return colorArray[1];
+    }
+}
+const Field = ({colors}) => {
     return (
         <div className="position container"
-             style={{background: color}}
-             //onChange={(newColor) => props.onChange(props.color)}
+             style={{background: mixColors(colors)}}
         >
         </div>
     )
 }
 
-const Start = ({color}) => {
+const Start = ({colors}) => {
     return (
         <div className="start container"
-             style={{background: color}}
+             style={{background: mixColors(colors)}}
         >
         </div>
     )
 }
 
 
-const Barrier = ({color}) => {
+const Barrier = ({colors}) => {
     return (
         <div className="barrier container">
             <i className="barrier icon"
-                style={{color: color}}
+               style={{color: mixColors(colors)}}
             >
                 error_outlined</i>
         </div>
@@ -33,10 +43,10 @@ const Barrier = ({color}) => {
 }
 
 
-const End = ({color}) => {
+const End = ({colors}) => {
     return (
         <div className="end container"
-             style={{background: color}}
+             style={{background: mixColors(colors)}}
         >
         </div>
     )
