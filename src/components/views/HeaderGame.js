@@ -8,29 +8,27 @@ import Stomper from "../../helpers/Stomp";
 
 const HeaderGame = props => {
     const history = useHistory();
-    const gameId = useParams().id;
+    const gameId = JSON.parse(localStorage.getItem('token')).id;
     let webSocket = Stomper.getInstance();
 
     const popUpLeave = async () => {
         if (window.confirm("Do you want to leave the game?")) {
             try {
+                webSocket.leave("/topic/games/" + gameId, function (payload) {
+                    console.log(JSON.parse(payload.body).content);
+                });
                 // set status to offline
                 await api.delete(
                     `/games/${gameId}`,
-                    {},
                     {headers: {"Authorization": JSON.parse(localStorage.getItem('token')).token}}
                 );
+                console.log("Left game");
 
+                // redirect to home
+                history.push('/');
             } catch (error) {
                 console.log(`Something went wrong when leaving the game: \n${handleError(error)}`);
             }
-
-            // remove websocket connection
-            webSocket.leave(`/games/${gameId}`)
-
-            // redirect to home
-            history.push('/');
-
         }
     }
 
