@@ -8,7 +8,7 @@ import Stomper from "../../helpers/Stomp";
 
 const HeaderGame = props => {
     const history = useHistory();
-    const gameId = JSON.parse(sessionStorage.getItem('token')).id;
+    const gameId = localStorage.getItem("gameId");
     let webSocket = Stomper.getInstance();
 
     const popUpLeave = async () => {
@@ -23,6 +23,7 @@ const HeaderGame = props => {
                     {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
                 );
                 console.log("Left game");
+                localStorage.removeItem("gameId");
 
                 // redirect to home
                 history.push('/');
