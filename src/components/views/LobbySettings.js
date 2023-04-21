@@ -39,7 +39,7 @@ const LobbySettings = (props) => {
         gameName: gameName,
         gameMode: "PVP",
       });
-      const token = JSON.parse(localStorage.getItem("token")).token;
+      const token = JSON.parse(sessionStorage.getItem("token")).token;
       console.log(requestBody);
 
       /* Call to server sending gameName and gameMode PVP to create the lobby */

@@ -31,7 +31,7 @@ FormField.propTypes = {
 const ProfileEdit = props => {
 
     const id = useParams().id;
-    const token = JSON.parse(localStorage.getItem('token')).token
+    const token = JSON.parse(sessionStorage.getItem('token')).token
 
     const history = useHistory();
     const [username, setUsername] = useState(null);
@@ -51,10 +51,10 @@ const ProfileEdit = props => {
             );
 
             if (username) {
-                // Edit successfully worked --> update localStorage token
-                localStorage.setItem('token', JSON.stringify({
-                        "token": JSON.parse(localStorage.getItem('token')).token, // token does not change
-                        "id": JSON.parse(localStorage.getItem('token')).id, // id does not change
+                // Edit successfully worked --> update sessionStorage token
+                sessionStorage.setItem('token', JSON.stringify({
+                        "token": JSON.parse(sessionStorage.getItem('token')).token, // token does not change
+                        "id": JSON.parse(sessionStorage.getItem('token')).id, // id does not change
                         "username": username
                     }
                 ));
@@ -76,13 +76,13 @@ const ProfileEdit = props => {
                         {
                             "Authorization": token,
                             "Password": password,
-                            "Username": JSON.parse(localStorage.getItem('token')).username
+                            "Username": JSON.parse(sessionStorage.getItem('token')).username
                         }
                 }
             );
 
             // removing the token from local storage and rerouting the user to the login page
-            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
             history.push("/login");
         } catch (error) {
             alert(`Something went wrong while deleting your profile: \n${handleError(error)}`);

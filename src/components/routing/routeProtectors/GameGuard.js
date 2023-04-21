@@ -15,8 +15,8 @@ import {useEffect, useState} from 'react';
  */
 
 /*
-Check with all the users currently registered in the server DB if the user with the token in localStorage
-even exists. If not clear the localStorage and route to /login
+Check with all the users currently registered in the server DB if the user with the token in sessionStorage
+even exists. If not clear the sessionStorage and route to /login
 */
 
 export const GameGuard = props => {
@@ -49,7 +49,7 @@ export const GameGuard = props => {
   // // console.log(users);
 
   // let match = false;
-  // let currentToken = localStorage.getItem("token");
+  // let currentToken = sessionStorage.getItem("token");
 
   // console.log(`currentToken: ${currentToken}`);
 
@@ -68,12 +68,12 @@ export const GameGuard = props => {
   //   return props.children;
   // }
 
-  // // remove the token from localStorage
-  // localStorage.removeItem("token");
+  // // remove the token from sessionStorage
+  // sessionStorage.removeItem("token");
   // return <Redirect to="/login"/>;
 
 
-  if (localStorage.getItem("token")) {
+  if (sessionStorage.getItem("token")) {
     return props.children;
   }
 

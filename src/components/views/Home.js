@@ -25,7 +25,7 @@ const DisplayLobby = ({ lobby }) => {
   /* Joins the lobby and navigates to the lobby page */
   const joinLobby = async (id) => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")).token;
+      const token = JSON.parse(sessionStorage.getItem("token")).token;
       await api.post(`/games/${id}`, {}, { headers: { Authorization: token } });
 
       /* unsubscribe from topic/games */
@@ -153,10 +153,9 @@ const Home = (props) => {
 
       /* subscribe to topic/games/{gameId} */
       webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
-        console.log(JSON.parse(payload.body).content);
-      });
+        console.log(JSON.parse(payload.body).content)});
 
-      const token = JSON.parse(localStorage.getItem("token")).token;
+      const token = JSON.parse(sessionStorage.getItem("token")).token;
       const response = await api.post(
         `/games/` + gameIdToJoin,
         {},
@@ -181,7 +180,7 @@ const Home = (props) => {
         console.log(JSON.parse(payload.body).content);
       });
 
-      const token = JSON.parse(localStorage.getItem("token")).token;
+      const token = JSON.parse(sessionStorage.getItem("token")).token;
       console.log("leave game: token " + token);
       const response = await api.delete(`/games/` + gameIdToLeave, {
         headers: { Authorization: token },
@@ -208,7 +207,7 @@ const Home = (props) => {
     webSocket.send(
       `/app/games/${gameToAnswer}/turn/${turnToAnswer}/player/${playerToAnswer}/saveAnswer`,
       {
-        userToken: JSON.parse(localStorage.getItem("token")).token,
+        userToken: JSON.parse(sessionStorage.getItem("token")).token,
         countryCode: countryCode,
         guess: guess,
       }
@@ -221,7 +220,7 @@ const Home = (props) => {
     webSocket.send(
       `/app/games/${gameBarrierAnswer}/player/${playerBarrierAnswer}/resolveBarrierAnswer`,
       {
-        userToken: JSON.parse(localStorage.getItem("token")).token,
+        userToken: JSON.parse(sessionStorage.getItem("token")).token,
         guess: barrierAnswer,
       }
     );

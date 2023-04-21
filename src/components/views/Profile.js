@@ -9,7 +9,7 @@ const Profile = () => {
 
   const history = useHistory();
   const id = useParams().id;
-  const activeId = JSON.parse(localStorage.getItem('token')).id;
+  const activeId = JSON.parse(sessionStorage.getItem('token')).id;
 
   const [aUser, setAUser] = useState(null);
 
@@ -28,7 +28,7 @@ const Profile = () => {
         
         const response = await api.get(
           `/users/${id}`,
-          {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
+          {headers:{"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
         );
 
         setAUser(response.data);

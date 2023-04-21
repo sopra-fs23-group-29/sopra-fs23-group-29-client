@@ -34,7 +34,7 @@ const Users = () => {
             try {
                 const response = await api.get(
                     '/users',
-                    {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
+                    {headers:{"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
                 );
 
                 // delays continuous execution of an async operation for 1 second.
@@ -58,8 +58,7 @@ const Users = () => {
                 // subscribe to /users - no .connect() needed
                 let webSocket = Stomper.getInstance();
                 webSocket.join("/topic/users", function (payload) {
-                    console.log(JSON.parse(payload.body).content);
-                });
+                    console.log(JSON.parse(payload.body).content)});
 
             } catch (error) {
                 console.error(`Something went wrong while fetching the users: \n${handleError(error)}`);
