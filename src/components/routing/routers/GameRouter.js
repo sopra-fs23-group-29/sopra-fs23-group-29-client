@@ -1,4 +1,4 @@
-import {Redirect, Route} from "react-router-dom";
+import {Route} from "react-router-dom";
 import Game from "components/views/Game";
 import PropTypes from 'prop-types';
 
@@ -10,9 +10,6 @@ const GameRouter = props => {
     <div style={{display: 'flex', flexDirection: 'column'}}>
       <Route exact path={`${props.base}/:id`}>
         <Game/>
-      </Route>
-      <Route exact path={`${props.base}`}>
-        <Redirect to={`${props.base}/dashboard`}/>
       </Route>
     </div>
   );
