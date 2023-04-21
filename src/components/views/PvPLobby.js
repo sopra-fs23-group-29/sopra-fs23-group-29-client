@@ -51,7 +51,7 @@ const PvPLobby = (props) => {
     setAllPlayers();
   }, [game]);
 
-  /* get info form websockt message to display players in lobby */
+  /* get info from websocket message to display players in lobby */
   const getGameInfo = (message) => {
     setGame(JSON.parse(message.body));
     setHasFetchedGame(true);
@@ -60,10 +60,12 @@ const PvPLobby = (props) => {
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
+    localStorage.setItem("gameId", id)
     console.log(id);
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,
     });
+    history.push(`/games/` + id);
 
     // take this out once everything above works
     console.log("Game with ID " + id + " has been started");
