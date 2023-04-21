@@ -63,7 +63,7 @@ const Registration = (props) => {
       // Store a token into the local storage for verification if logged in
       // currently in use: token
       const token = response.headers["authorization"];
-      localStorage.setItem(
+      sessionStorage.setItem(
         "token",
         JSON.stringify({ token: token, id: user.id, username: user.username })
       );

@@ -4,6 +4,8 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { getWS } from "./getDomain";
 
+
+
 class Stomper {
   static instance = null;
 
@@ -18,6 +20,7 @@ class Stomper {
   stompClient;
   openChannels = [];
 
+
   constructor() {
     this.listeners = [];
   }
@@ -26,7 +29,14 @@ class Stomper {
     if (this.openChannels.indexOf(endpoint) === -1) {
       this.openChannels.push(endpoint);
       this.stompClient.subscribe(endpoint, callback, {id : endpoint}); // add the endpoint also as ID
+      // generate a unique ID for the callback function
+
+      sessionStorage.setItem("subscribedEndpoints", JSON.stringify(this.openChannels));
+
+      // store the callback function in a mapping object
+
       console.log("Subscribed to " + endpoint);
+   
     }
   }
 
@@ -39,6 +49,7 @@ class Stomper {
     let index = this.openChannels.indexOf(endpoint);
     if (index !== -1) {
       this.stompClient.unsubscribe(endpoint);
+      sessionStorage.setItem('subscribedEndpoints', JSON.stringify(this.openChannels.filter(item => item !== endpoint))); // remove the endpoint from the list stored in session storage
       this.openChannels.splice(index, 1);
       console.log("Unsubscribed from " + endpoint);
     }
@@ -87,6 +98,10 @@ class Stomper {
     } catch {}
   };
 
+  emptyChannelsList = () => {
+    this.openChannels = [];
+  }
+
   _handleDisconnect = (reason) => {
     console.log(reason);
   };
@@ -94,6 +109,8 @@ class Stomper {
   _handleError = (error) => {
     console.log(handleError(error));
   };
+
 }
 
 export default Stomper;
+

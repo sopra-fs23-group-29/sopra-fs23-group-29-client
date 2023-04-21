@@ -5,7 +5,7 @@ import Stomper from "../../helpers/Stomp";
 
 export default function Tabs() {
     const history = useHistory();
-    const id = JSON.parse(localStorage.getItem('token')).id;
+    const id = JSON.parse(sessionStorage.getItem('token')).id;
     let webSocket = Stomper.getInstance();
     const goToHome = () => {
         history.push("/");
@@ -28,7 +28,7 @@ export default function Tabs() {
             await api.put(
                 '/users/logout',
                 {},
-                {headers:{"Authorization": JSON.parse(localStorage.getItem('token')).token}}
+                {headers:{"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
             );
 
         } catch (error) {
@@ -37,7 +37,7 @@ export default function Tabs() {
 
         try {
             // remove the token
-            localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
 
             // remove websocket connection
             webSocket.leaveAll()

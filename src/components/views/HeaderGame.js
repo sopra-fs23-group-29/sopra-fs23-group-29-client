@@ -8,7 +8,7 @@ import Stomper from "../../helpers/Stomp";
 
 const HeaderGame = props => {
     const history = useHistory();
-    const gameId = JSON.parse(localStorage.getItem('token')).id;
+    const gameId = JSON.parse(sessionStorage.getItem('token')).id;
     let webSocket = Stomper.getInstance();
 
     const popUpLeave = async () => {
@@ -20,7 +20,7 @@ const HeaderGame = props => {
                 // set status to offline
                 await api.delete(
                     `/games/${gameId}`,
-                    {headers: {"Authorization": JSON.parse(localStorage.getItem('token')).token}}
+                    {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
                 );
                 console.log("Left game");
 
