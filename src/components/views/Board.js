@@ -69,9 +69,9 @@ export const Board = (props) => {
         let colorArray = [];
         while (index <= end)  {
             if (allowBarriers && isBarrier(index, end)) {
-                colorArray.push([]);
+                colorArray.push(["purple"]);
             } else {
-                colorArray.push(["red", "yellow"])
+                colorArray.push(["red", "yellow", "blue"])
             }
             index += 1;
         }
