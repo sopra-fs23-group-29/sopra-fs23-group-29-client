@@ -1,19 +1,60 @@
 import {Start, Field, Barrier, End} from "./BoardField";
 import React from 'react';
 import "styles/views/Board.scss";
-import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 
 
 export const Board = (props) => {
-    /**
-     * functions needed to create the board
-     */
     let withBarriers = true;
+    let gameMode = "pvp-large";
 
-    const getBoardParams = (mode) => {
+    /**
+     * helper functions to locate and identify fields
+     */
+    const getPlaceOnBoard = (index, boardParams) => {
+        let counter = 0;
+
+        // locate field on the board
+        while (counter < boardParams.length) {
+            if (index < boardParams[counter]) {
+                break;
+            }
+            counter += 1;
+        }
+        let place;
+        switch (counter) {
+            case 1:
+                place = "left column";
+                break;
+            case 2:
+                place = "top row";
+                break;
+            case 3:
+                place = "right column";
+                break
+            case 4:
+                place = "bottom row";
+                break;
+            default:
+                console.log(`could not locate index: ${index}`)
+                place = "top row";
+                break;
+        }
+        return place;
+    }
+
+    const isBarrier = (index, end) => {
+        return ((index - 1)%3 === 0)
+            && (index > 3)
+            && (end - index > 2)
+    }
+
+    /**
+     * functions used to create the board
+     */
+     const getBoardParams = (mode) => {
         switch (mode) {
             case "pvp-large":
                 return [0, 5, 15, 20, 30, 29];
@@ -23,22 +64,14 @@ export const Board = (props) => {
         }
     }
 
-    const isBarrier = (index, end) => {
-        return ((index - 1)%3 === 0)
-                && (index > 3)
-                && (end - index > 2)
-    }
-
     function createColorArray(end, allowBarriers) {
         let index = 0;
         let colorArray = [];
         while (index <= end)  {
             if (allowBarriers && isBarrier(index, end)) {
-                colorArray.push([theme.textColor]);
-                //colorArray.push("red");
+                colorArray.push([]);
             } else {
-                colorArray.push([theme.containerColor])
-                //colorArray.push("blue");
+                colorArray.push(["red", "yellow"])
             }
             index += 1;
         }
@@ -60,6 +93,7 @@ export const Board = (props) => {
                     <Start
                         key={index}
                         colors={colors[index]}
+                        place={getPlaceOnBoard(index, boardParams)}
                     />
                 )
             }
@@ -69,6 +103,7 @@ export const Board = (props) => {
                     <End
                         key={index}
                         colors={colors[index]}
+                        place={getPlaceOnBoard(index, boardParams)}
                     />
                 )
             }
@@ -78,6 +113,7 @@ export const Board = (props) => {
                     <Barrier
                         key={index}
                         colors={colors[index]}
+                        place={getPlaceOnBoard(index, boardParams)}
                     />
                 )
             }
@@ -87,7 +123,7 @@ export const Board = (props) => {
                     <Field
                         key={index}
                         colors={colors[index]}
-
+                        place={getPlaceOnBoard(index, boardParams)}
                     />
                 )
             }
@@ -97,7 +133,7 @@ export const Board = (props) => {
     }
 
     /**
-     * function needed to update the board
+     * functions used to update the board
      */
     function updateColors(index, newColors) {
         // please sen help
@@ -106,7 +142,7 @@ export const Board = (props) => {
     /**
      * create and return the board
      */
-    const boardParams = getBoardParams("pvp-large");
+    const boardParams = getBoardParams(gameMode);
     const colors = createColorArray(boardParams[5], withBarriers);
 
     const fields = fieldMapper(boardParams[0], boardParams[4], boardParams[5], withBarriers);
@@ -145,9 +181,6 @@ export const Board = (props) => {
             }
         </div>
         <Button
-            position="fixed"
-            left="40%"
-            top="40%"
             onClick={() => updateColors(1, ["red"])}>
             change colors
         </Button>

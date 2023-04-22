@@ -17,6 +17,7 @@ $side: 2%;
         width: fit-content;
         display: flex;
     }
+
     &.left-column {
         &.container {
             position: fixed;
@@ -88,7 +89,7 @@ $side: 2%;
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        background-color: red;
+        background-color: $containerColor;
         height: $thickness;
         width: $thickness;
     }
@@ -99,7 +100,7 @@ $side: 2%;
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        background-color: blue;
+        background-color: $containerColor;
         height: $thickness;
         width: $thickness;
     }
@@ -115,7 +116,7 @@ $side: 2%;
     &.icon {
         @include icon;
         font-size: 77px;
-        color: green;
+        color: $textColor;
         margin: -0.0825em 0 0 1em;
     }
 }
@@ -125,7 +126,7 @@ $side: 2%;
         display: flex;
         justify-content: center;
         border-radius: 50%;
-        background-color: orange;
+        background-color: $containerColor;
         height: $thickness;
         width: $thickness;
     }
