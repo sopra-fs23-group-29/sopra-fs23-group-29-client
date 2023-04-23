@@ -8,6 +8,8 @@ import Stomper from "../../helpers/Stomp";
 
 const HeaderGame = props => {
     const history = useHistory();
+    const username = JSON.parse(localStorage.getItem('token')).username;
+    console.log(username)
     const gameId = localStorage.getItem("gameId");
     let webSocket = Stomper.getInstance();
 
@@ -36,7 +38,7 @@ const HeaderGame = props => {
     return (
         <div className="header container" style={{height: props.height}}>
             <Globalissimo/>
-            <h2 className="header game username">[USERNAME]</h2>
+            <h2 className="header game username">{username}</h2>
             {//<p className="header game barrier-counter">[Barrier Counter]</p>
             }
             <p className="header game round-counter">[Round Counter]</p>
