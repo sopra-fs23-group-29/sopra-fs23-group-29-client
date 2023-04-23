@@ -1,36 +1,20 @@
 import React from 'react';
 import "styles/views/Board.scss";
-/*
-import PropTypes from "prop-types";
-import { useState } from "react";
-import { mixColors } from "helpers/LinearGradient";
- */
+
 
 /**
  * components
  */
-const Field = (props, {index}) => {
-    //const [colors, setColors] = useState(initialColors);
+const Field = (props) => {
     return (
         <div className="position container"
-            id={index}
         >
             {
-
+                props.children
             }
         </div>
     )
 }
- /*
-Field.propTypes = {
-    children: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node
-    ]).isRequired,
-    onChange: PropTypes.func,
-};
-
-  */
 
 const Start = (props) => {
     return (
@@ -45,14 +29,12 @@ const Start = (props) => {
 const Barrier = (props, {colors}) => {
     return (
         <div className="barrier container">
-            { props.children }
+
             <i className="barrier icon"
                style={{color: colors}}
             >
                 error_outlined</i>
-            {
-                props.children
-            }
+
         </div>
     )
 }

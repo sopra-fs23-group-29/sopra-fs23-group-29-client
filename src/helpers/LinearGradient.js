@@ -1,4 +1,5 @@
-import { StyleSheet, View } from 'react-native-web';
+import React from "react";
+import {StyleSheet, View} from 'react-native-web';
 import LinearGradient from 'react-native-web-linear-gradient'
 
 /**
@@ -28,6 +29,13 @@ const doubleColors = (colorArray) => {
         counter += 1;
     }
     return modifiedColors;
+}
+
+const prepareColors = (colorArray) => {
+    if (colorArray.length > 1) {
+        return doubleColors(colorArray.slice(1));
+    }
+    return doubleColors(colorArray);
 }
 
 const getLocations = (numColors) => {
@@ -92,22 +100,40 @@ const getEnd = (placeOnBoard) => {
     }
 }
 
-const mixColors = (index, colorArray, partOfBoard) => {
-    const colorsToUse = doubleColors(colorArray);
+class Gradient extends React.Component {
+    constructor(props) {
+        super(props);
+        let {ind, colorArray, placeOnBoard} = props;
 
-    return (
-        <View style={styles.container}>
-            <LinearGradient
-                colors={colorsToUse}
-                style={styles.linearGradient}
-                id={index}
-                //locations={getLocations(colorsToUse.length)}
-                start={getStart(partOfBoard)}
-                end={getEnd(partOfBoard)}
+        this.state = {
+            index: ind,
+            colors: prepareColors(colorArray),
+            place: placeOnBoard
+        }
+    }
+
+    updateColors = (newColors) => {
+        this.setState({
+            colors: prepareColors(newColors)
+        });
+    }
+
+    render() {
+        return (
+            <View
+                style={styles.container}
             >
-            </LinearGradient>
-        </View>
-    );
+                <LinearGradient
+                    colors={this.state.colors}
+                    style={styles.linearGradient}
+                    //locations={getLocations(colorsToUse.length)}
+                    start={getStart(this.state.place)}
+                    end={getEnd(this.state.place)}
+                >
+                </LinearGradient>
+            </View>
+        );
+    }
 }
 
-export {mixColors};
+export {Gradient};
