@@ -1,53 +1,68 @@
-import React, { useState }  from 'react';
+import React from 'react';
 import "styles/views/Board.scss";
+/*
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { mixColors } from "helpers/LinearGradient";
+ */
 
-const mixColors = (colorArray) => {
-    // no need to do something fancy if there is just one color
-    if (colorArray.length === 1) {
-        return colorArray[0];
-    }
-    // need to mix multiple colors
-    else {
-        return colorArray[1];
-    }
-}
-const Field = ({colors}) => {
+/**
+ * components
+ */
+const Field = (props, {index}) => {
+    //const [colors, setColors] = useState(initialColors);
     return (
         <div className="position container"
-             style={{background: mixColors(colors)}}
+            id={index}
         >
+            {
+
+            }
         </div>
     )
 }
+ /*
+Field.propTypes = {
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.node),
+        PropTypes.node
+    ]).isRequired,
+    onChange: PropTypes.func,
+};
 
-const Start = ({colors}) => {
+  */
+
+const Start = (props) => {
     return (
-        <div className="start container"
-             style={{background: mixColors(colors)}}
-        >
+        <div className="start container">
+            {
+                props.children
+            }
         </div>
     )
 }
 
-
-const Barrier = ({colors}) => {
+const Barrier = (props, {colors}) => {
     return (
         <div className="barrier container">
+            { props.children }
             <i className="barrier icon"
-               style={{color: mixColors(colors)}}
+               style={{color: colors}}
             >
                 error_outlined</i>
+            {
+                props.children
+            }
         </div>
     )
 }
 
-
-const End = ({colors}) => {
+const End = (props) => {
     return (
-        <div className="end container"
-             style={{background: mixColors(colors)}}
-        >
+        <div className="end container">
+            {
+                props.children
+            }
         </div>
     )
 }
