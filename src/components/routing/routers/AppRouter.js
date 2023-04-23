@@ -108,6 +108,10 @@ const AppRouter = () => {
             <Users />
           </GameGuard>
         </Route>
+
+        <Route exact path="/testScoreboard">
+          <TurnScoreboard />
+        </Route>
       </Switch>
     </BrowserRouter>
   );

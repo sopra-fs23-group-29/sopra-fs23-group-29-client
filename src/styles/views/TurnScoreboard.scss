@@ -1,0 +1,55 @@
+@import '../_theme';
+
+.turn-scoreboard {
+  &.container {
+    background: $containerColor;
+    padding: 2em;
+    border-radius: $borderRadius;
+    border-style: solid;
+    border-color: $player1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+    position: fixed;
+    top: 25%;
+    left: 20%;
+    height: 55%;
+    width: 60%;
+  }
+  
+  &.table-row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    height: 45px; /* Set a fixed height */
+    width: 100%;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    gap: 1em;
+    justify-content: space-between;
+    border-bottom: 1px solid #ccc; /* Add a bottom border */
+  
+    & img {
+      border-radius: 5%;
+      width: 50px;
+    }
+  
+    & div {
+      display: flex;
+      align-items: center;
+      
+    }
+
+    & div:nth-child(2) {
+
+      margin-bottom: 10px; /* Add a margin to the bottom */
+      flex: 1;
+    }
+
+  }
+}
+
+
+
+
