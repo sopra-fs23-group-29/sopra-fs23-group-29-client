@@ -5,12 +5,31 @@ import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
-import { mixColors } from "helpers/LinearGradient";
+import { Gradient } from "helpers/LinearGradient";
 
 
 export const Board = (props) => {
-    let withBarriers = true;
+    let withBarriers = false;
     let gameMode = "pvp-large";
+    const containerColor = theme.containerColor;
+    const textColor = theme.textColor;
+
+    /**
+     * dummy players
+     */
+    const startFieldColors = ["blue", "red", "green", "yellow", "purple", "orange"];
+
+    const numberOfPlayers = 6;
+    const createPlayers = (numPlayers) => {
+        let players = [];
+        let counter = 0;
+        while (counter < numPlayers) {
+            players.push({color: startFieldColors[counter], field: 0})
+            counter += 1;
+        }
+        return players;
+    }
+    const players = createPlayers(numberOfPlayers);
 
     /**
      * helper functions to locate fields and identify barriers
@@ -70,25 +89,34 @@ export const Board = (props) => {
     }
 
     function createColorArray(end, allowBarriers) {
-        let colorArray = [["blue", "red", "yellow", "purple"]];
-        let index = 1;
+        let colorArray = []
+        let index = 0;
         while (index <= end) {
             if (allowBarriers && isBarrier(index, end)) {
-                colorArray.push([theme.textColor]);
+                colorArray.push([textColor]);
             } else {
-                colorArray.push([theme.containerColor]);
+                colorArray.push([containerColor]);
             }
             index += 1;
         }
+        // add the players' colors at the start
+        colorArray[0].push(...startFieldColors)
         return colorArray;
     }
 
-    function createGradientArray(colorArray) {
+    function createGradientArray(colorArray, parameters) {
          let gradientArray = [];
          let index = 0;
          let gradient;
          while (index < colorArray.length) {
-             gradient = mixColors(index, colorArray[index], getPlaceOnBoard(index, boardParams));
+             //gradient = mixColors(index, colorArray[index], getPlaceOnBoard(index, boardParams));
+             gradient = (
+                 <Gradient
+                    ind={100 + index}
+                    colorArray={colors[index]}
+                    placeOnBoard={getPlaceOnBoard(index, parameters)}
+                    ref={React.createRef()}
+                 />)
              gradientArray.push(gradient)
              index += 1;
          }
@@ -147,19 +175,58 @@ export const Board = (props) => {
     /**
      * functions used to update the board
      */
-    let ind = 1;
-    function updateColors(index, newColors) {
-        colors[index] = newColors;
-        const newGradient = mixColors(index, colors[index], getPlaceOnBoard(index, boardParams));
-        gradients[index] = newGradient;
-        document.getElementById(index).props.children = newGradient;
+    let globalIndex = 1;
+    function simulateGame(numPlayers, index, end) {
+        let fieldsToMove = [];
+        let player = 0;
+        while (player < numPlayers) {
+            if (index%player === 0) {
+                fieldsToMove.push(player);
+            }
+            else if (player === 0 && index%5 === 0){
+                fieldsToMove.push(5);
+            }
+            else {
+                fieldsToMove.push(0);
+            }
+            player += 1;
+        }
+        console.log(fieldsToMove);
+        updateColors(fieldsToMove, end);
+        globalIndex += 1;
     }
+
+    function updateColors(fieldsMoved, end) {
+        let player = 0;
+        while (player < fieldsMoved.length) {
+            movePlayer(player, fieldsMoved[player], end);
+            player += 1;
+        }
+    }
+
+    function movePlayer(playerNum, numFields, end) {
+        const player = players[playerNum];
+        const color = player.color;
+        const oldField = player.field
+
+        // remove the player from the current field
+        const index = colors[oldField].indexOf(color);
+        colors[oldField].splice(index, 1);
+        gradients[oldField].ref.current.updateColors(colors[oldField]);
+
+        // move the player one field forward
+        const newField = Math.min(end, oldField + numFields);
+        player.field = newField;
+        colors[newField].push(color);
+        gradients[newField].ref.current.updateColors(colors[newField]);
+    }
+
     /**
      * create and return the board
      */
     const boardParams = getBoardParams(gameMode);
     const colors = createColorArray(boardParams[5], withBarriers);
-    const gradients = createGradientArray(colors);
+    const gradients = createGradientArray(colors, boardParams);
 
     const fields = fieldMapper(boardParams, withBarriers, gradients);
 
@@ -197,8 +264,8 @@ export const Board = (props) => {
             }
         </div>
         <Button
-            onClick={() => updateColors(ind, ["green", "yellow"])}>
-            change colors
+            onClick={() => simulateGame(numberOfPlayers, globalIndex, boardParams[5])}>
+            simulate game
         </Button>
 
     </BaseContainer>
