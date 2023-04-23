@@ -1,53 +1,47 @@
 import React, { useState }  from 'react';
 import "styles/views/Board.scss";
 import PropTypes from "prop-types";
+import { mixColors } from "helpers/LinearGradient";
 
-const mixColors = (colorArray) => {
-    // no need to do something fancy if there is just one color
-    if (colorArray.length === 1) {
-        return colorArray[0];
-    }
-    // need to mix multiple colors
-    else {
-        return colorArray[1];
-    }
-}
-const Field = ({colors}) => {
+/**
+ * components
+ */
+const Field = ({colors, place}) => {
     return (
-        <div className="position container"
-             style={{background: mixColors(colors)}}
-        >
+        <div className="position container">
+            {mixColors(colors, place)}
         </div>
     )
 }
 
-const Start = ({colors}) => {
+const Start = ({colors, place}) => {
     return (
-        <div className="start container"
-             style={{background: mixColors(colors)}}
-        >
+        <div className="start container">
+            {
+                mixColors(colors, place)
+            }
         </div>
     )
 }
 
-
-const Barrier = ({colors}) => {
+const Barrier = ({colors, place}) => {
     return (
         <div className="barrier container">
             <i className="barrier icon"
-               style={{color: mixColors(colors)}}
+               style={{color: mixColors(colors, place)}}
             >
                 error_outlined</i>
+
         </div>
     )
 }
 
-
-const End = ({colors}) => {
+const End = ({colors, place}) => {
     return (
-        <div className="end container"
-             style={{background: mixColors(colors)}}
-        >
+        <div className="end container">
+            {
+                mixColors(colors, place)
+            }
         </div>
     )
 }
