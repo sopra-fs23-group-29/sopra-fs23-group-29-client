@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     },
 })
 
-const modifyColors = (colorArray) => {
+const doubleColors = (colorArray) => {
     let modifiedColors = [];
     let counter = 0;
     while (counter < colorArray.length) {
@@ -92,28 +92,22 @@ const getEnd = (placeOnBoard) => {
     }
 }
 
-const mixColors = (colorArray, partOfBoard) => {
-    // no need to do something fancy if there is just one color
-    if (colorArray.length === 0) {
-        return null;
-    }
-    // need to mix multiple colors
-    else {
-        const colorsToUse = modifyColors(colorArray);
+const mixColors = (index, colorArray, partOfBoard) => {
+    const colorsToUse = doubleColors(colorArray);
 
-        return (
-            <View style={styles.container}>
-                <LinearGradient
-                    colors={colorsToUse}
-                    style={styles.linearGradient}
-                    //locations={getLocations(colorsToUse.length)}
-                    start={getStart(partOfBoard)}
-                    end={getEnd(partOfBoard)}
-                >
-                </LinearGradient>
-            </View>
-        );
-    }
+    return (
+        <View style={styles.container}>
+            <LinearGradient
+                colors={colorsToUse}
+                style={styles.linearGradient}
+                id={index}
+                //locations={getLocations(colorsToUse.length)}
+                start={getStart(partOfBoard)}
+                end={getEnd(partOfBoard)}
+            >
+            </LinearGradient>
+        </View>
+    );
 }
 
 export {mixColors};

@@ -1,9 +1,11 @@
 import {Start, Field, Barrier, End} from "./BoardField";
 import React from 'react';
 import "styles/views/Board.scss";
+import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
+import { mixColors } from "helpers/LinearGradient";
 
 
 export const Board = (props) => {
@@ -11,14 +13,14 @@ export const Board = (props) => {
     let gameMode = "pvp-large";
 
     /**
-     * helper functions to locate and identify fields
+     * helper functions to locate fields and identify barriers
      */
-    const getPlaceOnBoard = (index, boardParams) => {
+    const getPlaceOnBoard = (index, parameters) => {
         let counter = 0;
 
         // locate field on the board
-        while (counter < boardParams.length) {
-            if (index < boardParams[counter]) {
+        while (counter < parameters.length) {
+            if (index < parameters[counter]) {
                 break;
             }
             counter += 1;
@@ -61,25 +63,43 @@ export const Board = (props) => {
             case "pvp-small":
                 withBarriers = false;
                 return [0, 3, 8, 11, 16, 15];
+            default:
+                // pvp-large
+                return [0, 5, 15, 20, 30, 29];
         }
     }
 
     function createColorArray(end, allowBarriers) {
-        let index = 0;
-        let colorArray = [];
-        while (index <= end)  {
+        let colorArray = [["blue", "red", "yellow", "purple"]];
+        let index = 1;
+        while (index <= end) {
             if (allowBarriers && isBarrier(index, end)) {
-                colorArray.push(["purple"]);
+                colorArray.push([theme.textColor]);
             } else {
-                colorArray.push(["red", "yellow", "blue"])
+                colorArray.push([theme.containerColor]);
             }
             index += 1;
         }
-
         return colorArray;
     }
 
-    function fieldMapper(min, max, end, allowBarriers) {
+    function createGradientArray(colorArray) {
+         let gradientArray = [];
+         let index = 0;
+         let gradient;
+         while (index < colorArray.length) {
+             gradient = mixColors(index, colorArray[index], getPlaceOnBoard(index, boardParams));
+             gradientArray.push(gradient)
+             index += 1;
+         }
+         return gradientArray;
+    }
+
+    function fieldMapper(parameters, allowBarriers, gradients) {
+        const min = parameters[0];
+        const max = parameters[4];
+        const end = parameters[5];
+
         if (max <= min) {
             throw new Error("max needs to be larger than min!")
         }
@@ -90,41 +110,33 @@ export const Board = (props) => {
             // start
             if (index === 0) {
                 fields.push(
-                    <Start
-                        key={index}
-                        colors={colors[index]}
-                        place={getPlaceOnBoard(index, boardParams)}
-                    />
+                    <Start key={index}>
+                        {gradients[index]}
+                    </Start>
                 )
             }
             // end
             else if (index === end) {
                 fields.push(
-                    <End
-                        key={index}
-                        colors={colors[index]}
-                        place={getPlaceOnBoard(index, boardParams)}
-                    />
+                    <End key={index}>
+                        {gradients[index]}
+                    </End>
                 )
             }
             // barriers
             else if (allowBarriers && isBarrier(index, end)) {
                 fields.push(
-                    <Barrier
-                        key={index}
-                        colors={colors[index]}
-                        place={getPlaceOnBoard(index, boardParams)}
-                    />
+                    <Barrier key={index}>
+                        {gradients[index]}
+                    </Barrier>
                 )
             }
             // normal fields
             else {
                 fields.push(
-                    <Field
-                        key={index}
-                        colors={colors[index]}
-                        place={getPlaceOnBoard(index, boardParams)}
-                    />
+                    <Field key={index}>
+                        {gradients[index]}
+                    </Field>
                 )
             }
             index += 1;
@@ -135,17 +147,21 @@ export const Board = (props) => {
     /**
      * functions used to update the board
      */
+    let ind = 1;
     function updateColors(index, newColors) {
-        // please sen help
+        colors[index] = newColors;
+        const newGradient = mixColors(index, colors[index], getPlaceOnBoard(index, boardParams));
+        gradients[index] = newGradient;
+        document.getElementById(index).props.children = newGradient;
     }
-
     /**
      * create and return the board
      */
     const boardParams = getBoardParams(gameMode);
     const colors = createColorArray(boardParams[5], withBarriers);
+    const gradients = createGradientArray(colors);
 
-    const fields = fieldMapper(boardParams[0], boardParams[4], boardParams[5], withBarriers);
+    const fields = fieldMapper(boardParams, withBarriers, gradients);
 
     const leftColumn = fields.slice(boardParams[0], boardParams[1]);
     const topRow = fields.slice(boardParams[1], boardParams[2]);
@@ -181,7 +197,7 @@ export const Board = (props) => {
             }
         </div>
         <Button
-            onClick={() => updateColors(1, ["red"])}>
+            onClick={() => updateColors(ind, ["green", "yellow"])}>
             change colors
         </Button>
 
