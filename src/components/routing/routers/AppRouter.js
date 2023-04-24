@@ -17,7 +17,7 @@ import LobbySettings from "../../views/LobbySettings";
 import PvPLobby from "../../views/PvPLobby";
 import SoloGameSettings from "components/views/SoloGameSettings";
 import { TurnScoreboard } from "components/ui/TurnScoreboard";
-import CountryRanking from "components/views/CountryRanking";
+import CountryRanking from "components/ui/CountryRanking";
 
 /**
  * Main router of your application.

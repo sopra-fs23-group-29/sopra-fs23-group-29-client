@@ -11,7 +11,7 @@ const CountryRanking = props => {
     let webSocket = Stomper.getInstance();
     // dummies
     let playerId = 3
-    let countryCode = "Switzerland"
+    let countryCode = "SUI"
 
     // websocket variables
     const [turnNumber, setTurnNumber] = useState(null);
@@ -40,50 +40,54 @@ const CountryRanking = props => {
 
             /* Get the current game */
             //webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
+            
 
         }
         fetchData();
+
+        processResponse(props);
 
         async function nextTurn() {
             webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
         }
 
-    }, []);
+    }, [props.turnNumber]);
 
-    const processResponse = message => {
+    const processResponse = props => {
         // set turnNumber
-        setTurnNumber(JSON.parse(message.body).turnNumber);
+
+        setTurnNumber(props.turnNumber);
 
         // set turnPlayers
-        setTurnPlayers(JSON.parse(message.body).turnPlayers);
+        setTurnPlayers(props.turnPlayers);
 
         // set rankQuestion
-        setRankQuestion(JSON.parse(message.body).rankQuestion);
+        setRankQuestion(props.rankQuestion);
 
         // set takenGuesses
-        setTakenGuesses(JSON.parse(message.body).takenGuesses);
+        setTakenGuesses(props.takenGuesses);
 
         // set players
-        for (let i = 0; i < JSON.parse(message.body).turnPlayers.length; i++) {
-            let player = new Player(JSON.parse(message.body).turnPlayers[i])
+        for (let i = 0; i < props.turnPlayers.length; i++) {
+            let player = new Player(props.turnPlayers[i])
             playerList.push(player)
         }
 
         // set country names
-        for (let i = 0; i < JSON.parse(message.body).rankQuestion.countryList.length; i++) {
-            countries.push(JSON.parse(message.body).rankQuestion.countryList[i].nameMap.common)
-            flags.push(JSON.parse(message.body).rankQuestion.countryList[i].flagsMap.svg)
-            flagAlt.push(JSON.parse(message.body).rankQuestion.countryList[i].flagsMap.alt)
+        for (let i = 0; i < props.rankQuestion.countryList.length; i++) {
+            countries.push(props.rankQuestion.countryList[i].nameMap.common)
+            flags.push(props.rankQuestion.countryList[i].flagsMap.svg)
+            flagAlt.push(props.rankQuestion.countryList[i].flagsMap.alt)
         }
 
         // set category
-        setCategory(JSON.parse(message.body).rankQuestion.questionTextShort)
+        setCategory(props.rankQuestion.questionTextShort)
     };
 
 
     // End Turn
     const saveAnswer = () => {
-        /*
+        
         webSocket.send(
             `/app/games/${gameId}/turn/${turnNumber}/player/${playerId}/saveAnswer`,
             {
@@ -91,7 +95,7 @@ const CountryRanking = props => {
                 countryCode: countryCode,
                 takenGuesses: takenGuesses,
             }
-            */
+        );
         // check which buttons are checked
         /*
         for (let i = 0; i < countries.length; i++) {
@@ -112,7 +116,7 @@ const CountryRanking = props => {
         console.log("text" + rankQuestion.countryList[0].nameMap.common)
         console.log("takenGuesses" + takenGuesses)
         //console.log(document.querySelectorAll('input[name=marker]:checked'))
-        webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
+        //webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
     };
 
     // set marker as checked when text is clicked
