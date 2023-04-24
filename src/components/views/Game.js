@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Board} from "../ui/Board";
 import CountryRanking from "./CountryRanking";
+import { TurnScoreboard } from 'components/ui/TurnScoreboard';
 
 
 const Game = props => {
@@ -123,12 +124,17 @@ const Game = props => {
     }
     */
 
+    let dynamicScorboard = (
+        <TurnScoreboard />
+    );
+
     return (
         <BaseContainer className="game container">
             <Board>
 
             </Board>
             {content}
+            {/*{dynamicScorboard}*/}
             <BaseContainer className="order container">
                 <div>Username 1</div>
                 <div>Username 2</div>

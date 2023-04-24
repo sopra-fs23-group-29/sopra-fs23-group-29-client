@@ -16,7 +16,7 @@ import HeaderGame from "../../views/HeaderGame";
 import LobbySettings from "../../views/LobbySettings";
 import PvPLobby from "../../views/PvPLobby";
 import SoloGameSettings from "components/views/SoloGameSettings";
-import { TurnScoreboard } from "components/views/TurnScoreboard";
+import { TurnScoreboard } from "components/ui/TurnScoreboard";
 import CountryRanking from "components/views/CountryRanking";
 
 /**
@@ -109,9 +109,6 @@ const AppRouter = () => {
           </GameGuard>
         </Route>
 
-        <Route exact path="/testScoreboard">
-          <TurnScoreboard />
-        </Route>
       </Switch>
     </BrowserRouter>
   );
