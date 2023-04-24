@@ -8,7 +8,7 @@ import Stomper from "../../helpers/Stomp";
 import {api, handleError} from "../../helpers/api";
 
 const HeaderHome = props => {
-    const username = JSON.parse(localStorage.getItem('token')).username;
+    const username = JSON.parse(sessionStorage.getItem('token')).username;
 
     return (
         <div className="header container" style={{height: props.height}}>
