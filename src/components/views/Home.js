@@ -101,9 +101,6 @@ const Home = (props) => {
   const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null);
   const [barrierAnswer, setBarrierAnswer] = useState(null);
 
-  const [gameEndTurn, setGameEndTurn] = useState(null);
-  const [turnEndTurn, setTurnEndTurn] = useState(null);
-
   const [gameToMove, setGameToMove] = useState(null);
   const [playerToMove, setPlayerToMove] = useState(null);
 
@@ -224,14 +221,6 @@ const Home = (props) => {
         guess: barrierAnswer,
       }
     );
-  };
-
-  /* Fake call to end the current turn in game with ID 1
-   */
-  const endTurn = () => {
-    webSocket.send(`/app/games/${gameEndTurn}/turn/${turnEndTurn}/endTurn`, {
-      message: `End turn game ${gameEndTurn}, turn ${turnEndTurn}`,
-    });
   };
 
   /* Fake call to move player with ID 1 in game 1
@@ -372,21 +361,7 @@ const Home = (props) => {
           onChange={(un) => setBarrierAnswer(un)}
         />
       </div>
-      <Button className="primary-button" width="15%" onClick={() => endTurn()}>
-        End Turn
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameEndTurn"
-          value={gameEndTurn}
-          onChange={(un) => setGameEndTurn(un)}
-        />
-        <FormField
-          label="turnEndTurn"
-          value={turnEndTurn}
-          onChange={(un) => setTurnEndTurn(un)}
-        />
-      </div>
+      
       <Button
         className="primary-button"
         width="15%"

@@ -29,8 +29,8 @@ const PvPLobby = (props) => {
       /* get gameId */
       const gameId = params.id;
 
-      /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/" + gameId, getGameInfo);
+      /* subscribe to topic/games/{gameId}/lobby */
+      webSocket.join(`/topic/games/${gameId}/lobby`, getGameInfo);
 
       /* Get the current game */
       webSocket.send("/app/games/" + gameId + "/getGame", {
@@ -62,6 +62,7 @@ const PvPLobby = (props) => {
     const id = params.id;
     sessionStorage.setItem("gameId", id)
     console.log(id);
+    webSocket.leave(`/topic/games/${id}/lobby`);
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,
     });

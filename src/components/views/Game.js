@@ -2,16 +2,31 @@ import {useEffect, useState} from 'react';
 import {api, handleError} from 'helpers/api';
 import {Spinner} from 'components/ui/Spinner';
 import {Button} from 'components/ui/Button';
-import {useHistory} from 'react-router-dom';
+import {useHistory,useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Board} from "../ui/Board";
 import CountryRanking from "./CountryRanking";
-
+import Stomper from "../../helpers/Stomp";
 
 const Game = props => {
     const history = useHistory();
+    const params = useParams();
+
+    // Add all websocket connections needed
+    let webSocket = Stomper.getInstance();
+    const gameId = params.id;
+    
+    // Join all the topics for the game flow. Currently with dummy message, just printing the received object
+    // TODO: Change the handeler functions to appropriate handle the different messages
+    webSocket.join(`/topic/games/${gameId}/`, (message) => {console.log(message.body)})
+    webSocket.join(`/topic/games/${gameId}/gameover`, (message) => {console.log(message.body)})
+    webSocket.join(`/topic/games/${gameId}/newturn`, (message) => {console.log(message.body)})
+    webSocket.join(`/topic/games/${gameId}/updatedturn`, (message) => {console.log(message.body)})
+    webSocket.join(`/topic/games/${gameId}/scoreboard`, (message) => {console.log(message.body)})
+    webSocket.join(`/topic/games/${gameId}/barrierquestion`, (message) => {console.log(message.body)})
+
 
     // Variable to change right now
 
