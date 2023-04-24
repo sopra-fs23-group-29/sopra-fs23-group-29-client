@@ -1,40 +1,39 @@
-import {Start, Field, Barrier, End} from "./BoardField";
+import {Start, Field, End, Barrier} from "./BoardField";
 import React from 'react';
 import "styles/views/Board.scss";
 import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
 import { Gradient } from "components/ui/LinearGradient";
 
 
-export const Board = (props) => {
-    let withBarriers = false;
-    let gameMode = "pvp-large";
-    const containerColor = theme.containerColor;
-    const textColor = theme.textColor;
+class Board extends React.Component {
+    withBarriers = true;
+    gameMode = "pvp-large";
+    containerColor = theme.containerColor;
+    textColor = theme.textColor;
 
     /**
      * dummy players
      */
-    const startFieldColors = ["blue", "red", "green", "yellow", "purple", "orange"];
+    startFieldColors = ["blue", "red", "green", "yellow", "purple", "orange"];
 
-    const numberOfPlayers = 6;
-    const createPlayers = (numPlayers) => {
+    numberOfPlayers = 6;
+    createPlayers(numPlayers){
         let players = [];
         let counter = 0;
         while (counter < numPlayers) {
-            players.push({color: startFieldColors[counter], field: 0})
+            players.push({color: this.startFieldColors[counter], field: 0})
             counter += 1;
         }
         return players;
     }
-    const players = createPlayers(numberOfPlayers);
+    players = this.createPlayers(this.numberOfPlayers);
 
     /**
      * helper functions to locate fields and identify barriers
      */
-    const getPlaceOnBoard = (index, parameters) => {
+    getPlaceOnBoard(index, parameters){
         let counter = 0;
 
         // locate field on the board
@@ -66,7 +65,7 @@ export const Board = (props) => {
         return place;
     }
 
-    const isBarrier = (index, end) => {
+    isBarrier(index, end){
         return ((index - 1)%3 === 0)
             && (index > 3)
             && (end - index > 2)
@@ -75,12 +74,12 @@ export const Board = (props) => {
     /**
      * functions used to create the board
      */
-     const getBoardParams = (mode) => {
+    getBoardParams(mode){
         switch (mode) {
             case "pvp-large":
                 return [0, 5, 15, 20, 30, 29];
             case "pvp-small":
-                withBarriers = false;
+                this.withBarriers = false;
                 return [0, 3, 8, 11, 16, 15];
             default:
                 // pvp-large
@@ -88,42 +87,53 @@ export const Board = (props) => {
         }
     }
 
-    function createColorArray(end, allowBarriers) {
+    createColorArray(end, allowBarriers) {
         let colorArray = []
         let index = 0;
         while (index <= end) {
-            if (allowBarriers && isBarrier(index, end)) {
-                colorArray.push([textColor]);
+            if (allowBarriers && this.isBarrier(index, end)) {
+                colorArray.push([this.textColor]);
             } else {
-                colorArray.push([containerColor]);
+                colorArray.push([this.containerColor]);
             }
             index += 1;
         }
         // add the players' colors at the start
-        colorArray[0].push(...startFieldColors)
+        colorArray[0].push(...this.startFieldColors)
         return colorArray;
     }
 
-    function createGradientArray(colorArray, parameters) {
-         let gradientArray = [];
+    createGradientAndBarrierArray(colorArray, parameters, allowBarriers) {
+         let gradientAndBarrierArray = [];
          let index = 0;
          let gradient;
+         let barrier;
+         let end = parameters[5];
+
          while (index < colorArray.length) {
-             //gradient = mixColors(index, colorArray[index], getPlaceOnBoard(index, boardParams));
-             gradient = (
-                 <Gradient
-                    ind={100 + index}
-                    colorArray={colors[index]}
-                    placeOnBoard={getPlaceOnBoard(index, parameters)}
-                    ref={React.createRef()}
-                 />)
-             gradientArray.push(gradient)
+             if (allowBarriers && this.isBarrier(index, end)) {
+                 barrier = (
+                     <Barrier
+                        color={this.textColor}
+                        ref={React.createRef()}
+                     />)
+                 gradientAndBarrierArray.push(barrier)
+             } else {
+                 gradient = (
+                     <Gradient
+                         ind={100 + index}
+                         colorArray={this.colors[index]}
+                         placeOnBoard={this.getPlaceOnBoard(index, parameters)}
+                         ref={React.createRef()}
+                     />)
+                 gradientAndBarrierArray.push(gradient)
+             }
              index += 1;
          }
-         return gradientArray;
+         return gradientAndBarrierArray;
     }
 
-    function fieldMapper(parameters, allowBarriers, gradients) {
+    fieldMapper(parameters, allowBarriers, gradientsAndBarriers) {
         const min = parameters[0];
         const max = parameters[4];
         const end = parameters[5];
@@ -139,7 +149,7 @@ export const Board = (props) => {
             if (index === 0) {
                 fields.push(
                     <Start key={index}>
-                        {gradients[index]}
+                        {gradientsAndBarriers[index]}
                     </Start>
                 )
             }
@@ -147,23 +157,21 @@ export const Board = (props) => {
             else if (index === end) {
                 fields.push(
                     <End key={index}>
-                        {gradients[index]}
+                        {gradientsAndBarriers[index]}
                     </End>
                 )
             }
             // barriers
-            else if (allowBarriers && isBarrier(index, end)) {
+            else if (allowBarriers && this.isBarrier(index, end)) {
                 fields.push(
-                    <Barrier key={index}>
-                        {gradients[index]}
-                    </Barrier>
+                    gradientsAndBarriers[index]
                 )
             }
             // normal fields
             else {
                 fields.push(
                     <Field key={index}>
-                        {gradients[index]}
+                        {gradientsAndBarriers[index]}
                     </Field>
                 )
             }
@@ -175,103 +183,96 @@ export const Board = (props) => {
     /**
      * functions used to update the board
      */
-    let globalIndex = 1;
-    function simulateGame(numPlayers, index, end) {
-        let fieldsToMove = [];
-        let player = 0;
-        while (player < numPlayers) {
-            if (index%player === 0) {
-                fieldsToMove.push(player);
-            }
-            else if (player === 0){
-                fieldsToMove.push(index%3);
-            }
-            else {
-                fieldsToMove.push(0);
-            }
-            player += 1;
-        }
-        console.log(fieldsToMove);
-        updateColors(fieldsToMove, end);
-        globalIndex += 1;
-    }
-
-    function updateColors(fieldsMoved, end) {
+    updateColors(fieldsMoved, end, allowBarriers) {
         let player = 0;
         while (player < fieldsMoved.length) {
-            movePlayer(player, fieldsMoved[player], end);
+            this.movePlayer(player, fieldsMoved[player], end, allowBarriers);
             player += 1;
         }
     }
 
-    function movePlayer(playerNum, numFields, end) {
-        const player = players[playerNum];
+    movePlayer(playerIndex, numFields, end, allowBarriers) {
+        let fieldsMoved = 0;
+        while (fieldsMoved < numFields) {
+            this.movePlayerOnce(playerIndex, end, allowBarriers);
+            fieldsMoved += 1
+        }
+    }
+
+    movePlayerOnce(playerIndex, end, allowBarriers) {
+        const player = this.players[playerIndex];
         const color = player.color;
         const oldField = player.field
 
         // remove the player from the current field
-        const index = colors[oldField].indexOf(color);
-        colors[oldField].splice(index, 1);
-        gradients[oldField].ref.current.updateColors(colors[oldField]);
+        const index = this.colors[oldField].indexOf(color);
+        this.colors[oldField].splice(index, 1);
+        this.gradientsAndBarriers[oldField].ref.current.updateColors(this.colors[oldField]);
 
         // move the player one field forward
-        const newField = Math.min(end, oldField + numFields);
+        let newField = Math.min(end, oldField + 1);
+        if (allowBarriers && this.isBarrier(newField, end)) {
+            const barrier = this.gradientsAndBarriers[newField].ref.current
+            // we need to skip barriers and clear them if they were not already cleared
+            if (!barrier.isCleared()) {
+                barrier.clearBarrier(color);
+            }
+            newField = Math.min(end, newField + 1);
+        }
         player.field = newField;
-        colors[newField].push(color);
-        gradients[newField].ref.current.updateColors(colors[newField]);
+        this.colors[newField].push(color);
+        this.gradientsAndBarriers[newField].ref.current.updateColors(this.colors[newField]);
     }
 
     /**
      * create and return the board
      */
-    const boardParams = getBoardParams(gameMode);
-    const colors = createColorArray(boardParams[5], withBarriers);
-    const gradients = createGradientArray(colors, boardParams);
+    boardParams = this.getBoardParams(this.gameMode);
+    colors = this.createColorArray(this.boardParams[5], this.withBarriers);
+    gradientsAndBarriers = this.createGradientAndBarrierArray(this.colors, this.boardParams, this.withBarriers);
+    fields = this.fieldMapper(this.boardParams, this.withBarriers, this.gradientsAndBarriers);
 
-    const fields = fieldMapper(boardParams, withBarriers, gradients);
+    leftColumn = this.fields.slice(this.boardParams[0], this.boardParams[1]);
+    topRow = this.fields.slice(this.boardParams[1], this.boardParams[2]);
+    rightColumn = this.fields.slice(this.boardParams[2], this.boardParams[3]);
+    bottomRow = this.fields.slice(this.boardParams[3], this.boardParams[4]);
 
-    const leftColumn = fields.slice(boardParams[0], boardParams[1]);
-    const topRow = fields.slice(boardParams[1], boardParams[2]);
-    const rightColumn = fields.slice(boardParams[2], boardParams[3]);
-    const bottomRow = fields.slice(boardParams[3], boardParams[4]);
-
+    render() {
     return <BaseContainer className="board container">
         <div className="board left-column container">
             {
                 // bottom to top, hence reverse()
-                leftColumn.reverse()
+                this.leftColumn.reverse()
             }
         </div>
 
         <div className="board top-row container">
             {
                 // left to right
-                topRow
+                this.topRow
             }
         </div>
 
         <div className="board right-column container">
             {
                 // top to bottom
-                rightColumn
+                this.rightColumn
             }
         </div>
 
         <div className="board bottom-row container">
             {
                 // right to left, hence reverse()
-                bottomRow.reverse()
+                this.bottomRow.reverse()
             }
         </div>
-        <Button
-            onClick={() => simulateGame(numberOfPlayers, globalIndex, boardParams[5])}>
-            simulate game
-        </Button>
-
     </BaseContainer>
+    }
 }
 
 Board.propTypes = {
     mode: PropTypes.string,
     onChange: PropTypes.func,
 };
+
+export { Board };
