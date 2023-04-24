@@ -81,6 +81,8 @@ class Board extends React.Component {
             case "pvp-small":
                 this.withBarriers = false;
                 return [0, 3, 8, 11, 16, 15];
+            case "gigantic":
+                return [0, 8, 28, 36, 56, 55];
             default:
                 // pvp-large
                 return [0, 5, 15, 20, 30, 29];
@@ -183,23 +185,25 @@ class Board extends React.Component {
     /**
      * functions used to update the board
      */
-    updateColors(fieldsMoved, end, allowBarriers) {
+    async updateColors(fieldsMoved, end, allowBarriers) {
         let player = 0;
         while (player < fieldsMoved.length) {
-            this.movePlayer(player, fieldsMoved[player], end, allowBarriers);
+            await this.movePlayer(player, fieldsMoved[player], end, allowBarriers);
             player += 1;
         }
     }
 
-    movePlayer(playerIndex, numFields, end, allowBarriers) {
+    async movePlayer(playerIndex, numFields, end, allowBarriers) {
         let fieldsMoved = 0;
+        let hitBarrier = false;
         while (fieldsMoved < numFields) {
-            this.movePlayerOnce(playerIndex, end, allowBarriers);
+            hitBarrier = await this.movePlayerOnce(playerIndex, end, allowBarriers);
             fieldsMoved += 1
         }
+        await new Promise(r => setTimeout(r, 200));
     }
 
-    movePlayerOnce(playerIndex, end, allowBarriers) {
+    async movePlayerOnce(playerIndex, end, allowBarriers) {
         const player = this.players[playerIndex];
         const color = player.color;
         const oldField = player.field
@@ -222,6 +226,7 @@ class Board extends React.Component {
         player.field = newField;
         this.colors[newField].push(color);
         this.gradientsAndBarriers[newField].ref.current.updateColors(this.colors[newField]);
+        await new Promise(r => setTimeout(r, 200));
     }
 
     /**

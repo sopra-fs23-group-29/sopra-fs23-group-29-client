@@ -37,10 +37,10 @@ const Game = props => {
                 }
                 player += 1;
             }
-            board.updateColors(fieldsToMove, end, allowBarriers);
+            await board.updateColors(fieldsToMove, end, allowBarriers);
             //board.updateColors([1], end, allowBarriers);
             index += 1;
-            await new Promise(r => setTimeout(r, 200));
+            await new Promise(r => setTimeout(r, 1000));
         }
     }
     const thisBoard = (
