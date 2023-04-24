@@ -5,7 +5,7 @@ import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { Button } from "components/ui/Button";
 import PropTypes from "prop-types";
-import { Gradient } from "helpers/LinearGradient";
+import { Gradient } from "components/ui/LinearGradient";
 
 
 export const Board = (props) => {
@@ -183,8 +183,8 @@ export const Board = (props) => {
             if (index%player === 0) {
                 fieldsToMove.push(player);
             }
-            else if (player === 0 && index%5 === 0){
-                fieldsToMove.push(5);
+            else if (player === 0){
+                fieldsToMove.push(index%3);
             }
             else {
                 fieldsToMove.push(0);

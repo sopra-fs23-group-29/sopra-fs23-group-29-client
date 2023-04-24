@@ -60,7 +60,7 @@ const PvPLobby = (props) => {
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
-    localStorage.setItem("gameId", id)
+    sessionStorage.setItem("gameId", id)
     console.log(id);
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,

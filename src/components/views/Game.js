@@ -6,7 +6,7 @@ import {useHistory} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 import "styles/views/Game.scss";
-import {Board} from "./Board";
+import {Board} from "../ui/Board";
 import CountryRanking from "./CountryRanking";
 
 
