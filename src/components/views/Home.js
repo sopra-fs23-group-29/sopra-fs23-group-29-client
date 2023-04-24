@@ -110,7 +110,6 @@ const Home = (props) => {
   useEffect(() => {
     async function fetchData() {
       webSocket.join("/topic/games", displayOpenLobbies);
-
       webSocket.send("/app/games/getAllGames", { message: "GET ALL GAMES" });
     }
     fetchData();

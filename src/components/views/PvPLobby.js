@@ -29,8 +29,11 @@ const PvPLobby = (props) => {
       /* get gameId */
       const gameId = params.id;
 
-      /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/" + gameId +"/lobby", getGameInfo);
+      /* subscribe to topic/games/{gameId}/lobby */
+      webSocket.join(`/topic/games/${gameId}/lobby`, getGameInfo);
+      
+      /* subscribe to topic/games/{gameId}/gamestart to get an update if the game starts */
+      webSocket.join(`/topic/games/${gameId}/gamestart`, gameHasStarted);
 
       /* Get the current game */
       webSocket.send("/app/games/" + gameId + "/getGame", {
@@ -56,6 +59,14 @@ const PvPLobby = (props) => {
     setGame(JSON.parse(message.body));
     setHasFetchedGame(true);
   };
+
+  // when a message comes in through that channel the game has started, route to /games/gameId
+  const gameHasStarted = (message) => {
+    const id = params.id;
+    webSocket.leave(`/topic/games/${id}/lobby`);
+    webSocket.leave(`/topic/games/${id}/gamestart`);
+    history.push(`/games/` + id);
+  }
 
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
