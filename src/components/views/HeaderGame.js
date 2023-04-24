@@ -16,9 +16,11 @@ const HeaderGame = props => {
     const popUpLeave = async () => {
         if (window.confirm("Do you want to leave the game?")) {
             try {
-                webSocket.leave("/topic/games/" + gameId, function (payload) {
-                    console.log(JSON.parse(payload.body).content);
-                });
+                webSocket.leave("/topic/games/" + gameId + "/newturn");
+                webSocket.leave("/topic/games/" + gameId + "/updatedturn");
+                webSocket.leave("/topic/games/" + gameId + "/scoreboard");
+                webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
+                webSocket.leave("/topic/games/" + gameId + "/gameover");
                 // set status to offline
                 await api.delete(
                     `/games/${gameId}`,

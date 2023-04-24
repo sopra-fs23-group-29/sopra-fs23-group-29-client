@@ -30,7 +30,7 @@ const PvPLobby = (props) => {
       const gameId = params.id;
 
       /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/" + gameId, getGameInfo);
+      webSocket.join("/topic/games/" + gameId +"/lobby", getGameInfo);
 
       /* Get the current game */
       webSocket.send("/app/games/" + gameId + "/getGame", {
@@ -65,7 +65,7 @@ const PvPLobby = (props) => {
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,
     });
-    history.push(`/games/` + id);
+    history.push(`/games/${id}`);
 
     // take this out once everything above works
     console.log("Game with ID " + id + " has been started");
