@@ -67,13 +67,18 @@ const PvPLobby = (props) => {
   // when a message comes in through that channel the game has started, route to /games/gameId
   const gameHasStarted = (message) => {
     const id = params.id;
+    // set the game id in the session storage
+    sessionStorage.setItem("gameId", id);
+    // leave all lobby topics
     webSocket.leave(`/topic/games/${id}/lobby`);
     webSocket.leave(`/topic/games/${id}/gamestart`);
+    webSocket.leave(`/topic/games/${id}/gamedeleted`);
     history.push(`/games/` + id);
   };
 
   const gameHasEnded = (message) => {
     const id = params.id;
+    // leave all lobby topics
     webSocket.leave(`/topic/games/${id}/lobby`);
     webSocket.leave(`/topic/games/${id}/gamestart`);
     webSocket.leave(`/topic/games/${id}/gamedeleted`);
