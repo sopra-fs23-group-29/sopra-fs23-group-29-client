@@ -10,7 +10,8 @@ const CountryRanking = props => {
     const gameId = useParams().id;
     let webSocket = Stomper.getInstance();
     // dummies
-    let playerId = 1;
+    let playerId = JSON.parse(sessionStorage.getItem('token')).id;
+    let playerColorId = 1
 
     // websocket variables
     const [turnNumber, setTurnNumber] = useState(null);
@@ -35,9 +36,11 @@ const CountryRanking = props => {
 
     useEffect(() => {
 
+        //webSocket.join("/topic/games/" + gameId + "/updatedturn", processUpdatedTurn);
+
         processResponse(props);
 
-    }, [props.turnNumber]);
+    }, [props.turnNumber, props.takenGuesses]);
 
     const processResponse = props => {
         // set turnNumber
@@ -73,7 +76,16 @@ const CountryRanking = props => {
         // set category
         setCategory(props.rankQuestion.questionTextShort)
     };
+    /*
+    const processUpdatedTurn = (message) => {
+        // set takenGuesses
+        setTakenGuesses(JSON.parse(message.body).takenGuesses);
 
+        if (JSON.parse(message.body).takenGuesses.length === JSON.parse(message.body).turnPlayers.length) {
+            saveAnswer()
+        }
+    };
+*/
     // End Turn
     const saveAnswer = () => {
         webSocket.send(
@@ -106,7 +118,7 @@ const CountryRanking = props => {
                 <div>
                     <div className="country-ranking marker-container">
                         <label className="country-ranking marker-number" onClick={() => setMarkerChecked(`marker${i}`)}>{i}</label>
-                        <input type="radio" name="marker" id={"marker" + i} className="marker-radio" value={"player" + playerId} key={i} onClick={() => setCheckedMarker(i)}/>
+                        <input type="radio" name="marker" id={"marker" + i} className="marker-radio" value={"player" + playerColorId} key={i} onClick={() => setCheckedMarker(i)}/>
                     </div>
                 </div>
             )
@@ -126,7 +138,7 @@ const CountryRanking = props => {
             countryArr.push(
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(`country${i}`)}>
-                        <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerId} onClick={() => setCheckedCountry(cioc[i])}/>
+                        <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerColorId} onClick={() => setCheckedCountry(cioc[i])}/>
                         <label className="country-ranking country-name" onClick={() => setCountryChecked(`country${i}`)}>{countries[i]}</label>
                         <img src={flags[i]} onClick={() => setCountryChecked(`country${i}`)} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
                     </div>
@@ -142,7 +154,7 @@ const CountryRanking = props => {
                 countryArr.push(
                     <div>
                         <div className="country-ranking countries-container" onClick={() => setCountryChecked(`country${i}`)}>
-                            <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerId} onClick={() => setCheckedCountry(cioc[i])}/>
+                            <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerColorId} onClick={() => setCheckedCountry(cioc[i])}/>
                             <label className="country-ranking country-name" onClick={() => setCountryChecked(`country${i}`)}>{countries[i]}</label>
                             <img src={flags[i]} onClick={() => setCountryChecked(`country${i}`)} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
                         </div>
