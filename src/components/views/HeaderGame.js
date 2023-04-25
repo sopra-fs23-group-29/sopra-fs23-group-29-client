@@ -16,6 +16,7 @@ const HeaderGame = props => {
     const popUpLeave = async () => {
         if (window.confirm("Do you want to leave the game?")) {
             try {
+                webSocket.leave("/topic/games/" + gameId + "/gamestart");
                 webSocket.leave("/topic/games/" + gameId + "/newturn");
                 webSocket.leave("/topic/games/" + gameId + "/updatedturn");
                 webSocket.leave("/topic/games/" + gameId + "/scoreboard");
