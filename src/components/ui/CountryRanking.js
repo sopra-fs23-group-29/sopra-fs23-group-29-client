@@ -1,5 +1,5 @@
 import {Button} from 'components/ui/Button';
-import {useHistory, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/CountryRanking.scss";
 import Stomper from "../../helpers/Stomp";
@@ -10,8 +10,7 @@ const CountryRanking = props => {
     const gameId = useParams().id;
     let webSocket = Stomper.getInstance();
     // dummies
-    let playerId = 3
-    let countryCode = "SUI"
+    let playerId = 1;
 
     // websocket variables
     const [turnNumber, setTurnNumber] = useState(null);
@@ -21,6 +20,7 @@ const CountryRanking = props => {
 
     // countries and flags
     const [countries, setCountries] = useState([]);
+    const [cioc, setCioc] = useState([]);
     const [flags, setFlags] = useState([]);
     const [flagAlt, setFlagAlt] = useState([]);
 
@@ -34,28 +34,13 @@ const CountryRanking = props => {
 
 
     useEffect(() => {
-        async function fetchData() {
-            /* subscribe to topic/games/{gameId} */
-            //webSocket.join("/topic/games/" + gameId + "/newturn", processResponse);
-
-            /* Get the current game */
-            //webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
-            
-
-        }
-        fetchData();
 
         processResponse(props);
-
-        async function nextTurn() {
-            webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
-        }
 
     }, [props.turnNumber]);
 
     const processResponse = props => {
         // set turnNumber
-
         setTurnNumber(props.turnNumber);
 
         // set turnPlayers
@@ -67,6 +52,10 @@ const CountryRanking = props => {
         // set takenGuesses
         setTakenGuesses(props.takenGuesses);
 
+        if (props.takenGuesses.length === props.turnPlayers.length) {
+            saveAnswer()
+        }
+
         // set players
         for (let i = 0; i < props.turnPlayers.length; i++) {
             let player = new Player(props.turnPlayers[i])
@@ -76,6 +65,7 @@ const CountryRanking = props => {
         // set country names
         for (let i = 0; i < props.rankQuestion.countryList.length; i++) {
             countries.push(props.rankQuestion.countryList[i].nameMap.common)
+            cioc.push(props.rankQuestion.countryList[i].cioc)
             flags.push(props.rankQuestion.countryList[i].flagsMap.svg)
             flagAlt.push(props.rankQuestion.countryList[i].flagsMap.alt)
         }
@@ -84,39 +74,23 @@ const CountryRanking = props => {
         setCategory(props.rankQuestion.questionTextShort)
     };
 
-
     // End Turn
     const saveAnswer = () => {
-
         webSocket.send(
             `/app/games/${gameId}/turn/${turnNumber}/player/${playerId}/saveAnswer`,
             {
                 userToken: JSON.parse(sessionStorage.getItem("token")).token,
-                countryCode: countryCode,
-                takenGuesses: takenGuesses,
+                countryCode: checkedCountry,
+                takenGuesses: checkedMarker,
             }
         );
-        // check which buttons are checked
-        /*
-        for (let i = 0; i < countries.length; i++) {
-            let currentMarker = document.getElementById('marker' + [i]);
-            let currentCountry = document.getElementById('country' + [i]);
-            // checking if any radio button is selected
-            if(currentMarker.checked){
-                console.log("The radio button with value " + currentMarker.key + " is checked!");
-            }
-            if(currentCountry.checked){
-                console.log("The radio button with value " + currentCountry.key + " is checked!");
-            }
-        }
-         */
-        console.log("turnNumber" + turnNumber)
-        console.log("turnPlayers" + turnPlayers)
-        console.log("rankQuestion" + rankQuestion)
-        console.log("text" + rankQuestion.countryList[0].nameMap.common)
-        console.log("takenGuesses" + takenGuesses)
-        //console.log(document.querySelectorAll('input[name=marker]:checked'))
-        //webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
+        };
+    const nextTurn = () => {
+        setCountries([])
+        setFlags([])
+        setFlagAlt([])
+        setCioc([])
+        webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
     };
 
     // set marker as checked when text is clicked
@@ -125,19 +99,19 @@ const CountryRanking = props => {
     }
 
     // marker elements
-    function marker(countries) {
-        let markerArr = []
+    function createMarker(countries) {
+        let marker = []
         for (let i = 1; i <= countries.length; i++) {
-            markerArr.push(
+            marker.push(
                 <div>
                     <div className="country-ranking marker-container">
                         <label className="country-ranking marker-number" onClick={() => setMarkerChecked(`marker${i}`)}>{i}</label>
-                        <input type="radio" name="marker" id={"marker" + i} className="marker-radio" value={"player" + playerId}/>
+                        <input type="radio" name="marker" id={"marker" + i} className="marker-radio" value={"player" + playerId} key={i} onClick={() => setCheckedMarker(i)}/>
                     </div>
                 </div>
             )
         }
-        return markerArr
+        return marker
     }
 
     // set country as checked when text, container or else is clicked
@@ -148,11 +122,11 @@ const CountryRanking = props => {
     // country elements
     function country1(countries) {
         let countryArr = []
-        for (let i = 0; i < countries.length; i++) {
+        for (let i = 0; i < countries.length-2; i++) {
             countryArr.push(
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(`country${i}`)}>
-                        <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerId}/>
+                        <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerId} onClick={() => setCheckedCountry(cioc[i])}/>
                         <label className="country-ranking country-name" onClick={() => setCountryChecked(`country${i}`)}>{countries[i]}</label>
                         <img src={flags[i]} onClick={() => setCountryChecked(`country${i}`)} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
                     </div>
@@ -161,7 +135,6 @@ const CountryRanking = props => {
         }
         return countryArr
     }
-    /* second row
     function country2(countries) {
         if (countries.length > 3) {
             let countryArr = []
@@ -169,8 +142,9 @@ const CountryRanking = props => {
                 countryArr.push(
                     <div>
                         <div className="country-ranking countries-container" onClick={() => setCountryChecked(`country${i}`)}>
+                            <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerId} onClick={() => setCheckedCountry(cioc[i])}/>
                             <label className="country-ranking country-name" onClick={() => setCountryChecked(`country${i}`)}>{countries[i]}</label>
-                            <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={"player" + playerId}/>
+                            <img src={flags[i]} onClick={() => setCountryChecked(`country${i}`)} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
                         </div>
                     </div>
                 )
@@ -178,7 +152,6 @@ const CountryRanking = props => {
             return countryArr
         }
     }
-     */
 
     return (
         <BaseContainer className="country-ranking container">
@@ -191,19 +164,26 @@ const CountryRanking = props => {
             <div className="country-ranking flag-rows">
                 {country1(countries)}
             </div>
+            <div className="country-ranking flag-rows">
+                {country2(countries)}
+            </div>
             <div className="country-ranking bottom-row">
                 <div className="country-ranking number-row">
-                    {marker(countries)}
+                    {createMarker(countries)}
                 </div>
                 <Button
                     id="saveAnswer"
                     onClick={() => saveAnswer()}>
                     End Turn
                 </Button>
+                <Button
+                    id="nextTurn"
+                    onClick={() => nextTurn()}>
+                    Next Turn
+                </Button>
             </div>
         </BaseContainer>
     );
 }
-
 
 export default CountryRanking;
