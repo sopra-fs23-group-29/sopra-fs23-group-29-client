@@ -13,7 +13,7 @@ const Game = props => {
     const history = useHistory();
     const params = useParams();
     let webSocket = Stomper.getInstance();
-    webSocket.leave("/topic/games/" + params.id + "/lobby", function (message) {});
+    webSocket.leave("/topic/games/" + params.id + "/lobby");
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
@@ -22,12 +22,13 @@ const Game = props => {
     webSocket.join("/topic/games/" + params.id + "/scoreboard", function (message) {
         setShowCountryRanking(false);
         setTurnScoreboardProps(JSON.parse(message.body));
-
+        console.log("showing scoreboard");
+        console.log(JSON.parse(message.body));
         setShowTurnScoreboard(true);
         setTimeout(() => {
             setShowTurnScoreboard(false);
-            //here comes call to board with player and point array
-        }, "5000");
+            //here comes call to board to walk players. just pass JSON.parse(message.body) . The information to move the players is in there
+        }, "10000");
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {});

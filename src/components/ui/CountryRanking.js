@@ -38,14 +38,14 @@ const CountryRanking = props => {
 
 
     useEffect(() => {
-
+        
         //webSocket.join("/topic/games/" + gameId + "/updatedturn", processUpdatedTurn);
 
-        processResponse(props);
+        processNewTurn(props);
 
     }, [props.turnNumber]);
 
-    const processResponse = props => {
+    const processNewTurn = props => {
         // set turnNumber
         setTurnNumber(props.turnNumber);
 
@@ -104,7 +104,7 @@ const CountryRanking = props => {
             {
                 userToken: userToken,
                 countryCode: checkedCountry,
-                takenGuesses: checkedMarker,
+                guess: checkedMarker,
             }
         );
         //console.log(takenGuesses.length)
@@ -199,13 +199,13 @@ const CountryRanking = props => {
                 <Button
                     id="saveAnswer"
                     onClick={() => saveAnswer()}>
-                    End Turn
+                    Submit Answer
                 </Button>
-                <Button
+                {/*<Button
                     id="nextTurn"
                     onClick={() => nextTurn()}>
                     Next Turn
-                </Button>
+                </Button>*/}
             </div>
         </BaseContainer>
     );
