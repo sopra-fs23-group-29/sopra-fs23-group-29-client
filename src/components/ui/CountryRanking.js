@@ -7,10 +7,11 @@ import React, {useEffect, useState} from "react";
 import Player from "../../models/Player";
 
 const CountryRanking = props => {
+    // set these as const [] = useState... if possible
     const gameId = useParams().id;
     let webSocket = Stomper.getInstance();
     // dummies
-    let playerId = JSON.parse(sessionStorage.getItem('token')).id;
+    let userToken = JSON.parse(sessionStorage.getItem('token')).token;
     let playerColorId = 1
 
     // websocket variables
@@ -27,9 +28,11 @@ const CountryRanking = props => {
 
     // Player
     const [playerList, setPlayerList] = useState([]);
+    const [yourPlayer, setYourPlayer] = useState(null);
+    const [currentPlayer, setCurrentPlayer] = useState(null);
 
     // misc
-    const [category, setCategory] = useState([]);
+    const [category, setCategory] = useState(null);
     const [checkedMarker, setCheckedMarker] = useState(null);
     const [checkedCountry, setCheckedCountry] = useState(null);
 
@@ -40,7 +43,7 @@ const CountryRanking = props => {
 
         processResponse(props);
 
-    }, [props.turnNumber, props.takenGuesses]);
+    }, [props.turnNumber]);
 
     const processResponse = props => {
         // set turnNumber
@@ -55,13 +58,21 @@ const CountryRanking = props => {
         // set takenGuesses
         setTakenGuesses(props.takenGuesses);
 
-        if (props.takenGuesses.length === props.turnPlayers.length) {
-            saveAnswer()
-        }
 
         // set players
         for (let i = 0; i < props.turnPlayers.length; i++) {
             let player = new Player(props.turnPlayers[i])
+            if (player.userToken === userToken) {
+                setYourPlayer(player)
+                sessionStorage.setItem('game', JSON.stringify({
+                    "turnNumber": props.turnNumber,
+                    "playerColor": player.playerColor,
+                }
+                ));
+            }
+            if (i === props.takenGuesses.length) {
+                setCurrentPlayer(player)
+            }
             playerList.push(player)
         }
 
@@ -89,19 +100,21 @@ const CountryRanking = props => {
     // End Turn
     const saveAnswer = () => {
         webSocket.send(
-            `/app/games/${gameId}/turn/${turnNumber}/player/${playerId}/saveAnswer`,
+            `/app/games/${gameId}/turn/${turnNumber}/player/${yourPlayer.id}/saveAnswer`,
             {
-                userToken: JSON.parse(sessionStorage.getItem("token")).token,
+                userToken: userToken,
                 countryCode: checkedCountry,
                 takenGuesses: checkedMarker,
             }
         );
+        //console.log(takenGuesses.length)
         };
     const nextTurn = () => {
         setCountries([])
         setFlags([])
         setFlagAlt([])
         setCioc([])
+        setPlayerList([])
         webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
     };
 
