@@ -1,6 +1,7 @@
 @import '../_theme';
 
 .turn-scoreboard {
+
   &.container {
     background: $containerColor;
     padding: 2em;
@@ -19,36 +20,34 @@
   }
   
   &.table-row {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
+    display: grid; /* Use CSS grid instead of flexbox */
+    grid-template-columns: 30px 50px 130px 20px 5px 90px 120px;
     height: 45px; /* Set a fixed height */
     width: 100%;
     margin-bottom: 1em;
     margin-top: 1em;
     gap: 1em;
-    justify-content: space-between;
     border-bottom: 1px solid #ccc; /* Add a bottom border */
   
     & img {
       border-radius: 5%;
       width: 50px;
+      grid-column: 2; /* Set the column position for the image */
     }
   
     & div {
       display: flex;
       align-items: center;
-      
-    }
-
-    & div:nth-child(2) {
-
-      margin-bottom: 10px; /* Add a margin to the bottom */
       flex: 1;
+      white-space: nowrap;
+      align-self: center;
     }
 
+    
   }
 }
+
+
 
 
 

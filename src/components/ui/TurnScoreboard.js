@@ -167,8 +167,18 @@ export const TurnScoreboard = (props) => {
     
         return (
             <BaseContainer className="turn-scoreboard container">
-              <h1>Results {test_data.rankQuestion.questionTextShort}</h1>
+              <h1>Results of this round</h1>
+              
               <div>
+              <BaseContainer className="turn-scoreboard table-row">
+                <div>Rank</div>
+                <div> </div>
+                <div> </div>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Guessed rank</div>
+                <div> </div>
+                <div> </div>
+                <div>{test_data.rankQuestion.questionTextShort}</div>
+              </BaseContainer>
                 {test_data.rankQuestion.countryList.map((country, index) => {
                   // Find the player that guessed this country
                   const player = test_data.scoreboardEntries.find((p) => p.guessCountryCode == country.cioc);
@@ -202,12 +212,15 @@ export const TurnScoreboard = (props) => {
                         <img src={country.flagUrl} alt={`${country.name} flag`} />
                       </div>
                       <div>{country.name}</div>
-                      <div>{player ? player.guess : ""}</div>
+                      <div style={{backgroundColor: player ? player.playerColor : 'transparent', borderRadius: '50%', width: '30px', height: '30px', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        {player ? player.guess : ""}
+                      </div>
                       <div>{player ? ">" : ""}</div>
                       <div>{player ? `${player.currentScore} ${player.currentScore === 1 ? 'Point' : 'Points'}` : ""}</div>
                       <div>{statistic}</div>
                     </BaseContainer>
                   );
+                  
                 })}
               </div>
             </BaseContainer>
