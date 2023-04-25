@@ -1,10 +1,6 @@
-import {useEffect, useState} from 'react';
-import {api, handleError} from 'helpers/api';
-import {Spinner} from 'components/ui/Spinner';
-import {Button} from 'components/ui/Button';
+import {useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
 import "styles/views/Game.scss";
 import {Board} from "../ui/Board";
 import CountryRanking from "../ui/CountryRanking";
@@ -43,15 +39,12 @@ const Game = props => {
     const [showTurnScoreboard, setShowTurnScoreboard] = useState(false);
     const [turnScoreboardProps, setTurnScoreboardProps] = useState({});
 
-    let change = "Score";
     let roundNumber = 1;
     let content = (
         <BaseContainer className="round container">
             Round {roundNumber}
         </BaseContainer>
     );
-
-    
 
     return (
         <BaseContainer className="game container">
