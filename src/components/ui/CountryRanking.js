@@ -40,7 +40,7 @@ const CountryRanking = props => {
 
             /* Get the current game */
             //webSocket.send("/app/games/" + gameId + "/nextTurn", { message: "NEXT TURN" });
-
+            
 
         }
         fetchData();
@@ -204,5 +204,6 @@ const CountryRanking = props => {
         </BaseContainer>
     );
 }
+
 
 export default CountryRanking;

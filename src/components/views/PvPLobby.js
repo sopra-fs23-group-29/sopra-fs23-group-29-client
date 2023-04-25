@@ -29,8 +29,11 @@ const PvPLobby = (props) => {
       /* get gameId */
       const gameId = params.id;
 
-      /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/" + gameId, getGameInfo);
+      /* subscribe to topic/games/{gameId}/lobby */
+      webSocket.join("/topic/games/" + gameId + "/lobby", getGameInfo);
+
+      /* subscribe to topic/games/{gameId}/gamestart to get an update if the game starts */
+      webSocket.join(`/topic/games/${gameId}/gamestart`, gameHasStarted);
 
       /* Get the current game */
       webSocket.send("/app/games/" + gameId + "/getGame", {
@@ -57,15 +60,23 @@ const PvPLobby = (props) => {
     setHasFetchedGame(true);
   };
 
+  // when a message comes in through that channel the game has started, route to /games/gameId
+  const gameHasStarted = (message) => {
+    const id = params.id;
+    webSocket.leave(`/topic/games/${id}/lobby`);
+    webSocket.leave(`/topic/games/${id}/gamestart`);
+    history.push(`/games/` + id);
+  };
+
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
-    sessionStorage.setItem("gameId", id)
+    sessionStorage.setItem("gameId", id);
     console.log(id);
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,
     });
-    history.push(`/games/` + id);
+    history.push(`/games/${id}`);
 
     // take this out once everything above works
     console.log("Game with ID " + id + " has been started");
@@ -80,7 +91,6 @@ const PvPLobby = (props) => {
     /* if person exiting is just a player: delete them as player and redirect to home screen,
         update player list for all remaining players */
 
-    //delete once everything above works
     history.push(`/`);
   };
 
@@ -98,7 +108,12 @@ const PvPLobby = (props) => {
             ))}
           </div>
           <Button onClick={() => exitLobby()}>Leave Lobby</Button>
-          <Button onClick={() => startGame()}>Start Game</Button>
+          <Button
+            disabled={!players || players.length < 2}
+            onClick={() => startGame()}
+          >
+            Start Game
+          </Button>
         </ul>
       ) : (
         <div />

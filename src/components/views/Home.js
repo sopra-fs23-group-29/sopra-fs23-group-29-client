@@ -110,7 +110,6 @@ const Home = (props) => {
   useEffect(() => {
     async function fetchData() {
       webSocket.join("/topic/games", displayOpenLobbies);
-
       webSocket.send("/app/games/getAllGames", { message: "GET ALL GAMES" });
     }
     fetchData();
@@ -176,9 +175,7 @@ const Home = (props) => {
   const leaveGame = async () => {
     try {
       /* unsubscribe to topic/games/{gameId} */
-      webSocket.leave("/topic/games/" + gameIdToLeave, function (payload) {
-        console.log(JSON.parse(payload.body).content);
-      });
+      webSocket.leave("/topic/games/" + gameIdToLeave + "/lobby");
 
       const token = JSON.parse(sessionStorage.getItem("token")).token;
       console.log("leave game: token " + token);
