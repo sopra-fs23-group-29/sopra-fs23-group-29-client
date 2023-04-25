@@ -5,24 +5,33 @@ import "styles/views/Login.scss";
 import "styles/views/Home.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import Stomper from "../../helpers/Stomp";
+import { api, handleError } from "helpers/api";
 
 /* This is the view for an open PvP Game Lobby that displays its name and all players in the lobby  */
-
-const Players = ({ player }) => {
-  return (
-    <div className="home lobby-container" width="30%">
-      <div>{player.playerName}</div>
-    </div>
-  );
-};
 
 const PvPLobby = (props) => {
   const history = useHistory();
   const params = useParams();
-  let webSocket = Stomper.getInstance();
   const [players, setPlayers] = useState([]);
   const [game, setGame] = useState(null);
   const [hasFetchedGame, setHasFetchedGame] = useState(false);
+  const [isHost, setIsHost] = useState(false);
+  
+  let webSocket = Stomper.getInstance();
+
+  // set the current gameId in the sessionStorage
+  sessionStorage.setItem("gameId", params.id);
+
+  const Players = ({ player }) => {
+  
+    const hostTag = player.isHost ? ' (Host)' : '';
+  
+    return (
+      <div className="home lobby-container" width="30%">
+        <div>{player.playerName + hostTag}</div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -35,10 +44,14 @@ const PvPLobby = (props) => {
       /* subscribe to topic/games/{gameId}/gamestart to get an update if the game starts */
       webSocket.join(`/topic/games/${gameId}/gamestart`, gameHasStarted);
 
+      /* subscribe to topic/games/{gameId}/gamedeleted to get an update if the game is deleted due to host leaving */
+      webSocket.join(`/topic/games/${gameId}/gamedeleted`, gameHasEnded);
+
       /* Get the current game */
       webSocket.send("/app/games/" + gameId + "/getGame", {
         message: "GET GAME " + gameId,
       });
+
     }
     fetchData();
   }, []);
@@ -54,6 +67,37 @@ const PvPLobby = (props) => {
     setAllPlayers();
   }, [game]);
 
+  // upon change in game, check if I'm the host
+  useEffect(() => {
+    async function setHost() {
+
+      console.log("setHost ...");
+
+      // when game null set to false
+      if (game === null) {
+        setIsHost(false);
+        return;
+      }
+      if (game.players === null) {
+        setIsHost(false);
+        return;
+      }
+  
+      const token = JSON.parse(sessionStorage.getItem("token")).token;
+      
+      // loop through game.players array and check if I'm the host
+      let player;
+      for (player of game.players) {
+        if (player.userToken === token && player.isHost === true) {
+          console.log(`Player ${player.playerName} is the host`);
+          setIsHost(true);
+        }
+      }
+    }
+    setHost();
+  }, [game])
+  
+
   /* get info from websocket message to display players in lobby */
   const getGameInfo = (message) => {
     setGame(JSON.parse(message.body));
@@ -63,15 +107,26 @@ const PvPLobby = (props) => {
   // when a message comes in through that channel the game has started, route to /games/gameId
   const gameHasStarted = (message) => {
     const id = params.id;
+    // leave all lobby topics
     webSocket.leave(`/topic/games/${id}/lobby`);
     webSocket.leave(`/topic/games/${id}/gamestart`);
+    webSocket.leave(`/topic/games/${id}/gamedeleted`);
     history.push(`/games/` + id);
   };
 
+  const gameHasEnded = (message) => {
+    const id = params.id;
+    // leave all lobby topics
+    webSocket.leave(`/topic/games/${id}/lobby`);
+    webSocket.leave(`/topic/games/${id}/gamestart`);
+    webSocket.leave(`/topic/games/${id}/gamedeleted`);
+    history.push("/");
+  };
+
+  
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
-    sessionStorage.setItem("gameId", id);
     console.log(id);
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,
@@ -82,14 +137,32 @@ const PvPLobby = (props) => {
     console.log("Game with ID " + id + " has been started");
   };
 
-  const exitLobby = () => {
-    /* check if person who wants to exit is the creator of the lobby*/
+  async function exitLobby() {
 
-    /* if person exiting is creator of lobby: delete lobby (and game on server) and 
-        redirect all players to the home screen*/
-
-    /* if person exiting is just a player: delete them as player and redirect to home screen,
-        update player list for all remaining players */
+      const id = params.id;
+  
+      try {
+        // fetch the user trying to leave the game
+        const token = JSON.parse(sessionStorage.getItem("token")).token;
+        console.log("leave game: token " + token);
+        // If the user is not authorized, this REST request will fail
+        const response = await api.delete(`/games/` + id, {
+          headers: { Authorization: token },
+        });
+  
+        // if the player leaving was the host and the game was in lobby, the backend will send a message to /games/id/gamedeleted
+  
+        /* unsubscribe from all lobby channels */
+        webSocket.leave(`/topic/games/${id}/lobby`);
+        webSocket.leave(`/topic/games/${id}/gamestart`);
+        webSocket.leave(`/topic/games/${id}/gamedeleted`);
+  
+        // Edit successfully worked --> navigate to the route /profile/id
+        console.log("Left game");
+  
+      } catch (error) {
+        alert(`Something went wrong while leaving game: \n${handleError(error)}`);
+      }
 
     history.push(`/`);
   };
@@ -109,7 +182,7 @@ const PvPLobby = (props) => {
           </div>
           <Button onClick={() => exitLobby()}>Leave Lobby</Button>
           <Button
-            disabled={!players || players.length < 2}
+            disabled={!players || players.length < 2 || !isHost}
             onClick={() => startGame()}
           >
             Start Game

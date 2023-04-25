@@ -6,6 +6,7 @@ import Stomper from "../../helpers/Stomp";
 export default function Tabs() {
     const history = useHistory();
     const id = JSON.parse(sessionStorage.getItem('token')).id;
+    const token = JSON.parse(sessionStorage.getItem('token')).token;
     let webSocket = Stomper.getInstance();
     const goToHome = () => {
         history.push("/");
@@ -20,6 +21,18 @@ export default function Tabs() {
     }
 
     const doLogout = async () => {
+
+        // if in a game, try to leave it
+        try {
+            const gameId = sessionStorage.getItem("gameId");
+            console.log("leave game: token " + token);
+            // If the user is not authorized, this REST request will fail
+            const response = await api.delete(`/games/` + gameId, {
+            headers: { Authorization: token },
+            });
+        } catch (error) {
+            console.log(`Player was not in a game, skip leaving game step`);
+        }
 
         // set status to offline
         try {
@@ -36,8 +49,15 @@ export default function Tabs() {
         }
 
         try {
+
+            
+
+            // remove game from sessionStorage
+            sessionStorage.removeItem('gameId');
+
             // remove the token
             sessionStorage.removeItem('token');
+
 
             // remove websocket connection
             webSocket.leaveAll()
