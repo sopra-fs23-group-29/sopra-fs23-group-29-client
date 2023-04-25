@@ -13,6 +13,9 @@ import CountryRanking from "./CountryRanking";
 const Game = props => {
     const history = useHistory();
 
+    /**
+     * handling board updates
+     */
     async function simulateGame() {
         console.log("started simulation");
         const board = thisBoard.ref.current;
