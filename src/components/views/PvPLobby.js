@@ -24,6 +24,7 @@ const PvPLobby = (props) => {
   const [players, setPlayers] = useState([]);
   const [game, setGame] = useState(null);
   const [hasFetchedGame, setHasFetchedGame] = useState(false);
+  const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -43,6 +44,7 @@ const PvPLobby = (props) => {
       webSocket.send("/app/games/" + gameId + "/getGame", {
         message: "GET GAME " + gameId,
       });
+
     }
     fetchData();
   }, []);
@@ -57,6 +59,37 @@ const PvPLobby = (props) => {
     }
     setAllPlayers();
   }, [game]);
+
+  // upon change in game, check if I'm the host
+  useEffect(() => {
+    async function setHost() {
+
+      console.log("setHost ...");
+
+      // when game null set to false
+      if (game === null) {
+        setIsHost(false);
+        return;
+      }
+      if (game.players === null) {
+        setIsHost(false);
+        return;
+      }
+  
+      const token = JSON.parse(sessionStorage.getItem("token")).token;
+      
+      // loop through game.players array and check if I'm the host
+      let player;
+      for (player of game.players) {
+        if (player.userToken === token && player.isHost === true) {
+          console.log(`Player ${player.playerName} is the host`);
+          setIsHost(true);
+        }
+      }
+    }
+    setHost();
+  }, [game])
+  
 
   /* get info from websocket message to display players in lobby */
   const getGameInfo = (message) => {
@@ -85,6 +118,7 @@ const PvPLobby = (props) => {
     history.push("/");
   };
 
+  
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
@@ -144,7 +178,7 @@ const PvPLobby = (props) => {
           </div>
           <Button onClick={() => exitLobby()}>Leave Lobby</Button>
           <Button
-            disabled={!players || players.length < 2}
+            disabled={!players || players.length < 2 || !isHost}
             onClick={() => startGame()}
           >
             Start Game
