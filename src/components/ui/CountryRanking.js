@@ -87,7 +87,7 @@ const CountryRanking = props => {
 
     // End Turn
     const saveAnswer = () => {
-        
+
         webSocket.send(
             `/app/games/${gameId}/turn/${turnNumber}/player/${playerId}/saveAnswer`,
             {
@@ -204,5 +204,6 @@ const CountryRanking = props => {
         </BaseContainer>
     );
 }
+
 
 export default CountryRanking;
