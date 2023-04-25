@@ -9,14 +9,6 @@ import { api, handleError } from "helpers/api";
 
 /* This is the view for an open PvP Game Lobby that displays its name and all players in the lobby  */
 
-const Players = ({ player }) => {
-  return (
-    <div className="home lobby-container" width="30%">
-      <div>{player.playerName}</div>
-    </div>
-  );
-};
-
 const PvPLobby = (props) => {
   const history = useHistory();
   const params = useParams();
@@ -25,6 +17,17 @@ const PvPLobby = (props) => {
   const [game, setGame] = useState(null);
   const [hasFetchedGame, setHasFetchedGame] = useState(false);
   const [isHost, setIsHost] = useState(false);
+
+  const Players = ({ player }) => {
+  
+    const hostTag = player.isHost ? ' (Host)' : '';
+  
+    return (
+      <div className="home lobby-container" width="30%">
+        <div>{player.playerName + hostTag}</div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     async function fetchData() {
