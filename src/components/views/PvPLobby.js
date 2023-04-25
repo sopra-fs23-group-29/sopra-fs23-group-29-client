@@ -12,11 +12,15 @@ import { api, handleError } from "helpers/api";
 const PvPLobby = (props) => {
   const history = useHistory();
   const params = useParams();
-  let webSocket = Stomper.getInstance();
   const [players, setPlayers] = useState([]);
   const [game, setGame] = useState(null);
   const [hasFetchedGame, setHasFetchedGame] = useState(false);
   const [isHost, setIsHost] = useState(false);
+  
+  let webSocket = Stomper.getInstance();
+
+  // set the current gameId in the sessionStorage
+  sessionStorage.setItem("gameId", params.id);
 
   const Players = ({ player }) => {
   
@@ -103,8 +107,6 @@ const PvPLobby = (props) => {
   // when a message comes in through that channel the game has started, route to /games/gameId
   const gameHasStarted = (message) => {
     const id = params.id;
-    // set the game id in the session storage
-    sessionStorage.setItem("gameId", id);
     // leave all lobby topics
     webSocket.leave(`/topic/games/${id}/lobby`);
     webSocket.leave(`/topic/games/${id}/gamestart`);
@@ -125,7 +127,6 @@ const PvPLobby = (props) => {
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
-    sessionStorage.setItem("gameId", id);
     console.log(id);
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,
