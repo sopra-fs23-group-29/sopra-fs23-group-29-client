@@ -74,18 +74,22 @@ const CountryRanking = props => {
             }
             playerList.push(player)
         }
+        let randomizedCountries = shuffleArray(props.rankQuestion.countryList)
 
-        // set country names
-        for (let i = 0; i < props.rankQuestion.countryList.length; i++) {
-            countries.push(props.rankQuestion.countryList[i].nameMap.common)
-            cioc.push(props.rankQuestion.countryList[i].cioc)
-            flags.push(props.rankQuestion.countryList[i].flagsMap.svg)
-            flagAlt.push(props.rankQuestion.countryList[i].flagsMap.alt)
+        // set countries
+        for (let i = 0; i < randomizedCountries.length; i++) {
+            countries.push(randomizedCountries[i].nameMap.common)
+            cioc.push(randomizedCountries[i].cioc)
+            flags.push(randomizedCountries[i].flagsMap.svg)
+            flagAlt.push(randomizedCountries[i].flagsMap.alt)
         }
 
         // set category
         setCategory(props.rankQuestion.questionText)
     };
+    /*
+               TODO set color of countries to chosen color by player guesses and set as unclickable
+             */
 
     const processUpdatedTurn = (message) => {
         // set takenGuesses
@@ -100,7 +104,16 @@ const CountryRanking = props => {
         }
     };
 
-    // End Turn
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }
+
     const saveAnswer = () => {
         webSocket.send(
             `/app/games/${gameId}/turn/${turnNumber}/player/${yourPlayer.id}/saveAnswer`,
