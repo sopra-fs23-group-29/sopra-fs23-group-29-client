@@ -182,7 +182,7 @@ const PvPLobby = (props) => {
               </div>
               <Button onClick={() => exitLobby()}>Leave Lobby</Button>
               <Button
-                  disabled={!players || players.length < 1 || !isHost}
+                  disabled={!players || players.length < 2 || !isHost}
                   onClick={() => startGame()}
               >
                 Start Game
