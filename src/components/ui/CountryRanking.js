@@ -74,13 +74,14 @@ const CountryRanking = props => {
             }
             playerList.push(player)
         }
+        let randomizedCountries = shuffleArray(props.rankQuestion.countryList)
 
-        // set country names
-        for (let i = 0; i < props.rankQuestion.countryList.length; i++) {
-            countries.push(props.rankQuestion.countryList[i].nameMap.common)
-            cioc.push(props.rankQuestion.countryList[i].cioc)
-            flags.push(props.rankQuestion.countryList[i].flagsMap.svg)
-            flagAlt.push(props.rankQuestion.countryList[i].flagsMap.alt)
+        // set countries
+        for (let i = 0; i < randomizedCountries.length; i++) {
+            countries.push(randomizedCountries[i].nameMap.common)
+            cioc.push(randomizedCountries[i].cioc)
+            flags.push(randomizedCountries[i].flagsMap.svg)
+            flagAlt.push(randomizedCountries[i].flagsMap.alt)
         }
 
         // set category
@@ -91,6 +92,13 @@ const CountryRanking = props => {
         // set takenGuesses
         setTakenGuesses(props.takenGuesses);
 
+        for (let i = 0; i < props.takenGuesses.length; i++) {
+            let guessCountryId = props.takenGuesses[i].guessCountryCode
+            let guessColor = props.takenGuesses[i].guessPlayerColor
+            document.getElementById(guessCountryId).style.backgroundColor = guessColor
+            document.getElementById(guessCountryId).disabled = true
+        }
+
         for (let i = 0; i < props.turnPlayers.length; i++) {
             let player = new Player(props.turnPlayers[i])
             if (i === props.takenGuesses.length) {
@@ -100,7 +108,16 @@ const CountryRanking = props => {
         }
     };
 
-    // End Turn
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        return array;
+    }
+
     const saveAnswer = () => {
         webSocket.send(
             `/app/games/${gameId}/turn/${turnNumber}/player/${yourPlayer.id}/saveAnswer`,
@@ -119,18 +136,22 @@ const CountryRanking = props => {
 
     // marker elements
     function createMarker(countries) {
-        let marker = []
-        for (let i = 1; i <= countries.length; i++) {
-            marker.push(
-                <div>
-                    <div className="country-ranking marker-container">
-                        <label className="country-ranking marker-number" onClick={() => setMarkerChecked(`marker${i}`)}>{i}</label>
-                        <input type="radio" name="marker" id={"marker" + i} className="marker-radio" value={currentPlayer.playerColor} key={i} onClick={() => setCheckedMarker(i)}/>
-                    </div>
-                </div>
-            )
+        if (currentPlayer) {
+            if (currentPlayer.id === yourPlayer.id) {
+                let marker = []
+                for (let i = 1; i <= countries.length; i++) {
+                    marker.push(
+                        <div>
+                            <div className="country-ranking marker-container">
+                                <label className="country-ranking marker-number" onClick={() => setMarkerChecked(`marker${i}`)}>{i}</label>
+                                <input type="radio" name="marker" id={"marker" + i} disabled={false} className="marker-radio" value={currentPlayer.playerColor} key={i} onClick={() => setCheckedMarker(i)}/>
+                            </div>
+                        </div>
+                    )
+                }
+                return marker
+            }
         }
-        return marker
     }
 
     // set country as checked when text, container or else is clicked
@@ -144,10 +165,10 @@ const CountryRanking = props => {
         for (let i = 0; i < countries.length-2; i++) {
             countryArr.push(
                 <div>
-                    <div className="country-ranking countries-container" onClick={() => setCountryChecked(`country${i}`)}>
-                        <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
-                        <label className="country-ranking country-name" onClick={() => setCountryChecked(`country${i}`)}>{countries[i]}</label>
-                        <img src={flags[i]} onClick={() => setCountryChecked(`country${i}`)} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
+                    <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
+                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
+                        <label className="country-ranking country-name" onClick={() => setCountryChecked(cioc[i])}>{countries[i]}</label>
+                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
                     </div>
                 </div>
             )
@@ -160,16 +181,25 @@ const CountryRanking = props => {
             for (let i = 3; i < countries.length; i++) {
                 countryArr.push(
                     <div>
-                        <div className="country-ranking countries-container" onClick={() => setCountryChecked(`country${i}`)}>
-                            <input type="radio" name="country" id={"country" + i } className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
-                            <label className="country-ranking country-name" onClick={() => setCountryChecked(`country${i}`)}>{countries[i]}</label>
-                            <img src={flags[i]} onClick={() => setCountryChecked(`country${i}`)} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
+                        <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
+                            <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
+                            <label className="country-ranking country-name" onClick={() => setCountryChecked(cioc[i])}>{countries[i]}</label>
+                            <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
                         </div>
                     </div>
                 )
             }
             return countryArr
         }
+    }
+
+    function enableSaveAnswer() {
+        if (currentPlayer && checkedCountry !== null && checkedMarker !== null) {
+            if (currentPlayer.id === yourPlayer.id) {
+                return false
+            }
+        }
+        return true
     }
 
     return (
@@ -186,8 +216,9 @@ const CountryRanking = props => {
                     {createMarker(countries)}
                 </div>
                 <Button
+                    className="hidden-button"
                     id="saveAnswer"
-                    disabled={currentPlayer ? currentPlayer.id !== yourPlayer.id : true}
+                    disabled ={enableSaveAnswer()}
                     onClick={() => saveAnswer()}>
                     Submit Answer
                 </Button>
