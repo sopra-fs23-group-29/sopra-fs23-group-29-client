@@ -16,20 +16,20 @@ const PvPLobby = (props) => {
   const [game, setGame] = useState(null);
   const [hasFetchedGame, setHasFetchedGame] = useState(false);
   const [isHost, setIsHost] = useState(false);
-  
+
   let webSocket = Stomper.getInstance();
 
   // set the current gameId in the sessionStorage
   sessionStorage.setItem("gameId", params.id);
 
   const Players = ({ player }) => {
-  
+
     const hostTag = player.isHost ? ' (Host)' : '';
-  
+
     return (
-      <div className="home lobby-container" width="30%">
-        <div>{player.playerName + hostTag}</div>
-      </div>
+        <div className="home lobby-container" width="30%">
+          <div>{player.playerName + hostTag}</div>
+        </div>
     );
   };
 
@@ -82,9 +82,9 @@ const PvPLobby = (props) => {
         setIsHost(false);
         return;
       }
-  
+
       const token = JSON.parse(sessionStorage.getItem("token")).token;
-      
+
       // loop through game.players array and check if I'm the host
       let player;
       for (player of game.players) {
@@ -96,7 +96,7 @@ const PvPLobby = (props) => {
     }
     setHost();
   }, [game])
-  
+
 
   /* get info from websocket message to display players in lobby */
   const getGameInfo = (message) => {
@@ -123,7 +123,7 @@ const PvPLobby = (props) => {
     history.push("/");
   };
 
-  
+
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
@@ -139,59 +139,59 @@ const PvPLobby = (props) => {
 
   async function exitLobby() {
 
-      const id = params.id;
-  
-      try {
-        // fetch the user trying to leave the game
-        const token = JSON.parse(sessionStorage.getItem("token")).token;
-        console.log("leave game: token " + token);
-        // If the user is not authorized, this REST request will fail
-        const response = await api.delete(`/games/` + id, {
-          headers: { Authorization: token },
-        });
-  
-        // if the player leaving was the host and the game was in lobby, the backend will send a message to /games/id/gamedeleted
-  
-        /* unsubscribe from all lobby channels */
-        webSocket.leave(`/topic/games/${id}/lobby`);
-        webSocket.leave(`/topic/games/${id}/gamestart`);
-        webSocket.leave(`/topic/games/${id}/gamedeleted`);
-  
-        // Edit successfully worked --> navigate to the route /profile/id
-        console.log("Left game");
-  
-      } catch (error) {
-        alert(`Something went wrong while leaving game: \n${handleError(error)}`);
-      }
+    const id = params.id;
+
+    try {
+      // fetch the user trying to leave the game
+      const token = JSON.parse(sessionStorage.getItem("token")).token;
+      console.log("leave game: token " + token);
+      // If the user is not authorized, this REST request will fail
+      const response = await api.delete(`/games/` + id, {
+        headers: { Authorization: token },
+      });
+
+      // if the player leaving was the host and the game was in lobby, the backend will send a message to /games/id/gamedeleted
+
+      /* unsubscribe from all lobby channels */
+      webSocket.leave(`/topic/games/${id}/lobby`);
+      webSocket.leave(`/topic/games/${id}/gamestart`);
+      webSocket.leave(`/topic/games/${id}/gamedeleted`);
+
+      // Edit successfully worked --> navigate to the route /profile/id
+      console.log("Left game");
+
+    } catch (error) {
+      alert(`Something went wrong while leaving game: \n${handleError(error)}`);
+    }
 
     history.push(`/`);
   };
 
   return (
-    <BaseContainer className="home container">
-      {hasFetchedGame ? (
-        <ul>
-          <div display="flex" flex-direction="row">
-            <h2>{game.gameName}</h2>
-            <div>{players.length}/6</div>
-          </div>
-          <div>
-            {players.map((player) => (
-              <Players player={player} key={player.id} />
-            ))}
-          </div>
-          <Button onClick={() => exitLobby()}>Leave Lobby</Button>
-          <Button
-            disabled={!players || players.length < 2 || !isHost}
-            onClick={() => startGame()}
-          >
-            Start Game
-          </Button>
-        </ul>
-      ) : (
-        <div />
-      )}
-    </BaseContainer>
+      <BaseContainer className="home container">
+        {hasFetchedGame ? (
+            <ul>
+              <div display="flex" flex-direction="row">
+                <h2>{game.gameName}</h2>
+                <div>{players.length}/6</div>
+              </div>
+              <div>
+                {players.map((player) => (
+                    <Players player={player} key={player.id} />
+                ))}
+              </div>
+              <Button onClick={() => exitLobby()}>Leave Lobby</Button>
+              <Button
+                  disabled={!players || players.length < 1 || !isHost}
+                  onClick={() => startGame()}
+              >
+                Start Game
+              </Button>
+            </ul>
+        ) : (
+            <div />
+        )}
+      </BaseContainer>
   );
 };
 

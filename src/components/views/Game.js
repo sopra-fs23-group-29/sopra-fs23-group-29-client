@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useHistory, useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
@@ -6,7 +6,7 @@ import {Board} from "../ui/Board";
 import CountryRanking from "../ui/CountryRanking";
 import { TurnScoreboard } from 'components/ui/TurnScoreboard';
 import Stomper from 'helpers/Stomp';
-import {Button} from "../ui/Button";
+import Player from "../../models/Player";
 
 
 const Game = props => {
@@ -28,55 +28,75 @@ const Game = props => {
         console.log("showing scoreboard");
         console.log(JSON.parse(message.body));
         setShowTurnScoreboard(true);
+        setTurnResults(JSON.parse(message.body).scoreboardEntries)
         setTimeout(() => {
             setShowTurnScoreboard(false);
             //here comes call to board to walk players. just pass JSON.parse(message.body) . The information to move the players is in there
-        }, "10000");
+        }, "1000");
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
+    webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
+        console.log(JSON.parse(message.body));
+        setBarrierHit(JSON.parse(message.body));
+    });
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {});
-
-    const thisBoard = (
-        <Board
-            ref={React.createRef()}
-        />
-    )
-    async function simulateGame() {
-        console.log("started simulation");
-        const board = thisBoard.ref.current;
-        const numPlayers = board.numberOfPlayers;
-        const end = board.boardParams[5];
-        const allowBarriers = board.withBarriers;
-
-        let index = 0;
-        let fieldsToMove = [];
-        while (index <= 18) {
-            // reset
-            let player = 0;
-            fieldsToMove = [];
-            // simulate next turn
-            while (player < numPlayers) {
-                if (index % player === 0) {
-                    fieldsToMove.push(player);
-                } else if (player === 0) {
-                    fieldsToMove.push(index % 3);
-                } else {
-                    fieldsToMove.push(0);
-                }
-                player += 1;
-            }
-            await board.updateColors(fieldsToMove, end, allowBarriers);
-            //board.updateColors([1], end, allowBarriers);
-            index += 1;
-            await new Promise(r => setTimeout(r, 1000));
-        }
-    }
 
     const [showCountryRanking, setShowCountryRanking] = useState(false);
     const [countryRankingProps, setCountryRankingProps] = useState({});
 
     const [showTurnScoreboard, setShowTurnScoreboard] = useState(false);
     const [turnScoreboardProps, setTurnScoreboardProps] = useState({});
+
+    const [turnResults, setTurnResults] = useState(null);
+    const [barrierHit, setBarrierHit] = useState(null);
+
+    const thisBoard = (
+        <Board
+            ref={React.createRef()}
+            gameId={params.id}
+            numPlayers={3}
+            withBarriers={true}
+            boardLayout={"large"}
+        />
+    )
+
+    useEffect(() => {
+        console.log(turnResults)
+        if (turnResults === null) {
+            return
+        }
+        const board = thisBoard.ref.current;
+        const end = board.boardParams[5];
+        const allowBarriers = board.withBarriers;
+
+        let moverIndex = 0;
+        let mover;
+        while (moverIndex < turnResults.length) {
+            mover = new Player(turnResults[moverIndex]);
+            board.movePlayer(mover, turnResults[moverIndex].currentScore, end, allowBarriers);
+            moverIndex += 1;
+        }
+
+        //console.log(mover);
+        //webSocket.send(`/games/${params.id}/player/${mover.playerId}/moveByOne`);
+    }, [turnResults]);
+
+    /*
+    useEffect( () => {
+        console.log(barrierHit)
+        if (barrierHit === null) {
+            return
+        }
+        if (barrierHit === false) {
+            const board = thisBoard.ref.current;
+            const end = board.boardParams[5];
+            const allowBarriers = board.withBarriers;
+
+            const mover = new Player(turnResults[0]);
+            board.movePlayerOnce(mover, end, allowBarriers);
+        }
+    }, [barrierHit]);
+         */
 
     sessionStorage.setItem('game', JSON.stringify({
             "turnNumber": 1,
@@ -92,11 +112,6 @@ const Game = props => {
     return (
         <BaseContainer className="game container">
             {thisBoard}
-
-            <Button
-                onClick={() => simulateGame()}>
-                simulate game
-            </Button>
 
             {content}
             {showCountryRanking && <CountryRanking {...countryRankingProps} />}

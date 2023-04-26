@@ -37,7 +37,6 @@ const End = (props) => {
     )
 }
 
-
 class Barrier extends React.Component {
     constructor(props) {
         super(props);
@@ -72,4 +71,5 @@ class Barrier extends React.Component {
         )
     }
 }
+
 export {Start, Field, End, Barrier};

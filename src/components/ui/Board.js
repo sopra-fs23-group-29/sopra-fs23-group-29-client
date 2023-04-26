@@ -3,18 +3,18 @@ import React from 'react';
 import "styles/views/Board.scss";
 import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
 import { Gradient } from "components/ui/LinearGradient";
 
 
 class Board extends React.Component {
-    withBarriers = true;
-    gameMode = "pvp-large";
+    numberOfPlayers = 0;
+    withBarriers = false;
+    boardLayout = "large";
     containerColor = theme.containerColor;
     textColor = theme.textColor;
 
     /**
-     * dummy players
+     * create players
      */
 
     /*
@@ -22,17 +22,14 @@ class Board extends React.Component {
     */
     startFieldColors = ["INDIANRED", "ORANGE", "YELLOW", "LIGHTGREEN", "LIGHTSKYBLUE", "VIOLET"];
 
-    numberOfPlayers = 6;
-    createPlayers(numPlayers){
-        let players = [];
-        let counter = 0;
-        while (counter < numPlayers) {
-            players.push({color: this.startFieldColors[counter], field: 0})
-            counter += 1;
-        }
-        return players;
+    playerFields = {};
+    addPlayer(player){
+        this.playerFields[player.playerUsername] = 0;
+
+        // add the color to the board
+        this.colors[0].push(player.playerColor);
+        this.gradientsAndBarriers[0].ref.current.updateColors(this.colors[0]);
     }
-    players = this.createPlayers(this.numberOfPlayers);
 
     /**
      * helper functions to locate fields and identify barriers
@@ -78,17 +75,17 @@ class Board extends React.Component {
     /**
      * functions used to create the board
      */
-    getBoardParams(mode){
-        switch (mode) {
-            case "pvp-large":
-                return [0, 5, 15, 20, 30, 29];
-            case "pvp-small":
-                this.withBarriers = false;
+    getBoardParams(layout){
+        switch (layout) {
+            case "small":
                 return [0, 3, 8, 11, 16, 15];
+            case "large":
+                return [0, 5, 15, 20, 30, 29];
             case "gigantic":
                 return [0, 8, 28, 36, 56, 55];
+
             default:
-                // pvp-large
+                // large
                 return [0, 5, 15, 20, 30, 29];
         }
     }
@@ -105,7 +102,7 @@ class Board extends React.Component {
             index += 1;
         }
         // add the players' colors at the start
-        colorArray[0].push(...this.startFieldColors)
+        // colorArray[0].push(...this.startFieldColors);
         return colorArray;
     }
 
@@ -122,6 +119,7 @@ class Board extends React.Component {
                     <Barrier
                         color={this.textColor}
                         ref={React.createRef()}
+                        key={index}
                     />)
                 gradientAndBarrierArray.push(barrier)
             } else {
@@ -189,28 +187,42 @@ class Board extends React.Component {
     /**
      * functions used to update the board
      */
-    async updateColors(fieldsMoved, end, allowBarriers) {
-        let player = 0;
-        while (player < fieldsMoved.length) {
-            await this.movePlayer(player, fieldsMoved[player], end, allowBarriers);
-            player += 1;
+    movePlayer(player, fieldsToMove, end, allowBarriers) {
+        console.log(`moving player ${player.playerUsername} with color ${player.playerColor} ${fieldsToMove} fields.`);
+        const color = player.playerColor;
+        if (this.playerFields[player.playerUsername] === undefined){
+            this.addPlayer(player);
         }
+        const oldField = this.playerFields[player.playerUsername];
+
+        // remove the player from the current field
+        const index = this.colors[oldField].indexOf(color);
+        this.colors[oldField].splice(index, 1);
+        this.gradientsAndBarriers[oldField].ref.current.updateColors(this.colors[oldField]);
+
+        // move the player one field forward
+        let newField = Math.min(end, oldField + fieldsToMove);
+        if (allowBarriers && this.isBarrier(newField, end)) {
+            const barrier = this.gradientsAndBarriers[newField].ref.current
+            // we need to skip barriers and clear them if they were not already cleared
+            if (!barrier.isCleared()) {
+                barrier.clearBarrier(color);
+            }
+            newField = Math.min(end, newField + 1);
+        }
+        player.field = newField;
+        this.colors[newField].push(color);
+        this.gradientsAndBarriers[newField].ref.current.updateColors(this.colors[newField]);
+        //await new Promise(r => setTimeout(r, 200));
     }
 
-    async movePlayer(playerIndex, numFields, end, allowBarriers) {
-        let fieldsMoved = 0;
-        let hitBarrier = false;
-        while (fieldsMoved < numFields) {
-            hitBarrier = await this.movePlayerOnce(playerIndex, end, allowBarriers);
-            fieldsMoved += 1
+    movePlayerOnce(player, end, allowBarriers) {
+        console.log(`moving player ${player.playerUsername} with color ${player.playerColor}`);
+        const color = player.playerColor;
+        if (this.playerFields[player.playerUsername] === undefined){
+            this.addPlayer(player);
         }
-        await new Promise(r => setTimeout(r, 200));
-    }
-
-    async movePlayerOnce(playerIndex, end, allowBarriers) {
-        const player = this.players[playerIndex];
-        const color = player.color;
-        const oldField = player.field
+        const oldField = this.playerFields[player.playerUsername];
 
         // remove the player from the current field
         const index = this.colors[oldField].indexOf(color);
@@ -230,28 +242,28 @@ class Board extends React.Component {
         player.field = newField;
         this.colors[newField].push(color);
         this.gradientsAndBarriers[newField].ref.current.updateColors(this.colors[newField]);
-        await new Promise(r => setTimeout(r, 200));
+        //await new Promise(r => setTimeout(r, 200));
     }
 
     /**
      * create and return the board
      */
-    boardParams = this.getBoardParams(this.gameMode);
+    boardParams = this.getBoardParams(this.boardLayout);
     colors = this.createColorArray(this.boardParams[5], this.withBarriers);
     gradientsAndBarriers = this.createGradientAndBarrierArray(this.colors, this.boardParams, this.withBarriers);
     fields = this.fieldMapper(this.boardParams, this.withBarriers, this.gradientsAndBarriers);
 
-    leftColumn = this.fields.slice(this.boardParams[0], this.boardParams[1]);
+    leftColumn = this.fields.slice(this.boardParams[0], this.boardParams[1]).reverse();
     topRow = this.fields.slice(this.boardParams[1], this.boardParams[2]);
     rightColumn = this.fields.slice(this.boardParams[2], this.boardParams[3]);
-    bottomRow = this.fields.slice(this.boardParams[3], this.boardParams[4]);
+    bottomRow = this.fields.slice(this.boardParams[3], this.boardParams[4]).reverse();
 
     render() {
         return <BaseContainer className="board container">
             <div className="board left-column container">
                 {
                     // bottom to top, hence reverse()
-                    this.leftColumn.reverse()
+                    this.leftColumn
                 }
             </div>
 
@@ -272,16 +284,11 @@ class Board extends React.Component {
             <div className="board bottom-row container">
                 {
                     // right to left, hence reverse()
-                    this.bottomRow.reverse()
+                    this.bottomRow
                 }
             </div>
         </BaseContainer>
     }
 }
-
-Board.propTypes = {
-    mode: PropTypes.string,
-    onChange: PropTypes.func,
-};
 
 export { Board };

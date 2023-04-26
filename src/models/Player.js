@@ -9,6 +9,7 @@ class Player {
     this.playerName = null;
     this.token = null;
     this.playerColor = null;
+    this.playerId = null;
     this.isHost = null;
     Object.assign(this, data);
   }
