@@ -22,13 +22,13 @@
   &.game {
     &.username {
       font-weight: bold;
-      color: $player1;
+      color: $accent;
       text-align: left;
     }
 
     &.barrier-counter {
       margin-left: auto;
-      color: $player2;
+      color: $accentColor2;
     }
 
     &.round-counter {

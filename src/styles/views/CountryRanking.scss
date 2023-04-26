@@ -6,7 +6,7 @@
     padding: 2em;
     border-radius: $borderRadius;
     border-style: solid;
-    border-color: $player1;
+    border-color: $containerColor;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -122,30 +122,33 @@ input[type="radio"] {
   width: auto;
   cursor: pointer;
   opacity: 1;
-  background-color: $player1;
+  background-color: $accentColor1;
   transition: all 0.3s ease;
 }
 
-input[value="player1"]:checked {
-  background-color: $player1;
+/*
+  Update if colors in backend change
+ */
+input[value="INDIANRED"]:checked {
+  background-color: $accentColor1;
 }
 
-input[value="player2"]:checked {
-  background-color: $player2;
+input[value="LIGHTSKYBLUE"]:checked {
+  background-color: $accentColor2;
 }
 
-input[value="player3"]:checked {
-  background-color: $player3;
+input[value="LIGHTGREEN"]:checked {
+  background-color: $accentColor3;
 }
 
-input[value="player4"]:checked {
-  background-color: $player4;
+input[value="YELLOW"]:checked {
+  background-color: $accentColor4;
 }
 
-input[value="player5"]:checked {
-  background-color: $player5;
+input[value="VIOLET"]:checked {
+  background-color: $accentColor5;
 }
 
-input[value="player6"]:checked {
-  background-color: $player6;
+input[value="TURQUOISE"]:checked {
+  background-color: $accentColor6;
 }

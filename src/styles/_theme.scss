@@ -14,12 +14,15 @@ $textColor: #D7D7D7;
 $containerColor: #7F7F7FCC;
 $accentDarkContainerColor: #292929CC;
 
-$player1: #C48080;
-$player2: #6297C4;
-$player3: #AF84B5;
-$player4: #6FAA63;
-$player5: #B68B39;
-$player6: #6CAD9E;
+/*
+  Update if colors in backend change
+ */
+$accentColor1: #CD5C5C;
+$accentColor2: #87CEFA;
+$accentColor3: #90EE90;
+$accentColor4: #FFFF00;
+$accentColor5: #EE82EE;
+$accentColor6: #40E0D0;
 
 /* some constants */
 
@@ -93,4 +96,11 @@ $borderRadiusRound: 6.25em;
 :export {
     textColor: $textColor;
     containerColor: $containerColor;
+    player1: $accentColor1;
+    player2: $accentColor2;
+    player3: $accentColor3;
+    player4: $accentColor4;
+    player5: $accentColor5;
+    player6: $accentColor6;
+
 }
