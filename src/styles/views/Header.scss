@@ -5,6 +5,23 @@
     @include left;
   }
 
+  &.playerlist {
+    @include left;
+    width:100%;
+    height: 50px;
+    display: flex;
+    flex-direction:row;
+    align-items:left;
+  }
+
+  &.playername {
+    @include left;
+    width:100%;
+    color: white;
+    text-align:center;
+    justify-content: center;
+  }
+
   &.title {
     font-weight: bold;
     color: $textColor;
