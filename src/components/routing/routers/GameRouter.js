@@ -1,5 +1,6 @@
 import {Route} from "react-router-dom";
 import Game from "components/views/Game";
+import HeaderGame from "../../views/HeaderGame";
 import PropTypes from 'prop-types';
 
 const GameRouter = props => {
@@ -9,6 +10,7 @@ const GameRouter = props => {
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
       <Route exact path={`${props.base}/:id`}>
+        <HeaderGame/>
         <Game/>
       </Route>
     </div>

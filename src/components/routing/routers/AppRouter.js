@@ -34,7 +34,6 @@ const AppRouter = () => {
       <Switch>
         <Route path="/games">
           <GameGuard>
-            <HeaderGame />
             <GameRouter base="/games" />
           </GameGuard>
         </Route>
