@@ -39,8 +39,8 @@
   }
   &.flag-container {
     &:disabled {
-      cursor: default;
-      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
     }
     cursor: pointer;
     background: $accent;
