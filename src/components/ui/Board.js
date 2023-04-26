@@ -16,7 +16,11 @@ class Board extends React.Component {
     /**
      * dummy players
      */
-    startFieldColors = ["blue", "red", "green", "yellow", "purple", "orange"];
+
+    /*
+        Update if colors in backend change
+    */
+    startFieldColors = ["INDIANRED", "ORANGE", "YELLOW", "LIGHTGREEN", "LIGHTSKYBLUE", "VIOLET"];
 
     numberOfPlayers = 6;
     createPlayers(numPlayers){
