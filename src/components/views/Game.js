@@ -18,7 +18,10 @@ const Game = props => {
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
     });
-    webSocket.join("/topic/games/" + params.id + "/updatedturn", function (message) {});
+    webSocket.join("/topic/games/" + params.id + "/updatedturn", function (message) {
+        setCountryRankingProps(JSON.parse(message.body));
+        setShowCountryRanking(true);
+    });
     webSocket.join("/topic/games/" + params.id + "/scoreboard", function (message) {
         setShowCountryRanking(false);
         setTurnScoreboardProps(JSON.parse(message.body));
@@ -75,10 +78,14 @@ const Game = props => {
     const [showTurnScoreboard, setShowTurnScoreboard] = useState(false);
     const [turnScoreboardProps, setTurnScoreboardProps] = useState({});
 
-    let roundNumber = 1;
+    sessionStorage.setItem('game', JSON.stringify({
+            "turnNumber": 1,
+            "playerColor": "NOTSET",
+        }
+    ));
     let content = (
         <BaseContainer className="round container">
-            Round {roundNumber}
+            Round {JSON.parse(sessionStorage.getItem("game")).turnNumber}
         </BaseContainer>
     );
 
