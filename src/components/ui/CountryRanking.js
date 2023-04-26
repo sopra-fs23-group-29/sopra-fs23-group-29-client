@@ -88,6 +88,9 @@ const CountryRanking = props => {
         setCategory(props.rankQuestion.questionText)
     };
     /*
+               TODO disable button if not complete guess
+             */
+    /*
                TODO set color of countries to chosen color by player guesses and set as unclickable
              */
 
@@ -185,6 +188,15 @@ const CountryRanking = props => {
         }
     }
 
+    function enableSaveAnswer() {
+        if (currentPlayer && checkedCountry !== null && checkedMarker !== null) {
+            if (currentPlayer.id === yourPlayer.id) {
+                return false
+            }
+        }
+        return true
+    }
+
     return (
         <BaseContainer className="country-ranking container" id="Country Ranking Container">
             <h3>{category}</h3>
@@ -200,7 +212,7 @@ const CountryRanking = props => {
                 </div>
                 <Button
                     id="saveAnswer"
-                    disabled={currentPlayer ? currentPlayer.id !== yourPlayer.id : true}
+                    disabled ={enableSaveAnswer()}
                     onClick={() => saveAnswer()}>
                     Submit Answer
                 </Button>
