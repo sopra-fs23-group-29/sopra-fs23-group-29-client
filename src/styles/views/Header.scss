@@ -17,6 +17,7 @@
   &.playername {
     @include left;
     width:100%;
+    border-radius: $borderRadius;
     color: white;
     text-align:center;
     justify-content: center;
