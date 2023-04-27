@@ -43,7 +43,7 @@ const Game = props => {
         setTurnResults(JSON.parse(message.body).scoreboardEntries)
         setTimeout(() => {
             setShowTurnScoreboard(false);
-        }, "2000");
+        }, "15000");
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
     webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
