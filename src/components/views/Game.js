@@ -24,6 +24,7 @@ const Game = props => {
         setShowCountryRanking(true);
 
         setPlayers(JSON.parse(message.body).turnPlayers);
+        setGameJustStarted(false);
     });
     webSocket.join("/topic/games/" + params.id + "/nextTurn", function (message) {
         setCountryRankingProps(JSON.parse(message.body));
@@ -37,17 +38,16 @@ const Game = props => {
         setShowCountryRanking(false);
         setTurnScoreboardProps(JSON.parse(message.body));
         console.log("showing scoreboard");
-        console.log(JSON.parse(message.body));
+        //console.log(JSON.parse(message.body));
         setShowTurnScoreboard(true);
         setTurnResults(JSON.parse(message.body).scoreboardEntries)
         setTimeout(() => {
             setShowTurnScoreboard(false);
-            //here comes call to board to walk players. just pass JSON.parse(message.body) . The information to move the players is in there
         }, "2000");
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
     webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
-        console.log(JSON.parse(message.body));
+        //console.log(JSON.parse(message.body));
         setBarrierHit(JSON.parse(message.body));
     });
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {});
@@ -61,6 +61,8 @@ const Game = props => {
     const [turnResults, setTurnResults] = useState(null);
     const [barrierHit, setBarrierHit] = useState(null);
     const [players, setPlayers] = useState(null);
+    const [movedFields, setMovedFields] = useState(null);
+    const [gameJustStarted, setGameJustStarted] = useState(true);
 
     const thisBoard = (
         <Board
@@ -76,16 +78,23 @@ const Game = props => {
         /**
          * callback to add the players to the board at the beginning of the game
          */
-        if (players === null) {
+        if (players === null){
             return;
         }
+        if (!gameJustStarted) {
+            return;
+        }
+
         let counter = 0;
         let mover;
+        let fieldTracker = {};
         while (counter < players.length) {
             mover = new Player(players[counter]);
-            thisBoard.ref.current.addPlayer(mover);
+            thisBoard.ref.current.addPlayer(mover, 0);
+            fieldTracker[mover.playerName] = 0;
             counter += 1;
         }
+        setMovedFields(fieldTracker);
 
     }, [players])
 
@@ -106,11 +115,20 @@ const Game = props => {
 
         let moverIndex = 0;
         let mover;
+        let counter;
         while (moverIndex < turnResults.length) {
             mover = new Player(turnResults[moverIndex]);
-            await board.movePlayer(mover, turnResults[moverIndex].currentScore, end, allowBarriers);
+            counter = 0;
+            while (counter < turnResults[moverIndex].currentScore) {
+                webSocket.send(`/games/${params.id}/player/${mover.playerId}/moveByOne`);
+                counter += 1;
+            }
+            await board.movePlayer(mover, movedFields[mover.playerName], turnResults[moverIndex].currentScore, end, allowBarriers);
+            movedFields[mover.playerName] += turnResults[moverIndex].currentScore;
+
             moverIndex += 1;
         }
+        console.log(movedFields);
 
         // If the client is the player allowed to continue, wait and send
         if (userToken === playerAllowedToContinue.userToken) {
@@ -123,8 +141,6 @@ const Game = props => {
             console.log("I'm not allowed to send nextTurn");
         }
 
-        //console.log(mover);
-        //webSocket.send(`/games/${params.id}/player/${mover.playerId}/moveByOne`);
 
     }, [turnResults]);
 
@@ -162,7 +178,9 @@ const Game = props => {
         <BaseContainer className="game container">
             {thisBoard}
 
-            {content}
+            {
+                //content
+            }
             {showCountryRanking && <CountryRanking {...countryRankingProps} />}
             {showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />}
 

@@ -15,21 +15,17 @@ class Board extends React.Component {
     /**
      * create players
      */
-
-    /*
-        Update if colors in backend change
-    */
-    startFieldColors = ["INDIANRED", "ORANGE", "YELLOW", "LIGHTGREEN", "LIGHTSKYBLUE", "VIOLET"];
-
-    playerFields = {};
-    addPlayer(player){
-        //console.log(`player: ${player}`);
+    addPlayer(player, field){
         const name = player.playerName;
-        this.playerFields[name] = 0;
+        const color = player.playerColor;
+        console.log(`added player with name: ${name} on field ${field}`);
 
-        // add the color to the board
-        this.colors[0].push(player.playerColor);
-        this.gradientsAndBarriers[0].ref.current.updateColors(this.colors[0]);
+        // add the color to the board if not already present
+        console.log(this.colors[field]);
+        if (this.colors[field].indexOf(color) === -1){
+            this.colors[field].push(color);
+            this.gradientsAndBarriers[field].ref.current.updateColors(this.colors[0]);
+        }
         //console.log(`playerFields[${player.playerName}] = ${this.playerFields[name]}`);
     }
 
@@ -190,13 +186,15 @@ class Board extends React.Component {
     /**
      * functions used to update the board
      */
-    async movePlayer(player, fieldsToMove, end, allowBarriers) {
+    async movePlayer(player, startingField, fieldsToMove, end, allowBarriers) {
         console.log(`moving player ${player.playerName} with color ${player.playerColor} ${fieldsToMove} fields.`);
         const color = player.playerColor;
+        /*
         if (this.playerFields[player.playerName] === undefined){
-            this.addPlayer(player);
+            this.addPlayer(player, startingField);
         }
-        const oldField = this.playerFields[player.playerName];
+         */
+        const oldField = startingField;
         console.log(oldField, color);
 
         // remove the player from the current field
@@ -220,7 +218,9 @@ class Board extends React.Component {
         player.field = newField;
         this.colors[newField].push(color);
         this.gradientsAndBarriers[newField].ref.current.updateColors(this.colors[newField]);
+
         await new Promise(r => setTimeout(r, 200));
+        return newField;
     }
 
     /*
