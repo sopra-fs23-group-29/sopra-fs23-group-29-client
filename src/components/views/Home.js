@@ -259,8 +259,7 @@ const Home = (props) => {
         </div>
       ) : (
         <div className="home lobby-container">
-          There are no multiplayer games to join. You can create your own or
-          start a single player game below!
+          There are no multiplayer games to join. You can create your own by clicking on the button below!
         </div>
       )}
       <Button
@@ -270,6 +269,8 @@ const Home = (props) => {
       >
         Create Multiplayer Lobby
       </Button>
+    </BaseContainer>
+    /*
       <Button
         className="primary-button"
         width="15%"
@@ -407,6 +408,7 @@ const Home = (props) => {
         Start Next Turn
       </Button>
     </BaseContainer>
+     */
   );
 };
 
