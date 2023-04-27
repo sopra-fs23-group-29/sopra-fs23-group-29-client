@@ -15,6 +15,13 @@ const Game = props => {
     let webSocket = Stomper.getInstance();
     webSocket.leave("/topic/games/" + params.id + "/lobby");
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
+        console.log("newturn information")
+        setCountryRankingProps(JSON.parse(message.body));
+        setShowCountryRanking(true);
+
+        setPlayers(JSON.parse(message.body).turnPlayers);
+    });
+    webSocket.join("/topic/games/" + params.id + "/nextTurn", function (message) {
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
     });
@@ -32,7 +39,7 @@ const Game = props => {
         setTimeout(() => {
             setShowTurnScoreboard(false);
             //here comes call to board to walk players. just pass JSON.parse(message.body) . The information to move the players is in there
-        }, "1000");
+        }, "2000");
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
     webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
@@ -49,6 +56,7 @@ const Game = props => {
 
     const [turnResults, setTurnResults] = useState(null);
     const [barrierHit, setBarrierHit] = useState(null);
+    const [players, setPlayers] = useState(null);
 
     const thisBoard = (
         <Board
@@ -60,8 +68,27 @@ const Game = props => {
         />
     )
 
-    useEffect(() => {
-        console.log(turnResults)
+    useEffect( () => {
+        /**
+         * callback to add the players to the board at the beginning of the game
+         */
+        if (players === null) {
+            return;
+        }
+        let counter = 0;
+        let mover;
+        while (counter < players.length) {
+            mover = new Player(players[counter]);
+            thisBoard.ref.current.addPlayer(mover);
+            counter += 1;
+        }
+
+    }, [players])
+
+    useEffect(async () => {
+        /**
+         * callback to move players at the end of turn
+         */
         if (turnResults === null) {
             return
         }
@@ -73,16 +100,19 @@ const Game = props => {
         let mover;
         while (moverIndex < turnResults.length) {
             mover = new Player(turnResults[moverIndex]);
-            board.movePlayer(mover, turnResults[moverIndex].currentScore, end, allowBarriers);
+            await board.movePlayer(mover, turnResults[moverIndex].currentScore, end, allowBarriers);
             moverIndex += 1;
         }
 
+        webSocket.send(`/games/${params.id}/nextTurn`);
         //console.log(mover);
         //webSocket.send(`/games/${params.id}/player/${mover.playerId}/moveByOne`);
     }, [turnResults]);
 
     /*
     useEffect( () => {
+        //callback for barriers
+
         console.log(barrierHit)
         if (barrierHit === null) {
             return
@@ -116,7 +146,9 @@ const Game = props => {
             {content}
             {showCountryRanking && <CountryRanking {...countryRankingProps} />}
             {showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />}
-            <BaseContainer className="order container">
+
+            {/*
+                <BaseContainer className="order container">
                 <div>Username 1</div>
                 <div>Username 2</div>
                 <div>Username 3</div>
@@ -124,6 +156,7 @@ const Game = props => {
                 <div>Username 5</div>
                 <div>Username 6</div>
             </BaseContainer>
+            */ }
         </BaseContainer>
     );
 }
