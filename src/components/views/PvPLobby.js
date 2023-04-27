@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
-import "styles/views/Home.scss";
+import "styles/views/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import Stomper from "../../helpers/Stomp";
 import { api, handleError } from "helpers/api";
@@ -23,13 +23,12 @@ const PvPLobby = (props) => {
   sessionStorage.setItem("gameId", params.id);
 
   const Players = ({ player }) => {
-
-    const hostTag = player.isHost ? ' (Host)' : '';
+    const hostTag = player.isHost ? " (Host)" : "";
 
     return (
-        <div className="home lobby-container" width="30%">
-          <div>{player.playerName + hostTag}</div>
-        </div>
+      <div className="lobby second-container" width="30%">
+        <div>{player.playerName + hostTag}</div>
+      </div>
     );
   };
 
@@ -51,7 +50,6 @@ const PvPLobby = (props) => {
       webSocket.send("/app/games/" + gameId + "/getGame", {
         message: "GET GAME " + gameId,
       });
-
     }
     fetchData();
   }, []);
@@ -70,7 +68,6 @@ const PvPLobby = (props) => {
   // upon change in game, check if I'm the host
   useEffect(() => {
     async function setHost() {
-
       // when game null set to false
       if (game === null) {
         setIsHost(false);
@@ -92,8 +89,7 @@ const PvPLobby = (props) => {
       }
     }
     setHost();
-  }, [game])
-
+  }, [game]);
 
   /* get info from websocket message to display players in lobby */
   const getGameInfo = (message) => {
@@ -120,7 +116,6 @@ const PvPLobby = (props) => {
     history.push("/");
   };
 
-
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
@@ -135,7 +130,6 @@ const PvPLobby = (props) => {
   };
 
   async function exitLobby() {
-
     const id = params.id;
 
     try {
@@ -156,39 +150,38 @@ const PvPLobby = (props) => {
 
       // Edit successfully worked --> navigate to the route /profile/id
       console.log("Left game");
-
     } catch (error) {
       alert(`Something went wrong while leaving game: \n${handleError(error)}`);
     }
 
     history.push(`/`);
-  };
+  }
 
   return (
-      <BaseContainer className="home container">
-        {hasFetchedGame ? (
-            <ul>
-              <div display="flex" flex-direction="row">
-                <h2>{game.gameName}</h2>
-                <div>{players.length}/6</div>
-              </div>
-              <div>
-                {players.map((player) => (
-                    <Players player={player} key={player.id} />
-                ))}
-              </div>
-              <Button onClick={() => exitLobby()}>Leave Lobby</Button>
-              <Button
-                  disabled={!players || players.length < 2 || !isHost}
-                  onClick={() => startGame()}
-              >
-                Start Game
-              </Button>
-            </ul>
-        ) : (
-            <div />
-        )}
-      </BaseContainer>
+    <BaseContainer className="lobby container">
+      {hasFetchedGame ? (
+        <ul>
+          <div display="flex" flex-direction="row">
+            <h2>{game.gameName}</h2>
+            <div>{players.length}/6</div>
+          </div>
+          <div>
+            {players.map((player) => (
+              <Players player={player} key={player.id} />
+            ))}
+          </div>
+          <Button onClick={() => exitLobby()}>Leave Lobby</Button>
+          <Button
+            disabled={!players || players.length < 2 || !isHost}
+            onClick={() => startGame()}
+          >
+            Start Game
+          </Button>
+        </ul>
+      ) : (
+        <div />
+      )}
+    </BaseContainer>
   );
 };
 

@@ -152,7 +152,8 @@ const Home = (props) => {
 
       /* subscribe to topic/games/{gameId} */
       webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
-        console.log(JSON.parse(payload.body).content)});
+        console.log(JSON.parse(payload.body).content);
+      });
 
       const token = JSON.parse(sessionStorage.getItem("token")).token;
       const response = await api.post(
@@ -167,26 +168,6 @@ const Home = (props) => {
       alert(
         `Something went wrong while creating game: \n${handleError(error)}`
       );
-    }
-  };
-
-  /* Fake call to leave a game
-   */
-  const leaveGame = async () => {
-    try {
-      /* unsubscribe to topic/games/{gameId} */
-      webSocket.leave("/topic/games/" + gameIdToLeave + "/lobby");
-
-      const token = JSON.parse(sessionStorage.getItem("token")).token;
-      console.log("leave game: token " + token);
-      const response = await api.delete(`/games/` + gameIdToLeave, {
-        headers: { Authorization: token },
-      });
-
-      // Edit successfully worked --> navigate to the route /profile/id
-      console.log("Left game");
-    } catch (error) {
-      alert(`Something went wrong while leaving game: \n${handleError(error)}`);
     }
   };
 
@@ -259,7 +240,8 @@ const Home = (props) => {
         </div>
       ) : (
         <div className="home lobby-container">
-          There are no multiplayer games to join. You can create your own by clicking on the button below!
+          There are no multiplayer games to join. You can create your own by
+          clicking on the button below!
         </div>
       )}
       <Button
