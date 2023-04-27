@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import PropTypes from "prop-types";
 import "styles/views/Header.scss";
 import {Globalissimo} from "../ui/Globalissimo";
 import {api, handleError} from "../../helpers/api";
 import {useHistory, useParams} from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
+import theme from "styles/_theme.scss";
 
 const HeaderGame = (props) => {
     const history = useHistory();
@@ -14,6 +15,7 @@ const HeaderGame = (props) => {
     
     const [hasTurn, setHasTurn] = useState(false);
     const [currentTurn, setCurrentTurn] = useState(null);
+    const [yourPlayerColor, setYourPlayerColor] = useState(theme.textColor);
 
     let webSocket = Stomper.getInstance();
 
@@ -39,6 +41,9 @@ const HeaderGame = (props) => {
 
     const Player = ({ player }) => {
         const pc = player.playerColor;
+        if (player.playerName === username) {
+            setYourPlayerColor(player.playerColor)
+        }
         return (
             <div className="header playername" style={{background: pc}} >
                 <div>{player.playerName}</div>
@@ -75,7 +80,7 @@ const HeaderGame = (props) => {
     return (
         <div className="header container" style={{height: props.height}}>
             <Globalissimo/>
-            <h2 className="header game username">{username}</h2>
+            <h2 className="header game username" style={{color: yourPlayerColor}}>{username}</h2>
             {(hasTurn && currentTurn !== null) ? (
                 <div className="header playerlist">
                     {/* <div className="header playername">one</div> */}
