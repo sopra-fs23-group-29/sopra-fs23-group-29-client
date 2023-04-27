@@ -67,9 +67,13 @@ const Profile = () => {
                 </div>
                 <div className="profile row">
                     <div className="profile sections">
-                        <p>Visited Countries: [STRING]</p>
-                        <p>Birthday: [{aUser.birthday}]</p>
-                        <p>About Me: [STRING]</p>
+                        {
+                            //<p>Visited Countries: [STRING]</p>
+                        }
+                            <p>Birthday: {aUser.birthday}</p>
+                        {
+                            //<p>About Me: [STRING]</p>
+                        }
 
                     </div>
                 </div>
