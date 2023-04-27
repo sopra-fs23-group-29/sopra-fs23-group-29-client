@@ -24,19 +24,13 @@ class Board extends React.Component {
     playerFields = {};
     addPlayer(player){
         //console.log(`player: ${player}`);
-        // TODO: modify backend to be more consistent!
-        let name;
-        try {
-            name = player.playerName;
-        } catch {
-            name = player.playerUsername;
-        }
+        const name = player.playerName;
         this.playerFields[name] = 0;
 
         // add the color to the board
         this.colors[0].push(player.playerColor);
         this.gradientsAndBarriers[0].ref.current.updateColors(this.colors[0]);
-        //console.log(`playerFields[${player.playerUsername}] = ${this.playerFields[name]}`);
+        //console.log(`playerFields[${player.playerName}] = ${this.playerFields[name]}`);
     }
 
     /**
@@ -197,12 +191,12 @@ class Board extends React.Component {
      * functions used to update the board
      */
     async movePlayer(player, fieldsToMove, end, allowBarriers) {
-        console.log(`moving player ${player.playerUsername} with color ${player.playerColor} ${fieldsToMove} fields.`);
+        console.log(`moving player ${player.playerName} with color ${player.playerColor} ${fieldsToMove} fields.`);
         const color = player.playerColor;
-        if (this.playerFields[player.playerUsername] === undefined){
+        if (this.playerFields[player.playerName] === undefined){
             this.addPlayer(player);
         }
-        const oldField = this.playerFields[player.playerUsername];
+        const oldField = this.playerFields[player.playerName];
         console.log(oldField, color);
 
         // remove the player from the current field
@@ -231,12 +225,12 @@ class Board extends React.Component {
 
     /*
     movePlayerOnce(player, end, allowBarriers) {
-        console.log(`moving player ${player.playerUsername} with color ${player.playerColor}`);
+        console.log(`moving player ${player.playerName} with color ${player.playerColor}`);
         const color = player.playerColor;
-        if (this.playerFields[player.playerUsername] === undefined){
+        if (this.playerFields[player.playerName] === undefined){
             this.addPlayer(player);
         }
-        const oldField = this.playerFields[player.playerUsername];
+        const oldField = this.playerFields[player.playerName];
 
         // remove the player from the current field
         const index = this.colors[oldField].indexOf(color);
