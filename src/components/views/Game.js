@@ -111,7 +111,6 @@ const Game = props => {
 
         // pick first player from round who can send nextTurn
         const playerAllowedToContinue = new Player(players[0]);
-        console.log(`Player allowed to continue: ${playerAllowedToContinue.userToken}`);
 
         let moverIndex = 0;
         let mover;
@@ -132,13 +131,10 @@ const Game = props => {
 
         // If the client is the player allowed to continue, wait and send
         if (userToken === playerAllowedToContinue.userToken) {
-            console.log("I'm allowed to send nextTurn");
             setTimeout(() => {
                 webSocket.send(`/app/games/${params.id}/nextTurn`, {message: `Player ${userToken} : nextTurn`})
             }, "2000");
             
-        } else {
-            console.log("I'm not allowed to send nextTurn");
         }
 
 

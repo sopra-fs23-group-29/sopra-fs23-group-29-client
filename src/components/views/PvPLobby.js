@@ -71,8 +71,6 @@ const PvPLobby = (props) => {
   useEffect(() => {
     async function setHost() {
 
-      console.log("setHost ...");
-
       // when game null set to false
       if (game === null) {
         setIsHost(false);
@@ -89,7 +87,6 @@ const PvPLobby = (props) => {
       let player;
       for (player of game.players) {
         if (player.userToken === token && player.isHost === true) {
-          console.log(`Player ${player.playerName} is the host`);
           setIsHost(true);
         }
       }
