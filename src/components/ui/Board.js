@@ -84,7 +84,7 @@ class Board extends React.Component {
             case "medium":
                 return [0, 5, 15, 20, 30, 29];
             case "large":
-                return [0, 6, 24, 30, 48, 47];
+                return [0, 7, 24, 31, 48, 47];
             case "gigantic":
                 return [0, 8, 28, 36, 56, 55];
             default:
