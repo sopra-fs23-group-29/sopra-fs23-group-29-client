@@ -8,10 +8,14 @@ import { TurnScoreboard } from 'components/ui/TurnScoreboard';
 import Stomper from 'helpers/Stomp';
 import Player from "../../models/Player";
 
+// todo: When a player leaves the game, players should be updated
+// otherwise the answering cannot be done
 
 const Game = props => {
     const history = useHistory();
     const params = useParams();
+    const userToken = JSON.parse(sessionStorage.getItem('token')).token;
+
     let webSocket = Stomper.getInstance();
     webSocket.leave("/topic/games/" + params.id + "/lobby");
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
@@ -96,6 +100,10 @@ const Game = props => {
         const end = board.boardParams[5];
         const allowBarriers = board.withBarriers;
 
+        // pick first player from round who can send nextTurn
+        const playerAllowedToContinue = new Player(players[0]);
+        console.log(`Player allowed to continue: ${playerAllowedToContinue.userToken}`);
+
         let moverIndex = 0;
         let mover;
         while (moverIndex < turnResults.length) {
@@ -104,9 +112,20 @@ const Game = props => {
             moverIndex += 1;
         }
 
-        webSocket.send(`/games/${params.id}/nextTurn`);
+        // If the client is the player allowed to continue, wait and send
+        if (userToken === playerAllowedToContinue.userToken) {
+            console.log("I'm allowed to send nextTurn");
+            setTimeout(() => {
+                webSocket.send(`/app/games/${params.id}/nextTurn`, {message: `Player ${userToken} : nextTurn`})
+            }, "2000");
+            
+        } else {
+            console.log("I'm not allowed to send nextTurn");
+        }
+
         //console.log(mover);
         //webSocket.send(`/games/${params.id}/player/${mover.playerId}/moveByOne`);
+
     }, [turnResults]);
 
     /*

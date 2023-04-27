@@ -7,6 +7,9 @@ import {useHistory, useParams} from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
 import theme from "styles/_theme.scss";
 
+// todo: When a player leaves the game, players should be updated
+// otherwise the answering cannot be done
+
 const HeaderGame = (props) => {
     const history = useHistory();
     const params = useParams();
@@ -28,13 +31,7 @@ const HeaderGame = (props) => {
         const receivedTurn = JSON.parse(message.body);
 
         if (receivedTurn !== null) {
-            console.log("receivedTurn is not null");
-            console.log(receivedTurn);
-
-            console.log("set hasTurn");
             setHasTurn(true);
-
-            console.log("set currentTurn")
             setCurrentTurn(receivedTurn);
         }
     }
