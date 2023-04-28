@@ -2,6 +2,8 @@ import BaseContainer from "components/ui/BaseContainer"
 import {Button} from 'components/ui/Button';
 import "styles/views/TurnScoreboard.scss";
 import { useEffect, useState } from 'react';
+import {useParams} from 'react-router-dom';
+import Stomper from 'helpers/Stomp';
 
 
 export const TurnScoreboard = (props) => {
@@ -165,17 +167,28 @@ export const TurnScoreboard = (props) => {
         }
     }
     
-    
+    const params = useParams();
+    let userToken = JSON.parse(sessionStorage.getItem('token')).token;
     const [rankingQuestion, setRankingQuestion] = useState(props.rankingQuestion);
     const [scoreboardEntries, setScoreboardEntries] = useState(props.scoreboardEntries);
     const [willContinue, setWillContinue] = useState(false);
 
+    let webSocket = Stomper.getInstance();
 
     useEffect(() => {
         setRankingQuestion(props.rankingQuestion);
         setScoreboardEntries(props.scoreboardEntries);
-        
     }, [props]);
+
+    // function to handle click on next turn button
+    const handleContinue = () => {
+        webSocket.send(
+            `/app/games/${params.id}/readyMovePlayers`,
+            {
+                userToken: userToken
+            }
+        );
+    }
 
     return (
         <BaseContainer className="turn-scoreboard container">
@@ -238,13 +251,15 @@ export const TurnScoreboard = (props) => {
             }
         </div>
         
+        {/* todo: maybe add timer which triggers automatically? */}
         <Button
             disabled={willContinue}
             onClick={() => {
                 setWillContinue(true);
+                handleContinue();
             }}
         >
-            {willContinue ? "Waiting for the others to get ready .." : "Next Turn"}
+            {willContinue ? "Waiting for the others to get ready .." : "Next Round"}
         </Button>
         
         </BaseContainer>

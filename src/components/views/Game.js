@@ -37,13 +37,16 @@ const Game = props => {
     webSocket.join("/topic/games/" + params.id + "/scoreboard", function (message) {
         setShowCountryRanking(false);
         setTurnScoreboardProps(JSON.parse(message.body));
-        console.log("showing scoreboard");
-        //console.log(JSON.parse(message.body));
-        setShowTurnScoreboard(true);
         // setTurnResults(JSON.parse(message.body).scoreboardEntries)
-        // setTimeout(() => {
-        //     setShowTurnScoreboard(false);
-        // }, "15000");
+        console.log("showing scoreboard");
+        setShowTurnScoreboard(true);
+    });
+    webSocket.join("/topic/games/" + params.id + "/scoreboardOver", function (message) {
+        console.log("remove scoreboard and move players");
+        setShowTurnScoreboard(false);
+        setTurnResults(JSON.parse(message.body).scoreboardEntries)
+        
+        
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
     webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
@@ -136,8 +139,6 @@ const Game = props => {
             }, "2000");
             
         }
-
-
     }, [turnResults]);
 
     /*
