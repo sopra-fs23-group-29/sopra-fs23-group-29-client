@@ -168,6 +168,7 @@ export const TurnScoreboard = (props) => {
     
     const [rankingQuestion, setRankingQuestion] = useState(props.rankingQuestion);
     const [scoreboardEntries, setScoreboardEntries] = useState(props.scoreboardEntries);
+    const [willContinue, setWillContinue] = useState(false);
 
 
     useEffect(() => {
@@ -236,6 +237,16 @@ export const TurnScoreboard = (props) => {
                 )   
             }
         </div>
+        
+        <Button
+            disabled={willContinue}
+            onClick={() => {
+                setWillContinue(true);
+            }}
+        >
+            {willContinue ? "Waiting for the others to get ready .." : "Next Turn"}
+        </Button>
+        
         </BaseContainer>
     );
     };
