@@ -1,4 +1,5 @@
 import BaseContainer from "components/ui/BaseContainer"
+import {Button} from 'components/ui/Button';
 import "styles/views/TurnScoreboard.scss";
 import { useEffect, useState } from 'react';
 
@@ -162,76 +163,79 @@ export const TurnScoreboard = (props) => {
                 }
             ]
         }
-        }
+    }
     
     
-        const [rankingQuestion, setRankingQuestion] = useState(props.rankingQuestion);
-        const [scoreboardEntries, setScoreboardEntries] = useState(props.scoreboardEntries);
+    const [rankingQuestion, setRankingQuestion] = useState(props.rankingQuestion);
+    const [scoreboardEntries, setScoreboardEntries] = useState(props.scoreboardEntries);
 
 
-        useEffect(() => {
-            setRankingQuestion(props.rankingQuestion);
-            setScoreboardEntries(props.scoreboardEntries);
-            
-        }, [props]);
+    useEffect(() => {
+        setRankingQuestion(props.rankingQuestion);
+        setScoreboardEntries(props.scoreboardEntries);
+        
+    }, [props]);
 
-        return (
-            <BaseContainer className="turn-scoreboard container">
-            <h1>Results of this round</h1>
+    return (
+        <BaseContainer className="turn-scoreboard container">
+        <h1>Results of this round</h1>
 
-            <div>
-                <BaseContainer className="turn-scoreboard table-row">
-                <div>Rank</div>
-                <div> </div>
-                <div> </div>
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Guessed rank</div>
-                <div> </div>
-                <div> </div>
-                <div>{rankingQuestion.questionTextShort}</div>
-                </BaseContainer>
-                {rankingQuestion.countryList.map((country, index) => {
-                // Find the player that guessed this country
-                const player = scoreboardEntries.find((p) => p.guessCountryCode == country.cioc);
-
-                let statistic;
-                switch (rankingQuestion.rankQuestionCategory) {
-                    case "AREA":
-                    statistic = country.area;
-                    break;
-                    case "POPULATION":
-                    statistic = country.population;
-                    break;
-                    case "GINI":
-                    statistic = country.gini;
-                    break;
-                    case "POPULATION_DENSITY":
-                    statistic = country.populationDensity;
-                    break;
-                    case "CAPITAL_LATITUDE":
-                    statistic = country.capitalLatitude;
-                    break;
-                    // add more cases for other categories as needed
-                    default:
-                    statistic = "-";
-                }
-
-                return (
-                    <BaseContainer className="turn-scoreboard table-row">
-                    <div>{index + 1}.</div>
-                    <div>
-                        <img src={country.flagUrl} alt={`${country.name} flag`} />
-                    </div>
-                    <div>{country.name}</div>
-                    <div style={{backgroundColor: player ? player.playerColor : 'transparent', borderRadius: '50%', width: '30px', height: '30px', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        {player ? player.guess : ""}
-                    </div>
-                    <div>{player ? ">" : ""}</div>
-                    <div>{player ? `${player.currentScore} ${player.currentScore === 1 ? 'Point' : 'Points'}` : ""}</div>
-                    <div>{statistic}</div>
-                    </BaseContainer>
-                );
-                })}
-            </div>
+        <div>
+            <BaseContainer className="turn-scoreboard table-row">
+            <div>Rank</div>
+            <div> </div>
+            <div> </div>
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Guessed rank</div>
+            <div> </div>
+            <div> </div>
+            <div>{rankingQuestion.questionTextShort}</div>
             </BaseContainer>
-        );
-        };
+            {
+                rankingQuestion.countryList.map((country, index) => {
+                    // Find the player that guessed this country
+                    const player = scoreboardEntries.find((p) => p.guessCountryCode == country.cioc);
+
+                    let statistic;
+                    switch (rankingQuestion.rankQuestionCategory) {
+                        case "AREA":
+                        statistic = country.area;
+                        break;
+                        case "POPULATION":
+                        statistic = country.population;
+                        break;
+                        case "GINI":
+                        statistic = country.gini.toFixed(2);
+                        break;
+                        case "POPULATION_DENSITY":
+                        statistic = country.populationDensity.toFixed(2);
+                        break;
+                        case "CAPITAL_LATITUDE":
+                        statistic = country.capitalLatitude.toFixed(2);
+                        break;
+                        // add more cases for other categories as needed
+                        default:
+                        statistic = "-";
+                    }
+
+                    return (
+                        <BaseContainer className="turn-scoreboard table-row">
+                            <div>{index + 1}.</div>
+                            <div>
+                                <img src={country.flagUrl} alt={`${country.name} flag`} />
+                            </div>
+                            <div>{country.name}</div>
+                            <div style={{backgroundColor: player ? player.playerColor : 'transparent', borderRadius: '50%', width: '30px', height: '30px', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                                {player ? player.guess : ""}
+                            </div>
+                            <div>{player ? ">" : ""}</div>
+                            <div>{player ? `${player.currentScore} ${player.currentScore === 1 ? 'Point' : 'Points'}` : ""}</div>
+                            <div>{statistic}</div>
+                        </BaseContainer>
+                        );
+                    }
+                )   
+            }
+        </div>
+        </BaseContainer>
+    );
+    };
