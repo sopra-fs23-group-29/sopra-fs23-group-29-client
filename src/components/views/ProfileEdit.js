@@ -40,13 +40,14 @@ const ProfileEdit = props => {
     const [username, setUsername] = useState(null);
     const [birthday, setBirthday] = useState(null);
     const [password, setPassword] = useState(null);
+    const [cioc, setCIOC] = useState(null);
 
     const doEdit = async () => {
         try {
 
             // Check if a user comes back, meaning the user exists and pw is correct
-            const requestBody = JSON.stringify({username, birthday});
-            console.log(requestBody)
+            const requestBody = JSON.stringify({username, birthday, cioc});
+            // console.log(requestBody)
             const response = await api.put(
                 `/users/${id}`,
                 requestBody,
@@ -92,6 +93,20 @@ const ProfileEdit = props => {
         }
     }
 
+    const getNewRandomFlag = async () => {
+        try {
+            const response = await api.delete(
+                `/users/${id}/flag`,
+                {headers:{"Authorization": token}}
+            )
+
+            // Edit successfully worked --> navigate to the route /profile/id
+            history.push(`/profile/${id}`);
+        }
+        catch (error) {
+            alert(`Something went wrong while replacing your flag: \n${handleError(error)}`);
+        }
+    }
 
     return (
         <BaseContainer>
@@ -108,12 +123,25 @@ const ProfileEdit = props => {
                         value={birthday}
                         onChange={b => setBirthday(b)}
                     />
+                    <FormField
+                        label="New Country for Flag"
+                        value={cioc}
+                        onChange={c => setCIOC(c)}
+                    />
                     <div className="edit button-container">
                         <Button
                             width="100%"
                             onClick={() => doEdit()}
                         >
                             Edit Profile
+                        </Button>
+                    </div>
+                    <div className="edit button-container">
+                        <Button
+                            width="100%"
+                            onClick={() => getNewRandomFlag()}
+                        >
+                            get new random flag
                         </Button>
                     </div>
                     <FormField
