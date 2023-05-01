@@ -6,6 +6,8 @@ import 'styles/views/ProfileEdit.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
+
+
 const FormField = props => {
     return (
         <div className="edit field">
@@ -27,6 +29,7 @@ FormField.propTypes = {
     value: PropTypes.string,
     onChange: PropTypes.func
 };
+
 
 const ProfileEdit = props => {
 
@@ -88,12 +91,50 @@ const ProfileEdit = props => {
             alert(`Something went wrong while deleting your profile: \n${handleError(error)}`);
         }
     }
+    const assignNewProfilePicture = async () => {
+        try {
+            // Check if a user comes back, meaning the user exists and pw is correct
+            const requestBody = JSON.stringify({image: null});
+            console.log(requestBody)
+            const response = await api.put(
+                `/users/${id}`,
+                requestBody,
+                {headers:{"Authorization": token}}
+            );
+
+            // Edit successfully worked --> navigate to the route /profile/id
+            history.push(`/profile/${id}`);
+
+        } catch (error) {
+            alert(`Something went wrong while setting your new profile picture: \n${handleError(error)}`);
+        }
+    };
+
+    const hiddenFileInput = React.useRef(null);
+    const selectUploadField = () => {
+        hiddenFileInput.current.click();
+    };
 
     return (
         <BaseContainer>
             <div className="edit container">
                 <div className="edit head-line">Please enter new Username and Birthday. Empty means unchanged</div>
                 <div className="edit form">
+                    <>
+                        <Button
+                            width="100%"
+                            onClick={selectUploadField}
+                        >
+                            Upload new profile picture
+                        </Button>
+                        <input
+                            type="file"
+                            ref={hiddenFileInput}
+                            onChange={p => assignNewProfilePicture(p)}
+                            style={{display: 'none'}} // Make the file input element invisible
+                        />
+                    </>
+
                     <FormField
                         label="New Username"
                         value={username}
