@@ -1,6 +1,6 @@
 import {Start, Field, End, Barrier} from "./BoardField";
 import React from 'react';
-import "styles/views/Board.scss";
+import "styles/ui/Board.scss";
 import theme from "styles/_theme.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import { Gradient } from "components/ui/LinearGradient";
@@ -204,8 +204,7 @@ class Board extends React.Component {
 
         // move the player one field forward
         let newField = Math.min(end, oldField + fieldsToMove);
-        /*
-        // we are ignoring barriers for the moment
+
         if (allowBarriers && this.isBarrier(newField, end)) {
             const barrier = this.gradientsAndBarriers[newField].ref.current
             // we need to skip barriers and clear them if they were not already cleared
@@ -214,7 +213,7 @@ class Board extends React.Component {
             }
             newField = Math.min(end, newField + 1);
         }
-         */
+
         player.field = newField;
         this.colors[newField].push(color);
         this.gradientsAndBarriers[newField].ref.current.updateColors(this.colors[newField]);
