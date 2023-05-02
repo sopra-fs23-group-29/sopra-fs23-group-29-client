@@ -5,7 +5,6 @@ import "styles/views/CountryRanking.scss";
 import Stomper from "../../helpers/Stomp";
 import React, {useEffect, useState} from "react";
 import Player from "../../models/Player";
-import HeaderGame, {updateHeaderGame} from "../views/HeaderGame";
 
 // todo: When a player leaves the game, players should be updated
 // otherwise the answering cannot be done
@@ -14,9 +13,7 @@ const CountryRanking = props => {
     // set these as const [] = useState... if possible
     const gameId = useParams().id;
     let webSocket = Stomper.getInstance();
-    // dummies
     let userToken = JSON.parse(sessionStorage.getItem('token')).token;
-    let playerColorId = 1
 
     // websocket variables
     const [turnNumber, setTurnNumber] = useState(null);
@@ -92,6 +89,7 @@ const CountryRanking = props => {
     };
 
     const processUpdatedTurn = (message) => {
+        setCheckedCountry(null)
         // set takenGuesses
         setTakenGuesses(props.takenGuesses);
 

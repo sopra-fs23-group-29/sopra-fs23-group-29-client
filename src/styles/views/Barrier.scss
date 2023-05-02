@@ -1,0 +1,108 @@
+@import '../_theme';
+
+.barrier {
+  &.answer-container {
+    background: $containerColor;
+    padding: 2em;
+    border-radius: $borderRadius;
+    border-style: solid;
+    border-color: $containerColor;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: $dropShadow;
+    position: fixed;
+    top: 25%;
+    left: 20%;
+    height: 55%;
+    width: 60%;
+  }
+  &.country-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 1em;
+    justify-content: space-between;
+  }
+  &.flag-container {
+    &:disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    cursor: pointer;
+    background: $accent;
+    border-radius: $borderRadius;
+    height: 2em;
+    width: 9em;
+  }
+  &.country-name {
+    margin-top: 0.5em;
+  }
+  &.answer-row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+  &.answer-option-container {
+    display: flex;
+    align-items: center;
+  }
+  &.answer-option-number {
+    color: $textColor;
+    position: absolute;
+    cursor: pointer;
+    display: inline;
+    margin-left: 2em;
+  }
+}
+
+input[type="radio"] {
+  appearance: none;
+}
+
+.answer-radio {
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+  &:hover {
+    transform: none;
+  }
+  background: $accentDarkContainerColor;
+  border-radius: $borderRadius;
+  display: flex;
+  cursor: pointer;
+  height: 5em;
+  width: 5em;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  transition: all 0.3s ease;
+}
+
+/*
+  Update if colors in backend change
+ */
+input[value="INDIANRED"]:checked {
+  background-color: $accentColor1;
+}
+
+input[value="ORANGE"]:checked {
+  background-color: $accentColor2;
+}
+
+input[value="YELLOW"]:checked {
+  background-color: $accentColor3;
+}
+
+input[value="LIGHTGREEN"]:checked {
+  background-color: $accentColor4;
+}
+
+input[value="LIGHTSKYBLUE"]:checked {
+  background-color: $accentColor5;
+}
+
+input[value="VIOLET"]:checked {
+  background-color: $accentColor6;
+}

@@ -53,9 +53,13 @@ const HeaderGame = (props) => {
         if (window.confirm("Do you want to leave the game?")) {
             try {
                 webSocket.leave("/topic/games/" + gameId + "/gamestart");
+                webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
                 webSocket.leave("/topic/games/" + gameId + "/newturn");
+                webSocket.leave("/topic/games/" + gameId + "/nextTurn");
                 webSocket.leave("/topic/games/" + gameId + "/updatedturn");
                 webSocket.leave("/topic/games/" + gameId + "/scoreboard");
+                webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
+                webSocket.leave("/topic/games/" + gameId + "/barrierHit");
                 webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
                 webSocket.leave("/topic/games/" + gameId + "/gameover");
                 // set status to offline
@@ -65,6 +69,7 @@ const HeaderGame = (props) => {
                 );
                 console.log("Left game");
                 sessionStorage.removeItem("gameId");
+                sessionStorage.removeItem('game');
 
                 // redirect to home
                 history.push('/');
