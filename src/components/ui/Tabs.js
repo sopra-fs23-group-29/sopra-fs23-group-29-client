@@ -54,6 +54,7 @@ export default function Tabs() {
 
             // remove game from sessionStorage
             sessionStorage.removeItem('gameId');
+            sessionStorage.removeItem('game');
 
             // remove the token
             sessionStorage.removeItem('token');

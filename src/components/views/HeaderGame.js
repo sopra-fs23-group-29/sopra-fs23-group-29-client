@@ -65,6 +65,7 @@ const HeaderGame = (props) => {
                 );
                 console.log("Left game");
                 sessionStorage.removeItem("gameId");
+                sessionStorage.removeItem('game');
 
                 // redirect to home
                 history.push('/');
