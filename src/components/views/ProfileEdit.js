@@ -6,8 +6,6 @@ import 'styles/views/ProfileEdit.scss';
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
 
-
-
 const FormField = props => {
     return (
         <div className="edit field">
@@ -30,7 +28,6 @@ FormField.propTypes = {
     onChange: PropTypes.func
 };
 
-
 const ProfileEdit = props => {
 
     const id = useParams().id;
@@ -39,7 +36,6 @@ const ProfileEdit = props => {
     const history = useHistory();
     const [username, setUsername] = useState(null);
     const [birthday, setBirthday] = useState(null);
-    const [password, setPassword] = useState(null);
     const [cioc, setCIOC] = useState(null);
 
     const doEdit = async () => {
@@ -73,6 +69,7 @@ const ProfileEdit = props => {
     };
 
     const deleteUser = async () => {
+        let password = window.prompt("Enter password to delete profile: ", "")
         try {
             const response = await api.delete(
                 `/users/${id}`,
@@ -111,52 +108,64 @@ const ProfileEdit = props => {
     return (
         <BaseContainer>
             <div className="edit container">
-                <div className="edit head-line">Please enter new Username and Birthday. Empty means unchanged</div>
                 <div className="edit form">
-                    <FormField
-                        label="New Username"
-                        value={username}
-                        onChange={un => setUsername(un)}
-                    />
-                    <FormField
-                        label="New Birthday"
-                        value={birthday}
-                        onChange={b => setBirthday(b)}
-                    />
-                    <FormField
-                        label="New Country for Flag"
-                        value={cioc}
-                        onChange={c => setCIOC(c)}
-                    />
+                    <h2 style={{marginBottom: "0"}}>Edit profile</h2>
+                    <h3 style={{fontWeight: "normal"}}>Empty means unchanged</h3>
+                    <p style={{fontSize: "1.1em"}}>Flag</p>
                     <div className="edit button-container">
                         <Button
-                            width="100%"
-                            onClick={() => doEdit()}
+                            style={{marginTop: "0em", marginBottom: "1em"}}
+                            width="50%"
                         >
-                            Edit Profile
+                            Remove Flag
                         </Button>
-                    </div>
-                    <div className="edit button-container">
                         <Button
-                            width="100%"
+                            style={{marginTop: "0em", marginBottom: "1em"}}
+                            width="50%"
                             onClick={() => getNewRandomFlag()}
                         >
                             get new random flag
                         </Button>
                     </div>
                     <FormField
-                        label="Enter password to delete profile:"
-                        value={password}
-                        onChange={un => setPassword(un)}
-                        margin-top="10em"
+                        label="New Country for Flag"
+                        value={cioc}
+                        onChange={c => setCIOC(c)}
                     />
-                    <div className="edit delete-button-container">
+                    <FormField
+                        label="Username"
+                        value={username}
+                        onChange={un => setUsername(un)}
+                    />
+                    <label style={{fontSize: "1.1em"}}>Birthday</label>
+                    <input
+                        type="date"
+                        max="today"
+                        className="edit input"
+                        id="birthday"
+                        style={{marginBottom: "1em"}}
+                        onChange={b => setBirthday(b)}
+                    >
+
+                    </input>
+                    <FormField
+                        label="Birthday"
+                        value={birthday}
+                        onChange={b => setBirthday(b)}
+                    />
+                    <div className="edit button-container">
                         <Button
                             width="100%"
-                            disabled={!password}
                             onClick={() => deleteUser()}
+                            style={{backgroundColor: "indianred"}}
                         >
                             Delete Profile
+                        </Button>
+                        <Button
+                            width="100%"
+                            onClick={() => doEdit()}
+                        >
+                            Save Changes
                         </Button>
                     </div>
                 </div>

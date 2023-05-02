@@ -1,71 +1,56 @@
 @import "../_theme";
 
 .edit {
-    &.container {
-        margin-top: 2em;
-        min-height: 300px;
-        @include center;
-        flex-direction: column;
-    }
-    &.form {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 60%;
-        max-width: 30em;
-        height: fit-content;
-        font-size: 1em;
-        padding: 2.5em;
-        border-radius: 0.75em;
-        background-color: $containerColor;
-        transition: opacity 0.5s ease, transform 0.5s ease;
-        box-shadow: $dropShadow;
-    }
-    &.field {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    &.head-line {
-        color: $textColor;
-        margin-bottom: 5px;
-        text-transform: lowercase;
-        font-size: 1.1em;
-        font-weight: 300;
-    }
-    &.label {
-        color: $textColor;
-        margin-bottom: 5px;
-        margin-left: 4px;
-        text-transform: lowercase;
-        font-size: 1.1em;
-        font-weight: 300;
-    }
-    &.input {
-        height: 35px;
-        padding-left: 15px;
-        border: none;
-        border-radius: 0.75em;
-        margin-bottom: 10px;
-        background: transparentize($textColor, 0.5);
-        color: $textColor;
-    }
-    &.button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: -5px;
-        margin-bottom: 3em;
-        gap: 1em;
-        flex-direction: column;
-    }
-    &.delete-button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: -5px;
-        gap: 1em;
-        flex-direction: column;
-    }
-    &.upload {
+  &.container {
+    margin-top: 2em;
+    min-height: 300px;
+    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+    @include center;
+    flex-direction: column;
+  }
+  &.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 90%;
+    max-width: 30em;
+    height: fit-content;
+    font-size: 1em;
+    padding: 2.5em;
+    border-radius: 0.75em;
+    background-color: $containerColor;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    box-shadow: $dropShadow;
+  }
+  &.field {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &.label {
+    color: $textColor;
+    margin-bottom: 5px;
+    margin-left: 4px;
+    font-size: 1.1em;
+    font-weight: 300;
+  }
+  &.input {
+    height: 35px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border: none;
+    border-radius: 0.75em;
+    margin-bottom: 10px;
+    background: transparentize($textColor, 0.5);
+    color: $accent;
+    color-scheme: dark
+  }
+  &.button-container {
+    display: flex;
+    gap: 1em;
+  }
+}
 
-    }
+input[type="date"] {
+  appearance: none;
 }
