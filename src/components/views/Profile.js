@@ -50,6 +50,7 @@ const Profile = () => {
         editButton = (
             <Button className="primary-button"
                     onClick={() => edit()}
+                    width="100%"
             >
                 Edit Profile
             </Button>
@@ -61,29 +62,34 @@ const Profile = () => {
   if (aUser) {
     content = (
         <div>
-            <div className="profile sections">
-                <div className="profile row">
-                    <h2 className="profile username">{aUser.username}</h2>
-                        {editButton}
-                </div>
-                <div className="profile picture">
-                    <img
-                        src={aUser.flagURL}
-                        alt=""
-                        height="100%"
-                    />
-                </div>
-                <div className="profile row">
-                    <div className="profile sections">
-                        {
-                            //<p>Visited Countries: [STRING]</p>
-                        }
-                            <p>Birthday: {aUser.birthday}</p>
-                        {
-                            //<p>About Me: [STRING]</p>
-                        }
-
+            <div className="profile row">
+                <div className="profile picture-container">
+                    <div className="profile picture">
+                        <img
+                            src={aUser.flagURL}
+                            alt=""
+                            height="100%"
+                        />
                     </div>
+                </div>
+                <div className="profile sections">
+                    <div className="profile username">
+                        <h2>{aUser.username}</h2>
+                    </div>
+                    <div className="profile row">
+                        <div className="profile sections">
+                            {
+                                //<p>Visited Countries: [STRING]</p>
+                            }
+                            <p>Birthday: {aUser.birthday}</p>
+                            {
+                                //<p>About Me: [STRING]</p>
+                            }
+
+                        </div>
+                    </div>
+                    {editButton}
+
                 </div>
             </div>
         </div>

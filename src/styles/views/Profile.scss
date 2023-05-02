@@ -20,34 +20,41 @@
     width: fit-content;
   }
   &.sections {
-    padding: 1.5em;
     display: flex;
-    align-items: left;
     flex-direction: column;
-    width: auto;
+    width: 25em;
   }
   &.row {
-    margin-top: 1.5em;
+    padding: 1em;
     flex-direction: row;
     display: flex;
-    align-items: left;
     justify-content: space-between;
     height: fit-content;
-    width: auto;
+  }
+  &.picture-container {
+    @include center;
+    display: flex;
+    flex-direction: column;
+    width: 25em;
   }
   &.picture {
-    align-items: center;
-    justify-content: center;
+    @include center;
+    flex-direction: column;
+    margin-right: 1em;
     background: none;
     box-shadow: none;
     height: 8em;
-    width: auto;
   }
   &.username {
-    font-weight: 700;
-    color: $textColor;
+    padding-left: 1em;
+    padding-right: 1em;
+    flex-direction: row;
+    display: flex;
+    justify-content: space-between;
+    height: fit-content;
   }
-  & p,h2 {
-    align-items: left;
+  &.icon {
+    @include icon;
+    font-size: 10em; /* Preferred icon size */
   }
 }
