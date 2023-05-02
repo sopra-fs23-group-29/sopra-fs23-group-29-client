@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useHistory, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
 import "styles/views/Game.scss";
 import {Board} from "../ui/Board";
@@ -7,18 +7,19 @@ import CountryRanking from "../ui/CountryRanking";
 import { TurnScoreboard } from 'components/ui/TurnScoreboard';
 import Stomper from 'helpers/Stomp';
 import Player from "../../models/Player";
+import Barrier from "../ui/Barrier";
 
-// todo: When a player leaves the game, players should be updated
-// otherwise the answering cannot be done
+// TODO: When a player leaves the game, players should be updated otherwise the answering cannot be done
 
 const Game = props => {
-    const history = useHistory();
     const params = useParams();
     const userToken = JSON.parse(sessionStorage.getItem('token')).token;
 
     let webSocket = Stomper.getInstance();
     webSocket.leave("/topic/games/" + params.id + "/lobby");
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
+        setShowTurnScoreboard(false);
+        setShowBarrier(false);
         console.log("newturn information")
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
@@ -48,9 +49,14 @@ const Game = props => {
         
         
     });
-    webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
+    webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {
+        setShowTurnScoreboard(false);
+        setShowCountryRanking(false);
+        setBarrierProps(JSON.parse(message.body));
+        setShowBarrier(true);
+    });
     webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
-        //console.log(JSON.parse(message.body));
+        console.log(JSON.parse(message.body));
         setBarrierHit(JSON.parse(message.body));
     });
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {});
@@ -60,6 +66,9 @@ const Game = props => {
 
     const [showTurnScoreboard, setShowTurnScoreboard] = useState(false);
     const [turnScoreboardProps, setTurnScoreboardProps] = useState({});
+
+    const [showBarrier, setShowBarrier] = useState(false);
+    const [barrierProps, setBarrierProps] = useState({});
 
     const [turnResults, setTurnResults] = useState(null);
     const [barrierHit, setBarrierHit] = useState(null);
@@ -141,7 +150,7 @@ const Game = props => {
         }
     }, [turnResults]);
 
-    /*
+
     useEffect( () => {
         //callback for barriers
 
@@ -158,14 +167,6 @@ const Game = props => {
             board.movePlayerOnce(mover, end, allowBarriers);
         }
     }, [barrierHit]);
-         */
-
-    // todo: remove?
-    sessionStorage.setItem('game', JSON.stringify({
-            "turnNumber": 1,
-            "playerColor": "NOTSET",
-        }
-    ));
 
     // todo: remove?
     let content = (
@@ -181,19 +182,13 @@ const Game = props => {
             {
                 //content
             }
-            {showCountryRanking && <CountryRanking {...countryRankingProps} />}
-            {showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />}
+            {showCountryRanking && <CountryRanking {...countryRankingProps} />
+            }
+            {showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />
+            }
+            {showBarrier && <Barrier {...barrierProps} />
+                }
 
-            {/*
-                <BaseContainer className="order container">
-                <div>Username 1</div>
-                <div>Username 2</div>
-                <div>Username 3</div>
-                <div>Username 4</div>
-                <div>Username 5</div>
-                <div>Username 6</div>
-            </BaseContainer>
-            */ }
         </BaseContainer>
     );
 }
