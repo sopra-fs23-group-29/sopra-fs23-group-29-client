@@ -37,13 +37,16 @@ const Game = props => {
     webSocket.join("/topic/games/" + params.id + "/scoreboard", function (message) {
         setShowCountryRanking(false);
         setTurnScoreboardProps(JSON.parse(message.body));
+        // setTurnResults(JSON.parse(message.body).scoreboardEntries)
         console.log("showing scoreboard");
-        //console.log(JSON.parse(message.body));
         setShowTurnScoreboard(true);
+    });
+    webSocket.join("/topic/games/" + params.id + "/scoreboardOver", function (message) {
+        console.log("remove scoreboard and move players");
+        setShowTurnScoreboard(false);
         setTurnResults(JSON.parse(message.body).scoreboardEntries)
-        setTimeout(() => {
-            setShowTurnScoreboard(false);
-        }, "15000");
+        
+        
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {});
     webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
@@ -136,8 +139,6 @@ const Game = props => {
             }, "2000");
             
         }
-
-
     }, [turnResults]);
 
     /*
@@ -159,11 +160,14 @@ const Game = props => {
     }, [barrierHit]);
          */
 
+    // todo: remove?
     sessionStorage.setItem('game', JSON.stringify({
             "turnNumber": 1,
             "playerColor": "NOTSET",
         }
     ));
+
+    // todo: remove?
     let content = (
         <BaseContainer className="round container">
             Round {JSON.parse(sessionStorage.getItem("game")).turnNumber}
