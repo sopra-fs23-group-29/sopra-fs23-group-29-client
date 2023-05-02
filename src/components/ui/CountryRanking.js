@@ -167,7 +167,7 @@ const CountryRanking = props => {
     // country elements
     function country1(countries) {
         let countryArr = []
-        for (let i = 0; i < countries.length-2; i++) {
+        for (let i = 0; i < Math.min(3, countries.length); i++) {
             countryArr.push(
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
@@ -183,7 +183,7 @@ const CountryRanking = props => {
     }
     function country2(countries) {
         let countryArr = []
-        for (let i = 3; i < countries.length; i++) {
+        for (let i = 3; i < Math.max(3, countries.length); i++) {
             countryArr.push(
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
