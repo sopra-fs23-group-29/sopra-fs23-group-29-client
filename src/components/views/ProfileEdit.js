@@ -116,19 +116,20 @@ const ProfileEdit = props => {
                         <Button
                             style={{marginTop: "0em", marginBottom: "1em"}}
                             width="50%"
+                            onClick={() => setCIOC("SUI")}
                         >
-                            Remove Flag
+                            get neutral Flag
                         </Button>
                         <Button
                             style={{marginTop: "0em", marginBottom: "1em"}}
                             width="50%"
                             onClick={() => getNewRandomFlag()}
                         >
-                            get new random flag
+                            get random flag
                         </Button>
                     </div>
                     <FormField
-                        label="New Country for Flag"
+                        label="IOC Country code"
                         value={cioc}
                         onChange={c => setCIOC(c)}
                     />
@@ -137,6 +138,7 @@ const ProfileEdit = props => {
                         value={username}
                         onChange={un => setUsername(un)}
                     />
+                    {/*
                     <label style={{fontSize: "1.1em"}}>Birthday</label>
                     <input
                         type="date"
@@ -148,6 +150,7 @@ const ProfileEdit = props => {
                     >
 
                     </input>
+                    */}
                     <FormField
                         label="Birthday"
                         value={birthday}
