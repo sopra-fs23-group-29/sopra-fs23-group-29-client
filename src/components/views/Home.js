@@ -251,7 +251,31 @@ const Home = (props) => {
       >
         Create Multiplayer Lobby
       </Button>
+
+      <div className="login form">
+        <FormField
+          label="moveGame"
+          value={gameToMove}
+          onChange={(un) => setGameToMove(un)}
+        />
+        <FormField
+          label="movePlayer"
+          value={playerToMove}
+          onChange={(un) => setPlayerToMove(un)}
+        />
+      </div>
+      <Button
+        className="primary-button"
+        width="15%"
+        onClick={() => movePlayer()}
+      >
+        Move Player
+      </Button>
     </BaseContainer>
+
+
+
+
     /*
       <Button
         className="primary-button"
