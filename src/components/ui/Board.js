@@ -16,12 +16,11 @@ class Board extends React.Component {
      * create players
      */
     addPlayer(player, field){
-        const name = player.playerName;
         const color = player.playerColor;
-        console.log(`added player with name: ${name} on field ${field}`);
+        //console.log(`added player with name: ${name} on field ${field}`);
 
         // add the color to the board if not already present
-        console.log(this.colors[field]);
+        //console.log(this.colors[field]);
         if (this.colors[field].indexOf(color) === -1){
             this.colors[field].push(color);
             this.gradientsAndBarriers[field].ref.current.updateColors(this.colors[0]);
@@ -187,7 +186,7 @@ class Board extends React.Component {
      * functions used to update the board
      */
     async movePlayer(player, startingField, fieldsToMove, end, allowBarriers) {
-        console.log(`moving player ${player.playerName} with color ${player.playerColor} ${fieldsToMove} fields.`);
+        //console.log(`moving player ${player.playerName} with color ${player.playerColor} ${fieldsToMove} fields.`);
         const color = player.playerColor;
         /*
         if (this.playerFields[player.playerName] === undefined){
@@ -195,7 +194,7 @@ class Board extends React.Component {
         }
          */
         const oldField = startingField;
-        console.log(oldField, color);
+        //console.log(oldField, color);
 
         // remove the player from the current field
         const index = this.colors[oldField].indexOf(color);
