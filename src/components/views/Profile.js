@@ -32,6 +32,7 @@ const Profile = () => {
         );
 
         setAUser(response.data);
+        //console.log(response);
 
       } catch (error) {
         console.error(`Something went wrong while fetching the user: \n${handleError(error)}`);
@@ -64,6 +65,13 @@ const Profile = () => {
                 <div className="profile row">
                     <h2 className="profile username">{aUser.username}</h2>
                         {editButton}
+                </div>
+                <div className="profile picture">
+                    <img
+                        src={aUser.flagURL}
+                        alt=""
+                        height="100%"
+                    />
                 </div>
                 <div className="profile row">
                     <div className="profile sections">

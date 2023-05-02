@@ -1,5 +1,5 @@
 import React from 'react';
-import "styles/views/Board.scss";
+import "styles/ui/Board.scss";
 
 /**
  * components
