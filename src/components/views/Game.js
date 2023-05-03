@@ -168,12 +168,6 @@ const Game = props => {
         }
     }, [barrierHit]);
 
-    // todo: remove?
-    let content = (
-        <BaseContainer className="round container">
-            Round {JSON.parse(sessionStorage.getItem("game")).turnNumber}
-        </BaseContainer>
-    );
 
     return (
         <BaseContainer className="game container">
