@@ -168,14 +168,9 @@ const Game = props => {
         }
     }, [barrierHit]);
 
-
     return (
         <BaseContainer className="game container">
             {thisBoard}
-
-            {
-                //content
-            }
             {showCountryRanking && <CountryRanking {...countryRankingProps} />
             }
             {showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />
