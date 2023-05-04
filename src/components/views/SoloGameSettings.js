@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
-import User from "models/User";
 import { useHistory } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Home.scss";
 import BaseContainer from "components/ui/BaseContainer";
-import PropTypes from "prop-types";
-
-import Stomper from "../../helpers/Stomp";
+import BoardSizeSelect from "components/ui/BoardSizeSelect";
 
 const SoloGameSettings = (props) => {
   const history = useHistory();
@@ -126,6 +123,7 @@ const SoloGameSettings = (props) => {
         Start Game
       </Button>
       <Button onClick={() => backToLobbyOverview()}>Cancel</Button>
+      <BoardSizeSelect />
     </BaseContainer>
   );
 };
