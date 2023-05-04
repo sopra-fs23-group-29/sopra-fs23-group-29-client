@@ -12,6 +12,11 @@
     align-content:center;
     box-shadow: $dropShadow;
   }
+  &.button-container {
+    flex-direction: row;
+    @include center;
+    padding: 2em;
+  }
   &.lobby-container {
     width:100%;
     height: 50px;

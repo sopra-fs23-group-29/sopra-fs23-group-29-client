@@ -131,8 +131,8 @@ const Home = (props) => {
     }
   };
 
-  /* Starts a solo Game by creating a game server side and opening a view where game settings can be changed.*/
-  const startSoloGame = () => {
+  /* Redirect to Solo Game Settings page*/
+  const openSoloGame = () => {
     webSocket.leave("/topic/games");
     history.push("/sologame");
   };
@@ -143,8 +143,8 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
-  /* Fake call to join a game
-   */
+  /* Fake cals to join a game*/
+
   const joinGame = async () => {
     try {
       /* leave /games */
@@ -244,14 +244,22 @@ const Home = (props) => {
           clicking on the button below!
         </div>
       )}
-      <Button
-        className="primary-button"
-        width="20%"
-        onClick={() => createGameLobby()}
-      >
-        Create Multiplayer Lobby
-      </Button>
-
+      <div className="home button-container">
+        <Button
+          className="primary-button"
+          width="20%"
+          onClick={() => createGameLobby()}
+        >
+          Create Multiplayer Lobby
+        </Button>
+        <Button
+          className="primary-button"
+          width="15%"
+          onClick={() => openSoloGame()}
+        >
+          Single Player Game
+        </Button>
+      </div>
       <div className="login form">
         <FormField
           label="moveGame"
@@ -272,9 +280,6 @@ const Home = (props) => {
         Move Player
       </Button>
     </BaseContainer>
-
-
-
 
     /*
       <Button
