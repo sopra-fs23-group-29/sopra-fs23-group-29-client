@@ -1,0 +1,62 @@
+@import "../_theme";
+
+.lobbyset {
+  &.container {
+    margin-top: 2em;
+    min-height: 300px;
+    /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
+    @include center;
+    flex-direction: column;
+  }
+  &.title {
+    font-size: 1.3em;
+    font-weight: 700;
+    font-family: $fontDefault;
+    margin-bottom: -16px;
+  }
+  &.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 60%;
+    max-width: 30em;
+    height: fit-content;
+    font-size: 1em;
+    padding: 2.5em;
+    border-radius: 0.75em;
+    background-color: $containerColor;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    box-shadow: $dropShadow;
+  }
+  &.field {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 1em;
+    margin-bottom: 1.5em;
+  }
+  &.input {
+    height: 35px;
+    padding-left: 15px;
+    margin-left: -4px;
+    border: none;
+    border-radius: 0.75em;
+    background: transparentize($textColor, 0.5);
+    color: $accentDark;
+    justify-self:start;
+  }
+  &.label {
+    color: $textColor;
+    margin-bottom: 10px;
+    margin-top: 1em;
+    text-transform: lowercase;
+    font-size: 1.1em;
+    font-weight: 300;
+  }
+  &.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    flex-direction: column;
+  }
+}

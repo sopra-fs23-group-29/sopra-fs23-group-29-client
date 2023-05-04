@@ -102,7 +102,7 @@ const SoloGameSettings = () => {
         setBoardSize("MEDIUM");
       } else if (isHowFast) {
         setGameMode("HOWFAST");
-        setDuration("0");
+        setDuration("NA");
       } else return;
     } else return;
   };

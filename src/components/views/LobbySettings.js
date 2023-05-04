@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import { api, handleError } from "helpers/api";
 import { useHistory } from "react-router-dom";
 import { Button } from "components/ui/Button";
-import "styles/views/Login.scss";
+import "styles/views/Home.scss";
+import "styles/views/LobbySettings.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import PropTypes from "prop-types";
+import BoardSizeSelect from "components/ui/BoardSizeSelect";
 
 /* This is the view for creating a PvP Game Lobby by entering the name first */
 
 const NameFormField = (props) => {
   return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
+    <div className="lobbyset field">
+      <label className="lobbyset label">{props.label}</label>
       <input
-        className="login input"
+        className="lobbyset input"
         placeholder={"Please enter a name for this round of Globalissimo"}
         value={props.value}
         onChange={(e) => props.onChange(e.target.value)}
@@ -30,12 +32,15 @@ NameFormField.propTypes = {
 const LobbySettings = (props) => {
   const history = useHistory();
   const [gameName, setGameName] = useState(null);
+  const [boardSize, setBoardSize] = useState(null);
 
   const createLobby = async () => {
     try {
       const requestBody = JSON.stringify({
         gameName: gameName,
         gameMode: "PVP",
+        boardSize: boardSize,
+        maxDuration: "NA",
       });
       const token = JSON.parse(sessionStorage.getItem("token")).token;
       console.log(requestBody);
@@ -63,14 +68,21 @@ const LobbySettings = (props) => {
     }
   };
 
+  const changeBoardSize = (size) => {
+    setBoardSize(size);
+  };
+
   const backToLobbyOverview = () => {
     history.push(`/`);
   };
 
   return (
     <BaseContainer className="home container">
+      <div className="lobbyset title">Game Name:</div>
       <NameFormField value={gameName} onChange={(un) => setGameName(un)} />
-      <Button disabled={!gameName} onClick={() => createLobby()}>
+      <div className="lobbyset title">Gameboard Size:</div>
+      <BoardSizeSelect changeBoardSize={changeBoardSize} />
+      <Button disabled={!gameName || !boardSize} onClick={() => createLobby()}>
         Create PvP Lobby
       </Button>
 

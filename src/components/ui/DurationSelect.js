@@ -27,13 +27,13 @@ const DurationSelect = ({ changeDuration }) => {
 
   useEffect(() => {
     if (isOpOne && !isOpTwo && !isOpThree) {
-      setGameDuration("3");
+      setGameDuration("SHORT");
       changeDuration(gameDuration);
     } else if (isOpTwo && !isOpOne && !isOpThree) {
-      setGameDuration("10");
+      setGameDuration("MEDIUM");
       changeDuration(gameDuration);
     } else if (isOpThree && !isOpOne && !isOpTwo) {
-      setGameDuration("20");
+      setGameDuration("LONG");
       changeDuration(gameDuration);
     } else changeDuration(null);
   }, [isOpOne, isOpTwo, isOpThree, gameDuration]);
