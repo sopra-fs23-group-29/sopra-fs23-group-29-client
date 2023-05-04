@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
-import { Spinner } from "components/ui/Spinner";
 import { useHistory } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Home.scss";
@@ -85,25 +84,6 @@ const Home = (props) => {
   const [lobbies, setLobbies] = useState([]);
   const [hasLobbies, setHasLobbies] = useState(false);
 
-  const [gameToAnswer, setGameToAnswer] = useState(null);
-  const [turnToAnswer, setTurnToAnswer] = useState(null);
-  const [playerToAnswer, setPlayerToAnswer] = useState(null);
-  const [countryCode, setCountryCode] = useState(null);
-  const [guess, setGuess] = useState(null);
-
-  const [gameIdToJoin, setgameIdToJoin] = useState(null);
-
-  const [gameIdToLeave, setGameIdToLeave] = useState(null);
-
-  const [gameToStart, setGameToStart] = useState(null);
-
-  const [gameBarrierAnswer, setGameBarrierAnswer] = useState(null);
-  const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null);
-  const [barrierAnswer, setBarrierAnswer] = useState(null);
-
-  const [gameEndTurn, setGameEndTurn] = useState(null);
-  const [turnEndTurn, setTurnEndTurn] = useState(null);
-
   const [gameToMove, setGameToMove] = useState(null);
   const [playerToMove, setPlayerToMove] = useState(null);
 
@@ -143,75 +123,6 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
-  /* Fake cals to join a game*/
-
-  const joinGame = async () => {
-    try {
-      /* leave /games */
-      webSocket.leave("/topic/games");
-
-      /* subscribe to topic/games/{gameId} */
-      webSocket.join("/topic/games/" + gameIdToJoin, function (payload) {
-        console.log(JSON.parse(payload.body).content);
-      });
-
-      const token = JSON.parse(sessionStorage.getItem("token")).token;
-      const response = await api.post(
-        `/games/` + gameIdToJoin,
-        {},
-        { headers: { Authorization: token } }
-      );
-
-      // Edit successfully worked --> navigate to the route /profile/id
-      console.log("Joined game");
-    } catch (error) {
-      alert(
-        `Something went wrong while creating game: \n${handleError(error)}`
-      );
-    }
-  };
-
-  /* Fake call to start game with ID 1
-   */
-  const startGame = () => {
-    webSocket.send("/app/games/" + gameToStart + "/startGame", {
-      message: "START GAME " + gameToStart,
-    });
-  };
-
-  /* Fake call to save an answer
-   */
-  const saveAnswer = () => {
-    webSocket.send(
-      `/app/games/${gameToAnswer}/turn/${turnToAnswer}/player/${playerToAnswer}/saveAnswer`,
-      {
-        userToken: JSON.parse(sessionStorage.getItem("token")).token,
-        countryCode: countryCode,
-        guess: guess,
-      }
-    );
-  };
-
-  /* Fake call to save a barrier answer
-   */
-  const saveBarrierAnswer = () => {
-    webSocket.send(
-      `/app/games/${gameBarrierAnswer}/player/${playerBarrierAnswer}/resolveBarrierAnswer`,
-      {
-        userToken: JSON.parse(sessionStorage.getItem("token")).token,
-        guess: barrierAnswer,
-      }
-    );
-  };
-
-  /* Fake call to end the current turn in game with ID 1
-   */
-  const endTurn = () => {
-    webSocket.send(`/app/games/${gameEndTurn}/turn/${turnEndTurn}/endTurn`, {
-      message: `End turn game ${gameEndTurn}, turn ${turnEndTurn}`,
-    });
-  };
-
   /* Fake call to move player with ID 1 in game 1
    */
   const movePlayer = () => {
@@ -221,12 +132,6 @@ const Home = (props) => {
         message: "MOVE PLAYER" + playerToMove + "BY ONE",
       }
     );
-  };
-
-  /* Fake call to start next turn in game with ID 1
-   */
-  const nextTurn = () => {
-    webSocket.send("/app/games/1/nextTurn", { message: "START NEXT TURN" });
   };
 
   return (
@@ -280,146 +185,6 @@ const Home = (props) => {
         Move Player
       </Button>
     </BaseContainer>
-
-    /*
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => startSoloGame()}
-      >
-        Single Player Game
-      </Button>
-      <Button className="primary-button" width="15%" onClick={() => joinGame()}>
-        Join game
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameToJoin"
-          value={gameIdToLeave}
-          onChange={(un) => setgameIdToJoin(un)}
-        />
-      </div>
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => leaveGame()}
-      >
-        Leave game
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameToLeave"
-          value={gameIdToLeave}
-          onChange={(un) => setGameIdToLeave(un)}
-        />
-      </div>
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => startGame()}
-      >
-        Start game
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameToStart"
-          value={gameIdToLeave}
-          onChange={(un) => setGameToStart(un)}
-        />
-      </div>
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => saveAnswer()}
-      >
-        Save Answer
-      </Button>
-      <div className="login form">
-        <FormField
-          label="game"
-          value={gameToAnswer}
-          onChange={(un) => setGameToAnswer(un)}
-        />
-        <FormField
-          label="turn"
-          value={turnToAnswer}
-          onChange={(n) => setTurnToAnswer(n)}
-        />
-        <FormField
-          label="player"
-          value={playerToAnswer}
-          onChange={(n) => setPlayerToAnswer(n)}
-        />
-        <FormField
-          label="countryCode"
-          value={countryCode}
-          onChange={(n) => setCountryCode(n)}
-        />
-        <FormField label="guess" value={guess} onChange={(n) => setGuess(n)} />
-      </div>
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => saveBarrierAnswer()}
-      >
-        Save Barrier Answer
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameBarrierAnswer"
-          value={gameBarrierAnswer}
-          onChange={(un) => setGameBarrierAnswer(un)}
-        />
-        <FormField
-          label="playerBarrierAnswer"
-          value={playerBarrierAnswer}
-          onChange={(un) => setplayerBarrierAnswer(un)}
-        />
-        <FormField
-          label="barrierAnswer"
-          value={barrierAnswer}
-          onChange={(un) => setBarrierAnswer(un)}
-        />
-      </div>
-      <Button className="primary-button" width="15%" onClick={() => endTurn()}>
-        End Turn
-      </Button>
-      <div className="login form">
-        <FormField
-          label="gameEndTurn"
-          value={gameEndTurn}
-          onChange={(un) => setGameEndTurn(un)}
-        />
-        <FormField
-          label="turnEndTurn"
-          value={turnEndTurn}
-          onChange={(un) => setTurnEndTurn(un)}
-        />
-      </div>
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => movePlayer()}
-      >
-        Move Player
-      </Button>
-      <div className="login form">
-        <FormField
-          label="moveGame"
-          value={gameToMove}
-          onChange={(un) => setGameToMove(un)}
-        />
-        <FormField
-          label="movePlayer"
-          value={playerToMove}
-          onChange={(un) => setPlayerToMove(un)}
-        />
-      </div>
-      <Button className="primary-button" width="15%" onClick={() => nextTurn()}>
-        Start Next Turn
-      </Button>
-    </BaseContainer>
-     */
   );
 };
 
