@@ -3,13 +3,16 @@ import { api, handleError } from "helpers/api";
 import { useHistory } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Home.scss";
+import "styles/views/SoloGameSettings.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import BoardSizeSelect from "components/ui/BoardSizeSelect";
+import DurationSelect from "components/ui/DurationSelect";
 
-const SoloGameSettings = (props) => {
+const SoloGameSettings = () => {
   const history = useHistory();
   const [gameMode, setGameMode] = useState(null);
   const [boardSize, setBoardSize] = useState(null);
+  const [duration, setDuration] = useState(null);
   const [hasGameMode, setHasGameMode] = useState(false);
   const [isHowFar, setIsHowFar] = useState(false);
   const [isHowFast, setIsHowFast] = useState(false);
@@ -25,12 +28,15 @@ const SoloGameSettings = (props) => {
   const howFastChosen = () => {
     setIsHowFast(!isHowFast);
     setIsHowFar(false);
+    setDuration(null);
   };
 
   useEffect(() => {
     console.log("Board size:");
     console.log(boardSize);
-  }, [boardSize]);
+    console.log("Duration:");
+    console.log(duration);
+  }, [boardSize, duration]);
 
   /* useEffect needs to be used here to immediately update ishowfast and ishowfar when a checkbox is clicked*/
   useEffect(() => {
@@ -58,6 +64,7 @@ const SoloGameSettings = (props) => {
             gameName: nameForGame,
             gameMode: gameMode,
             boardSize: boardSize,
+            maxDuration: duration,
           });
           const token = JSON.parse(sessionStorage.getItem("token")).token;
           console.log(requestBody);
@@ -95,12 +102,17 @@ const SoloGameSettings = (props) => {
         setBoardSize("MEDIUM");
       } else if (isHowFast) {
         setGameMode("HOWFAST");
+        setDuration("0");
       } else return;
     } else return;
   };
 
   const changeBoardSize = (size) => {
     setBoardSize(size);
+  };
+
+  const changeDuration = (dur) => {
+    setDuration(dur);
   };
 
   const backToLobbyOverview = () => {
@@ -110,41 +122,50 @@ const SoloGameSettings = (props) => {
   return (
     <BaseContainer className="home container">
       <h2>Choose your prefered game mode:</h2>
-      <label>
-        <input
-          type="checkbox"
-          checked={isHowFar}
-          onChange={() => howFarChosen()}
-        ></input>
-        See how far you can get
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          checked={isHowFast}
-          onChange={() => howFastChosen()}
-        ></input>
-        See how fast you can go
-      </label>
-      {isHowFar ? (
-        <div>
-          <div>Select how long you want to play for:</div>
+      <div className="solosettings">
+        <div className="solosettings container">
+          <label>
+            <input
+              type="checkbox"
+              checked={isHowFar}
+              onChange={() => howFarChosen()}
+            ></input>
+            See how far you can get
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={isHowFast}
+              onChange={() => howFastChosen()}
+            ></input>
+            See how fast you can go
+          </label>
         </div>
-      ) : (
-        <div />
-      )}
-      {isHowFast ? (
-        <div>
-          <div>Select the size of the game board:</div>
-          <BoardSizeSelect changeBoardSize={changeBoardSize} />
+        <div className="solosettings container">
+          {isHowFar ? (
+            <div>
+              <div>Select how long you want to play for:</div>
+              <DurationSelect changeDuration={changeDuration} />
+            </div>
+          ) : (
+            <div />
+          )}
+          {isHowFast ? (
+            <div>
+              <div>Select the size of the game board:</div>
+              <BoardSizeSelect changeBoardSize={changeBoardSize} />
+            </div>
+          ) : (
+            <div />
+          )}
         </div>
-      ) : (
-        <div />
-      )}
+      </div>
       <Button
         onClick={() => startGame()}
         disabled={
-          !hasGameMode || (hasGameMode && isHowFast && boardSize == null)
+          !hasGameMode ||
+          (hasGameMode && isHowFast && boardSize == null) ||
+          (hasGameMode && isHowFar && duration == null)
         }
       >
         Start Game

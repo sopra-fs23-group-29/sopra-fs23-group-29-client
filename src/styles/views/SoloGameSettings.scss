@@ -1,1 +1,12 @@
 @import "../_theme";
+
+.solosettings{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1.5em;
+    .container{
+        font-size:larger;
+        flex-direction: column;
+        margin-right: 5em;
+    }
+}

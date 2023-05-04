@@ -35,7 +35,7 @@ const BoardSizeSelect = ({ changeBoardSize }) => {
     } else if (isActiveSmall && !isActiveMed && !isActiveLarge) {
       setBoardSize("SMALL");
       changeBoardSize(boardSize);
-    } else return;
+    } else changeBoardSize(null);
   }, [isActiveLarge, isActiveMed, isActiveSmall, boardSize]);
 
   return (
