@@ -57,6 +57,7 @@ const SoloGameSettings = (props) => {
           const requestBody = JSON.stringify({
             gameName: nameForGame,
             gameMode: gameMode,
+            boardSize: boardSize,
           });
           const token = JSON.parse(sessionStorage.getItem("token")).token;
           console.log(requestBody);
@@ -87,18 +88,19 @@ const SoloGameSettings = (props) => {
     createGame();
   }, [gameMode]);
 
-  const changeBoardSize = (size) => {
-    setBoardSize(size);
-  };
-
   const startGame = async () => {
     if (hasGameMode) {
       if (isHowFar) {
         setGameMode("HOWFAR");
+        setBoardSize("MEDIUM");
       } else if (isHowFast) {
         setGameMode("HOWFAST");
       } else return;
     } else return;
+  };
+
+  const changeBoardSize = (size) => {
+    setBoardSize(size);
   };
 
   const backToLobbyOverview = () => {
