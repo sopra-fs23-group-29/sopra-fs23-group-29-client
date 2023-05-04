@@ -83,6 +83,9 @@ const SoloGameSettings = () => {
           /* Map answer from server to get the game id */
           const gameId = response.data.gameId;
 
+          /* Set the current gameId in sessionStorage */
+          sessionStorage.setItem("gameId", gameId);
+
           /* push to lobby screen using the id we got as response from the server once the game is created there*/
           history.push(`/sologame/${gameId}`);
         } catch (error) {
