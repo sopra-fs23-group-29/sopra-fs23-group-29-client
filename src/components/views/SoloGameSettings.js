@@ -39,8 +39,59 @@ const SoloGameSettings = (props) => {
     console.log("has game mode: " + hasGameMode);
   }, [isHowFar, isHowFast, hasGameMode]);
 
-  // TODO + figure out how to send specific settings for duration or tiles on game board to the server
-  const startGame = async () => {};
+  useEffect(() => {
+    async function createGame() {
+      if (gameMode != null) {
+        /* create game name */
+        const newName = JSON.parse(sessionStorage.getItem("token")).username;
+        console.log(newName);
+        const nameForGame = "Solo Game for " + newName;
+        console.log(nameForGame);
+
+        /* rest call to start solo game */
+        try {
+          const requestBody = JSON.stringify({
+            gameName: nameForGame,
+            gameMode: gameMode,
+          });
+          const token = JSON.parse(sessionStorage.getItem("token")).token;
+          console.log(requestBody);
+
+          /* Call to server sending gameName and gameMode PVP to create the lobby */
+          const response = await api.post(`/games`, requestBody, {
+            headers: {
+              Authorization: token,
+            },
+          });
+
+          /* Take out later */
+          console.log("Created game");
+          console.log("Game ID : " + JSON.stringify(response.data.gameId));
+
+          /* Map answer from server to get the game id */
+          const gameId = response.data.gameId;
+
+          /* push to lobby screen using the id we got as response from the server once the game is created there*/
+          history.push(`/sologame/${gameId}`);
+        } catch (error) {
+          alert(
+            `Something went wrong while creating game: \n${handleError(error)}`
+          );
+        }
+      } else return;
+    }
+    createGame();
+  }, [gameMode]);
+
+  const startGame = async () => {
+    if (hasGameMode) {
+      if (isHowFar) {
+        setGameMode("HOWFAR");
+      } else if (isHowFast) {
+        setGameMode("HOWFAST");
+      }
+    } else return;
+  };
 
   const backToLobbyOverview = () => {
     history.push(`/`);
