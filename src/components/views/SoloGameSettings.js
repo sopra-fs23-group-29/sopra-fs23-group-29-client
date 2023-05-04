@@ -9,6 +9,7 @@ import BoardSizeSelect from "components/ui/BoardSizeSelect";
 const SoloGameSettings = (props) => {
   const history = useHistory();
   const [gameMode, setGameMode] = useState(null);
+  const [boardSize, setBoardSize] = useState(null);
   const [hasGameMode, setHasGameMode] = useState(false);
   const [isHowFar, setIsHowFar] = useState(false);
   const [isHowFast, setIsHowFast] = useState(false);
@@ -17,6 +18,7 @@ const SoloGameSettings = (props) => {
   const howFarChosen = () => {
     setIsHowFar(!isHowFar);
     setIsHowFast(false);
+    setBoardSize(null);
   };
 
   /* executed whenever the How Fast option is chosen */
@@ -24,6 +26,11 @@ const SoloGameSettings = (props) => {
     setIsHowFast(!isHowFast);
     setIsHowFar(false);
   };
+
+  useEffect(() => {
+    console.log("Board size:");
+    console.log(boardSize);
+  }, [boardSize]);
 
   /* useEffect needs to be used here to immediately update ishowfast and ishowfar when a checkbox is clicked*/
   useEffect(() => {
@@ -80,13 +87,17 @@ const SoloGameSettings = (props) => {
     createGame();
   }, [gameMode]);
 
+  const changeBoardSize = (size) => {
+    setBoardSize(size);
+  };
+
   const startGame = async () => {
     if (hasGameMode) {
       if (isHowFar) {
         setGameMode("HOWFAR");
       } else if (isHowFast) {
         setGameMode("HOWFAST");
-      }
+      } else return;
     } else return;
   };
 
@@ -113,17 +124,30 @@ const SoloGameSettings = (props) => {
         ></input>
         See how fast you can go
       </label>
-      {isHowFar ? <div>Select how long you want to play for:</div> : <div />}
-      {isHowFast ? (
-        <div>Select the number of tiles on the game board:</div>
+      {isHowFar ? (
+        <div>
+          <div>Select how long you want to play for:</div>
+        </div>
       ) : (
         <div />
       )}
-      <Button onClick={() => startGame()} disabled={!hasGameMode}>
+      {isHowFast ? (
+        <div>
+          <div>Select the size of the game board:</div>
+          <BoardSizeSelect changeBoardSize={changeBoardSize} />
+        </div>
+      ) : (
+        <div />
+      )}
+      <Button
+        onClick={() => startGame()}
+        disabled={
+          !hasGameMode || (hasGameMode && isHowFast && boardSize == null)
+        }
+      >
         Start Game
       </Button>
       <Button onClick={() => backToLobbyOverview()}>Cancel</Button>
-      <BoardSizeSelect />
     </BaseContainer>
   );
 };

@@ -1,1 +1,31 @@
 @import "../_theme";
+
+.toggle{
+    display: flex;
+    &.button{
+        flex-direction: row;
+        @include center;
+        padding: 0.5em;
+        margin-top: 8px;
+        margin-right: 8px;
+        background-color: transparent;
+        border: none;
+        color: $textColor;
+        font-weight: 500;
+        font-size: 15px;
+    }
+    &.button-active{
+        flex-direction: row;
+        @include center;
+        padding: 0.5em;
+        margin-top: 8px;
+        margin-right: 8px;
+        font-weight: 500;
+        font-size: 15px;
+        background-color: $accentDark;
+        border: none;
+        color: $textColor;
+        height:fit-content;
+        border-radius: $borderRadius;
+    }
+}
