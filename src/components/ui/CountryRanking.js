@@ -161,7 +161,9 @@ const CountryRanking = props => {
 
     // set country as checked when text, container or else is clicked
     const setCountryChecked = (countryId) => {
-        document.getElementById(countryId).click();
+        if (currentPlayer.id === yourPlayer.id) {
+            document.getElementById(countryId).click();
+        }
     }
 
     // country elements
