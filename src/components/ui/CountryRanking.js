@@ -6,8 +6,7 @@ import Stomper from "../../helpers/Stomp";
 import React, {useEffect, useState} from "react";
 import Player from "../../models/Player";
 
-// todo: When a player leaves the game, players should be updated
-// otherwise the answering cannot be done
+// todo: When a player leaves the game, players should be updated otherwise the answering cannot be done
 
 const CountryRanking = props => {
     // set these as const [] = useState... if possible
@@ -85,11 +84,14 @@ const CountryRanking = props => {
         }
 
         // set category
-        setCategory(props.rankQuestion.questionText)
+        setCategory(props.rankQuestion.questionText.replace("^2", "²"))
     };
 
     const processUpdatedTurn = (message) => {
-        setCheckedCountry(null)
+        if (checkedCountry !== null) {
+            document.getElementById(checkedCountry).checked = false;
+            setCheckedCountry(null)
+        }
         // set takenGuesses
         setTakenGuesses(props.takenGuesses);
 
@@ -169,9 +171,9 @@ const CountryRanking = props => {
             countryArr.push(
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
-                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
                         <label className="country-ranking country-name" onClick={() => setCountryChecked(cioc[i])}>{countries[i]}</label>
-                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
+                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
+                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="80em" style={{borderRadius: "0.25em", margin: "1em"}}/>
                     </div>
                 </div>
             )
@@ -185,9 +187,9 @@ const CountryRanking = props => {
             countryArr.push(
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
-                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
                         <label className="country-ranking country-name" onClick={() => setCountryChecked(cioc[i])}>{countries[i]}</label>
-                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
+                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
+                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="80em" style={{borderRadius: "0.25em", margin: "1em"}}/>
                     </div>
                 </div>
             )
@@ -206,7 +208,7 @@ const CountryRanking = props => {
 
     return (
         <BaseContainer className="country-ranking container" id="Country Ranking Container">
-            <h3>{category}</h3>
+            <h2>{category}</h2>
             <div className="country-ranking flag-rows">
                 {country1(countries)}
             </div>
@@ -214,6 +216,7 @@ const CountryRanking = props => {
                 {country2(countries)}
             </div>
             <div className="country-ranking bottom-row">
+                <div style={{width: "10em"}}></div>
                 <div className="country-ranking number-row">
                     {createMarker(countries)}
                 </div>
@@ -221,7 +224,9 @@ const CountryRanking = props => {
                     className="hidden-button"
                     id="saveAnswer"
                     disabled ={enableSaveAnswer()}
-                    onClick={() => saveAnswer()}>
+                    onClick={() => saveAnswer()}
+                    width="10em"
+                >
                     Submit Answer
                 </Button>
             </div>
