@@ -192,18 +192,18 @@ export const TurnScoreboard = (props) => {
 
     return (
         <BaseContainer className="turn-scoreboard container">
-        <h1>Results of this round</h1>
+        <h1 style={{marginBottom: "0em"}}>Results of this round</h1>
 
         <div>
-            <BaseContainer className="turn-scoreboard table-row">
-            <div>Rank</div>
+            <div className="turn-scoreboard table-row" style={{paddingBottom: "0"}}>
+            <h3>Rank</h3>
             <div> </div>
             <div> </div>
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>Guessed rank</div>
+            <h3 style={{display: 'flex', alignItems: 'center'}}>Guessed rank</h3>
             <div> </div>
             <div> </div>
-            <div>{rankingQuestion.questionTextShort}</div>
-            </BaseContainer>
+            <h3>{rankingQuestion.questionTextShort.replace("^2", "²")}</h3>
+            </div>
             {
                 rankingQuestion.countryList.map((country, index) => {
                     // Find the player that guessed this country
@@ -232,19 +232,19 @@ export const TurnScoreboard = (props) => {
                     }
 
                     return (
-                        <BaseContainer className="turn-scoreboard table-row">
+                        <div className="turn-scoreboard table-row">
                             <div>{index + 1}.</div>
                             <div>
                                 <img src={country.flagUrl} alt={`${country.name} flag`} />
                             </div>
-                            <div>{country.name}</div>
+                            <div className="turn-scoreboard table-country-name">{country.name}</div>
                             <div style={{backgroundColor: player ? player.playerColor : 'transparent', borderRadius: '50%', width: '30px', height: '30px', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                                 {player ? player.guess : ""}
                             </div>
                             <div>{player ? ">" : ""}</div>
                             <div>{player ? `${player.currentScore} ${player.currentScore === 1 ? 'Point' : 'Points'}` : ""}</div>
                             <div>{statistic}</div>
-                        </BaseContainer>
+                        </div>
                         );
                     }
                 )   
@@ -259,7 +259,7 @@ export const TurnScoreboard = (props) => {
                 handleContinue();
             }}
         >
-            {willContinue ? "Waiting for the others to get ready .." : "Next Round"}
+            {willContinue ? "Waiting for other players to get ready .." : "Next Round"}
         </Button>
         
         </BaseContainer>

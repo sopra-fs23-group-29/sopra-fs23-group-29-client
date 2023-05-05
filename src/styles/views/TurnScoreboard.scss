@@ -13,38 +13,48 @@
     align-items: center;
     box-shadow: $dropShadow;
     position: fixed;
-    top: 25%;
+    top: 17.5%;
     left: 20%;
-    height: 55%;
+    height: 65%;
     width: 60%;
   }
   
   &.table-row {
     display: grid; /* Use CSS grid instead of flexbox */
-    grid-template-columns: 30px 50px 130px 20px 5px 90px 120px;
-    height: 45px; /* Set a fixed height */
+    grid-template-columns: 30px 80px 140px 30px 15px 100px auto;
+    height: 50px; /* Set a fixed height */
     width: 100%;
     margin-bottom: 1em;
     margin-top: 1em;
     gap: 1em;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    padding-bottom: 1em;
     border-bottom: 1px solid #ccc; /* Add a bottom border */
   
     & img {
       border-radius: 5%;
-      width: 50px;
+      max-height: 40px;
+      max-width: 80px;
       grid-column: 2; /* Set the column position for the image */
     }
   
-    & div {
+    & div, h3 {
       display: flex;
       align-items: center;
+      font-size: 1.1em;
       flex: 1;
       white-space: nowrap;
       align-self: center;
-      
+      width: fit-content;
     }
-
-    
+  }
+  &.table-country-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: "140px";
+    backgroundColor: "blue";
   }
 }
 

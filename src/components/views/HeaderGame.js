@@ -7,8 +7,7 @@ import {useHistory, useParams} from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
 import theme from "styles/_theme.scss";
 
-// todo: When a player leaves the game, players should be updated
-// otherwise the answering cannot be done
+// todo: When a player leaves the game, players should be updated otherwise the answering cannot be done
 
 const HeaderGame = (props) => {
     const history = useHistory();
@@ -42,8 +41,8 @@ const HeaderGame = (props) => {
             setYourPlayerColor(player.playerColor)
         }
         return (
-            <div className="header playername" style={{background: pc}} >
-                <div>{player.playerName}</div>
+            <div className="header game playername" style={{background: pc}}>
+                {player.playerName}
             </div>
         );
       };
@@ -84,21 +83,19 @@ const HeaderGame = (props) => {
             <Globalissimo/>
             <h2 className="header game username" style={{color: yourPlayerColor}}>{username}</h2>
             {(hasTurn && currentTurn !== null) ? (
-                <div className="header playerlist">
-                    {/* <div className="header playername">one</div> */}
-                    {/* <div className="header playername">two</div> */}
+                <div className="header game playerlist">
                     {currentTurn.turnPlayers.map((p) => (<Player player={p} key={p.id}/>))}
                 </div>
             ) : (
-                <div className="home lobby-container">
+                <div className="header game playerlist">
                     no turn received yet
                 </div>
             )}
             <div className="header game round-counter">
                 {(hasTurn && currentTurn !== null) ? (
-                    <div> Round {currentTurn.turnNumber} </div>
+                    <div style={{width: "5em"}}> Round {currentTurn.turnNumber} </div>
                 ) : (
-                    <div> no round counter </div>
+                    <div className="header game round-counter"/>
                 )}
             </div>
             <i className="header game icon" onClick={() => popUpLeave()}>logout</i>
