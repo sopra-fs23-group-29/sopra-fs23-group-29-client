@@ -131,7 +131,7 @@ const Game = props => {
             mover = new Player(turnResults[moverIndex]);
             counter = 0;
             while (counter < turnResults[moverIndex].currentScore) {
-                webSocket.send(`/games/${params.id}/player/${mover.playerId}/moveByOne`);
+                webSocket.send(`/app/games/${params.id}/player/${mover.playerId}/moveByOne`);
                 counter += 1;
             }
             await board.movePlayer(mover, movedFields[mover.playerName], turnResults[moverIndex].currentScore, end, allowBarriers);
