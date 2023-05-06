@@ -49,7 +49,7 @@ const Game = props => {
     });
     webSocket.join("/topic/games/" + params.id + "/moveByOne", function (message) {
         console.log("moving by one");
-        moveByOne(message);
+        setPlayerToMove(JSON.parse(message.body));
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {
         setShowTurnScoreboard(false);
@@ -68,10 +68,12 @@ const Game = props => {
     const [showBarrier, setShowBarrier] = useState(false);
     const [barrierProps, setBarrierProps] = useState({});
 
+    const [turnResults, setTurnResults] = useState(null);
     const [barrierHit, setBarrierHit] = useState(null); // todo: remove?
     const [players, setPlayers] = useState(null);
     const [movedFields, setMovedFields] = useState(null);
     const [gameJustStarted, setGameJustStarted] = useState(true);
+    const [playerToMove, setPlayerToMove] = useState({})
 
     const thisBoard = (
         <Board
@@ -88,20 +90,21 @@ const Game = props => {
     expected message:
     {'playerId':playerId, 'currentField':currentField}
     */
-    function moveByOne(message) {
-
+    useEffect( async () => {
+        
+        if (Object.keys(playerToMove).length === 0) {
+            return;
+        }
+        
         console.log("Starting moveByOne ...");
+        console.log(playerToMove)
 
         const board = thisBoard.ref.current;
         const end = board.boardParams[5];
         const allowBarriers = board.withBarriers;
 
-        if (message === null) {
-            return;
-        }
-        
-        let playerIdToMove = JSON.parse(message.body).playerId;
-        let playerCurrentField = JSON.parse(message.body).currentField;
+        let playerIdToMove = playerToMove.playerId;
+        let playerCurrentField = playerToMove.currentField;
 
         if (playerIdToMove === null || playerCurrentField === null) {
             return;
@@ -113,7 +116,7 @@ const Game = props => {
         // send to board the player, and the starting field, moving by 1
         board.movePlayer(playerMoving, playerCurrentField, 1, end, allowBarriers);
 
-    }
+    }, [playerToMove])
 
     useEffect( () => {
         /**
