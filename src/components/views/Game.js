@@ -12,10 +12,11 @@ import Barrier from "../ui/Barrier";
 // TODO: When a player leaves the game, players should be updated otherwise the answering cannot be done
 
 const Game = props => {
+
     const params = useParams();
-    const userToken = JSON.parse(sessionStorage.getItem('token')).token;
 
     let webSocket = Stomper.getInstance();
+
     webSocket.leave("/topic/games/" + params.id + "/lobby");
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
         setShowTurnScoreboard(false);
@@ -43,21 +44,18 @@ const Game = props => {
         setShowTurnScoreboard(true);
     });
     webSocket.join("/topic/games/" + params.id + "/scoreboardOver", function (message) {
-        console.log("remove scoreboard and move players");
+        console.log("remove scoreboard and set turnResults");
         setShowTurnScoreboard(false);
-        setTurnResults(JSON.parse(message.body).scoreboardEntries)
-        
-        
+    });
+    webSocket.join("/topic/games/" + params.id + "/moveByOne", function (message) {
+        console.log("moving by one");
+        moveByOne(message);
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {
         setShowTurnScoreboard(false);
         setShowCountryRanking(false);
         setBarrierProps(JSON.parse(message.body));
         setShowBarrier(true);
-    });
-    webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
-        console.log(JSON.parse(message.body));
-        setBarrierHit(JSON.parse(message.body));
     });
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {});
 
@@ -70,8 +68,7 @@ const Game = props => {
     const [showBarrier, setShowBarrier] = useState(false);
     const [barrierProps, setBarrierProps] = useState({});
 
-    const [turnResults, setTurnResults] = useState(null);
-    const [barrierHit, setBarrierHit] = useState(null);
+    const [barrierHit, setBarrierHit] = useState(null); // todo: remove?
     const [players, setPlayers] = useState(null);
     const [movedFields, setMovedFields] = useState(null);
     const [gameJustStarted, setGameJustStarted] = useState(true);
@@ -82,9 +79,41 @@ const Game = props => {
             gameId={params.id}
             numPlayers={3}
             withBarriers={true}
-            boardLayout={"large"}
+            boardLayout={"small"}
         />
     )
+    
+    /*
+    process an incoming message to move a player
+    expected message:
+    {'playerId':playerId, 'currentField':currentField}
+    */
+    function moveByOne(message) {
+
+        console.log("Starting moveByOne ...");
+
+        const board = thisBoard.ref.current;
+        const end = board.boardParams[5];
+        const allowBarriers = board.withBarriers;
+
+        if (message === null) {
+            return;
+        }
+        
+        let playerIdToMove = JSON.parse(message.body).playerId;
+        let playerCurrentField = JSON.parse(message.body).currentField;
+
+        if (playerIdToMove === null || playerCurrentField === null) {
+            return;
+        }
+
+        console.log(`playerIDToMove: ${playerIdToMove} currently at field ${playerCurrentField}`);
+
+        let playerMoving = new Player(playerIdToMove);
+        // send to board the player, and the starting field, moving by 1
+        board.movePlayer(playerMoving, playerCurrentField, 1, end, allowBarriers);
+
+    }
 
     useEffect( () => {
         /**
@@ -110,62 +139,25 @@ const Game = props => {
 
     }, [players])
 
-    useEffect(async () => {
-        /**
-         * callback to move players at the end of turn
-         */
-        if (turnResults === null) {
-            return
-        }
-        const board = thisBoard.ref.current;
-        const end = board.boardParams[5];
-        const allowBarriers = board.withBarriers;
-
-        // pick first player from round who can send nextTurn
-        const playerAllowedToContinue = new Player(players[0]);
-
-        let moverIndex = 0;
-        let mover;
-        let counter;
-        while (moverIndex < turnResults.length) {
-            mover = new Player(turnResults[moverIndex]);
-            counter = 0;
-            while (counter < turnResults[moverIndex].currentScore) {
-                webSocket.send(`/app/games/${params.id}/player/${mover.playerId}/moveByOne`);
-                counter += 1;
-            }
-            await board.movePlayer(mover, movedFields[mover.playerName], turnResults[moverIndex].currentScore, end, allowBarriers);
-            movedFields[mover.playerName] += turnResults[moverIndex].currentScore;
-
-            moverIndex += 1;
-        }
-        console.log(movedFields);
-
-        // If the client is the player allowed to continue, wait and send
-        if (userToken === playerAllowedToContinue.userToken) {
-            setTimeout(() => {
-                webSocket.send(`/app/games/${params.id}/nextTurn`, {message: `Player ${userToken} : nextTurn`})
-            }, "2000");
-            
-        }
-    }, [turnResults]);
-
 
     useEffect( () => {
         //callback for barriers
 
-        console.log(barrierHit)
-        if (barrierHit === null) {
-            return
-        }
-        if (barrierHit === false) {
-            const board = thisBoard.ref.current;
-            const end = board.boardParams[5];
-            const allowBarriers = board.withBarriers;
+        // DEBUG, remove later
+        console.log(`barrierHit ${barrierHit} - do nothing`)
 
-            const mover = new Player(turnResults[0]);
-            board.movePlayerOnce(mover, end, allowBarriers);
-        }
+        // // console.log(barrierHit)
+        // if (barrierHit === null) {
+        //     return
+        // }
+        // if (barrierHit === false) {
+        //     const board = thisBoard.ref.current;
+        //     const end = board.boardParams[5];
+        //     const allowBarriers = board.withBarriers;
+
+        //     const mover = new Player(turnResults[0]);
+        //     board.movePlayerOnce(mover, end, allowBarriers);
+        // }
     }, [barrierHit]);
 
     return (

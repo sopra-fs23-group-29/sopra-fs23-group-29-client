@@ -8,7 +8,7 @@ import { Gradient } from "components/ui/LinearGradient";
 
 class Board extends React.Component {
     withBarriers = false;
-    boardLayout = "large";
+    boardLayout = "small";
     containerColor = theme.containerColor;
     textColor = theme.textColor;
 
@@ -221,7 +221,6 @@ class Board extends React.Component {
         return newField;
     }
 
-    /*
     movePlayerOnce(player, end, allowBarriers) {
         console.log(`moving player ${player.playerName} with color ${player.playerColor}`);
         const color = player.playerColor;
@@ -250,7 +249,6 @@ class Board extends React.Component {
         this.gradientsAndBarriers[newField].ref.current.updateColors(this.colors[newField]);
         //await new Promise(r => setTimeout(r, 200));
     }
-     */
 
     /**
      * create and return the board
