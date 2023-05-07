@@ -1,0 +1,77 @@
+@import '../_theme';
+
+.winner-screen {
+
+  &.container {
+    background: $containerColor;
+    padding: 2em;
+    border-radius: $borderRadius;
+    border-style: solid;
+    //border-color: $accentColor1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    box-shadow: $dropShadow;
+    position: fixed;
+    top: 17.5%;
+    left: 20%;
+    height: 65%;
+    width: 60%;
+  }
+  
+  &.table-row {
+    display: flex;
+    align-items: center; /* add this line to center the background color around the username */
+    grid-template-columns: 30px 80px 140px 30px 15px 100px auto;
+    height: 50px; /* Set a fixed height */
+    width: 100%;
+    //margin-bottom: 1em;
+    justify-content: center;
+    margin-top: 0.5em;
+    gap: 1em;
+    //padding-right: 0.5em;
+    //padding-left: 2.5em;
+    padding-bottom: 1em;
+    
+    font-size: 1.5em;
+    font-weight: bold;
+  
+    & img {
+      border-radius: 5%;
+      max-height: 40px;
+      max-width: 80px;
+      grid-column: 2; /* Set the column position for the image */
+    }
+  
+    & div, h3 {
+      display: flex;
+      align-items: center;
+      font-size: 1.1em;
+      flex: 1;
+      white-space: nowrap;
+      align-self: center;
+      width: fit-content;
+    }
+  }
+  
+  & .player-username {
+    border-radius: 20px; /* add this line to give the background color rounded edges */
+    padding: 0.2em;
+  }
+
+  & .barrier-icon-winner-screen {
+    
+    font-size: 77px;
+    color: $textColor;
+    margin: -0.0825em 0 0 1em;
+}
+
+
+}
+
+
+
+
+
+

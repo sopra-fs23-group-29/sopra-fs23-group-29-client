@@ -8,6 +8,7 @@ import { TurnScoreboard } from 'components/ui/TurnScoreboard';
 import Stomper from 'helpers/Stomp';
 import Player from "../../models/Player";
 import Barrier from "../ui/Barrier";
+import { WinnerScreen } from 'components/ui/WinnerScreen';
 
 // TODO : Board constructor should take boardSize as an argument
 
@@ -66,13 +67,20 @@ const Game = props => {
         setBarrierProps(JSON.parse(message.body));
         setShowBarrier(true);
     });
-    webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {});
+
+    webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
+        setShowWinnerScreen(true);
+        setWinnerScreenProps(JSON.parse(message.body));
+    });
 
     const [showCountryRanking, setShowCountryRanking] = useState(false);
     const [countryRankingProps, setCountryRankingProps] = useState({});
 
     const [showTurnScoreboard, setShowTurnScoreboard] = useState(false);
     const [turnScoreboardProps, setTurnScoreboardProps] = useState({});
+
+    const [showWinnerScreen, setShowWinnerScreen] = useState(false);
+    const [winnerScreenProps, setWinnerScreenProps] = useState({});
 
     const [showBarrier, setShowBarrier] = useState(false);
     const [barrierProps, setBarrierProps] = useState({});
@@ -159,11 +167,14 @@ const Game = props => {
         let fieldTracker = {};
         while (counter < players.length) {
             mover = new Player(players[counter]);
-            thisBoard.ref.current.addPlayer(mover, 0);
-            fieldTracker[mover.playerName] = 0;
+            thisBoard.ref.current.addPlayer(mover, 46);
+            fieldTracker[mover.playerName] = 46;
             counter += 1;
         }
+        console.log("filed tracker:");
+        console.log(fieldTracker);
         setMovedFields(fieldTracker);
+
 
     }, [players])
 
@@ -180,6 +191,9 @@ const Game = props => {
             }
             {
                 showBarrier && <Barrier {...barrierProps} />
+            }
+            {
+                showWinnerScreen && <WinnerScreen {...winnerScreenProps} />
             }
 
         </BaseContainer>
