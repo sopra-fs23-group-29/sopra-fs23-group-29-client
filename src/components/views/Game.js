@@ -18,6 +18,18 @@ const Game = props => {
     let webSocket = Stomper.getInstance();
 
     webSocket.leave("/topic/games/" + params.id + "/lobby");
+
+    // Get a message with the created game upon creation of the game
+    webSocket.join("/topic/games/" + params.id + "/newgame", function (message) {
+        console.log("newgame information");
+        // set the boardsize parameter
+        let game = JSON.parse(message.body);
+        console.log(`newgame game.boardSize: ${game.boardSize.toLowerCase()}`);
+        console.log(`newgame game.boardSize: ${game.boardSizeInt}`);
+        setBoardsize(game.boardSize.toLowerCase());
+        setBoardsizeInt(game.boardSizeInt);
+    });
+
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
         setShowTurnScoreboard(false);
         setShowBarrier(false);
@@ -79,6 +91,9 @@ const Game = props => {
     const [gameJustStarted, setGameJustStarted] = useState(true);
     const [playerToMove, setPlayerToMove] = useState({})
 
+    const [boardsize, setBoardsize] = useState(null)
+    const [boardsizeInt, setBoardsizeInt] = useState(null)
+
     const thisBoard = (
         <Board
             ref={React.createRef()}
@@ -88,7 +103,7 @@ const Game = props => {
             boardLayout={"small"}
         />
     )
-    
+
     /*
     process an incoming message to move a player
     expected message:
