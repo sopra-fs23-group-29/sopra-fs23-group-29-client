@@ -38,27 +38,88 @@ export const WinnerScreen = (props) => {
     ]
   }
 
-    const exitGame = () => {console.log("exit game")}
+  //const [players, setPlayers] = useState(props.players);
+  const [globalScoreboard, setGlobalScoreboard] = useState(props.leaderboard);
+  const [barrierScoreboard, setBarrierScoreboard] = useState(props.barrierScoreboard);
+
+  useEffect(() => {
+    setGlobalScoreboard(props.leaderboard);
+    setBarrierScoreboard(props.barrierScoreboard);
+
+    
+    // Loop through each object in the barrierScoreboard array
+    barrierScoreboard.forEach(barrierObj => {
+      // Find the object in the globalScoreboard array with the same playerName
+      const globalObj = globalScoreboard.find(globalObj => globalObj.playerName === barrierObj.playerName);
+
+      // If an object is found, update its currentscore property with the value from barrierScoreboard
+      if (globalObj) {
+        globalObj.currentscore = barrierObj.currentscore;
+      }
+    });
+
+    // Sort the globalScoreboard array based on currentscore and barrierCurrentScore (in case of a tie)
+    globalScoreboard.sort((a, b) => {
+      if (b.currentscore === a.currentscore) {
+        return b.barrierCurrentScore - a.barrierCurrentScore;
+      } else {
+        return b.currentscore - a.currentscore;
+      }
+    });
+    
+  }, [props]);
+
+    const exitGame = async () => {
+      try {
+        webSocket.leave("/topic/games/" + gameId + "/gamestart");
+        webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
+        webSocket.leave("/topic/games/" + gameId + "/newturn");
+        webSocket.leave("/topic/games/" + gameId + "/nextTurn");
+        webSocket.leave("/topic/games/" + gameId + "/updatedturn");
+        webSocket.leave("/topic/games/" + gameId + "/scoreboard");
+        webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
+        webSocket.leave("/topic/games/" + gameId + "/barrierHit");
+        webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
+        webSocket.leave("/topic/games/" + gameId + "/gameover");
+        // set status to offline
+        await api.delete(
+            `/games/${gameId}`,
+            {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
+        );
+        console.log("Left game");
+        sessionStorage.removeItem("gameId");
+        sessionStorage.removeItem('game');
+
+        // redirect to home
+        history.push('/');
+    } catch (error) {
+        console.log(`Something went wrong when leaving the game: \n${handleError(error)}`);
+    }
+    }
 
   return (
     <BaseContainer className="winner-screen container">
       <h1 style={{ margin: 0 }}>Winner!</h1>
-      <h2 style={{ marginBottom: 40 }}>{test_data.winnerList[0].username} is on top of the world right now!</h2>
-      {test_data.winnerList.map((player) => (
+      <h2 style={{ marginBottom: 40 }}>{globalScoreboard[0].playerName} is on top of the world right now!</h2>
+
+      <div>
+      {globalScoreboard.map((player, index) => {
+
+        return(
         <div className="winner-screen table-row"
-          key={player.username}
+          key={player.playerName}
           
         >
-            <span className="player-rank">{player.rank}.</span>
+            <span className="player-rank">{index + 1}.</span>
           <span
-            style={{ backgroundColor: player.playercolor }}
+            style={{ backgroundColor: player.playerColor }}
             className="player-username"
           >
-            {player.username}
+            {player.playerName}
           </span>
           
           <span className="player-barrier-questions" style={{marginRight: 0, marginLeft: 50}}>
-            {player.answeredBarrierQuestions}
+            {player.barrierCurrentScore}
           </span>
           <span>
           <i className="barrier icon"
@@ -68,7 +129,9 @@ export const WinnerScreen = (props) => {
         </span>
         
         </div>
-      ))}
+        )
+      })}
+      </div>
 
         <Button style={{ marginTop: 40 }}
             onClick={() => {

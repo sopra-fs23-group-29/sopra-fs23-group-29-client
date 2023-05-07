@@ -61,7 +61,8 @@ const Game = props => {
         setBarrierHit(JSON.parse(message.body));
     });
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
-        console.log(message.body);
+        setShowWinnerScreen(true);
+        setWinnerScreenProps(JSON.parse(message.body));
     });
 
     const [showCountryRanking, setShowCountryRanking] = useState(false);
