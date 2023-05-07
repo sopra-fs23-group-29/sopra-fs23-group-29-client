@@ -9,7 +9,7 @@ import Stomper from 'helpers/Stomp';
 import Player from "../../models/Player";
 import Barrier from "../ui/Barrier";
 
-// TODO: When a player leaves the game, players should be updated otherwise the answering cannot be done
+// TODO : Board constructor should take boardSize as an argument
 
 const Game = props => {
 
@@ -22,16 +22,20 @@ const Game = props => {
         setShowTurnScoreboard(false);
         setShowBarrier(false);
         console.log("newturn information")
+        // todo: how to replace country ranking, so it does not show double?
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
 
         setPlayers(JSON.parse(message.body).turnPlayers);
         setGameJustStarted(false);
     });
+
+    // TOOD : Channel /nextTurn does not exist anymore, can be removed?
     webSocket.join("/topic/games/" + params.id + "/nextTurn", function (message) {
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
     });
+    
     webSocket.join("/topic/games/" + params.id + "/updatedturn", function (message) {
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
