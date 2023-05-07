@@ -196,6 +196,7 @@ class Board extends React.Component {
      */
     async movePlayer(player, startingField, fieldsToMove, end, allowBarriers) {
         //console.log(`moving player ${player.playerName} with color ${player.playerColor} ${fieldsToMove} fields.`);
+        console.log(`movePlayer : PlayerColor ${player.playerColor}`);
         const color = player.playerColor;
         /*
         if (this.playerFields[player.playerName] === undefined){

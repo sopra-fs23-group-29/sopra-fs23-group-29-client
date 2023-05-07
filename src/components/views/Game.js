@@ -119,7 +119,7 @@ const Game = props => {
     /*
     process an incoming message to move a player
     expected message:
-    {'playerId':playerId, 'currentField':currentField}
+    {'playerId':playerId, 'playerColor':playerColor, 'currentField':currentField}
     */
     useEffect( async () => {
         
@@ -135,15 +135,17 @@ const Game = props => {
         const allowBarriers = board.withBarriers;
 
         let playerIdToMove = playerToMove.playerId;
+        let playerColorToMove = playerToMove.playerColor;
         let playerCurrentField = playerToMove.currentField;
 
-        if (playerIdToMove === null || playerCurrentField === null) {
+        if (playerIdToMove === null || playerCurrentField === null || playerColorToMove === null) {
             return;
         }
 
-        console.log(`playerIDToMove: ${playerIdToMove} currently at field ${playerCurrentField}`);
+        console.log(`playerIDToMove: ${playerIdToMove} with color ${playerColorToMove} currently at field ${playerCurrentField}`);
 
-        let playerMoving = new Player(playerIdToMove);
+        let playerMoving = new Player(playerToMove);
+        
         // send to board the player, and the starting field, moving by 1
         board.movePlayer(playerMoving, playerCurrentField, 1, end, allowBarriers);
 
