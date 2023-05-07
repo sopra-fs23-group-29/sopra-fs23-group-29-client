@@ -44,7 +44,8 @@ class Barrier extends React.Component {
 
         this.state = {
             color: color,
-            cleared: false
+            cleared: false,
+            tempColor: null
         }
     }
 
@@ -59,12 +60,24 @@ class Barrier extends React.Component {
         return this.state.cleared;
     }
 
+    updateColors(newColors) {
+        this.setState({
+            tempColor: newColors[1]
+        })
+    }
+    getColor() {
+        if (this.state.tempColor != null) {
+            return this.state.tempColor;
+        } else {
+            return this.state.color;
+        }
+    }
     render() {
         return (
             <div className="barrier container">
 
                 <i className="barrier icon"
-                   style={{color: this.state.color}}
+                   style={{color: this.getColor()}}
                 >
                     error_outlined</i>
             </div>
