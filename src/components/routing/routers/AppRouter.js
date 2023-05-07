@@ -18,6 +18,7 @@ import PvPLobby from "../../views/PvPLobby";
 import SoloGameSettings from "components/views/SoloGameSettings";
 import { TurnScoreboard } from "components/ui/TurnScoreboard";
 import CountryRanking from "components/ui/CountryRanking";
+import { WinnerScreen } from "components/ui/WinnerScreen";
 
 /**
  * Main router of your application.
@@ -106,6 +107,10 @@ const AppRouter = () => {
             <HeaderHome height="100" />
             <Users />
           </GameGuard>
+        </Route>
+
+        <Route exact path="/winnerscreen">
+          <WinnerScreen/>
         </Route>
 
       </Switch>
