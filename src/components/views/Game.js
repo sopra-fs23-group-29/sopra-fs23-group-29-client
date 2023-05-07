@@ -167,8 +167,8 @@ const Game = props => {
         let fieldTracker = {};
         while (counter < players.length) {
             mover = new Player(players[counter]);
-            thisBoard.ref.current.addPlayer(mover, 46);
-            fieldTracker[mover.playerName] = 46;
+            thisBoard.ref.current.addPlayer(mover, 0);
+            fieldTracker[mover.playerName] = 0;
             counter += 1;
         }
         console.log("filed tracker:");

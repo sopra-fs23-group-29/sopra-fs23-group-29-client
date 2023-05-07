@@ -201,7 +201,7 @@ class Board extends React.Component {
         /**
          * handle ending field
          */
-        // move the player one field forward
+            // move the player one field forward
         let endingField = Math.min(end, startingField + 1);
         if (allowBarriers && this.isBarrier(endingField, end)) {
             const barrier = this.gradientsAndBarriers[endingField].ref.current
