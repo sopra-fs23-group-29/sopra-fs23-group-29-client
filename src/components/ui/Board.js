@@ -7,8 +7,10 @@ import { Gradient } from "components/ui/LinearGradient";
 
 
 class Board extends React.Component {
+
     withBarriers = false;
-    boardLayout = "small";
+    // boardLayout = "small";
+    boardLayout = this.props.boardLayout; // setting the board with the props passed by Game.js
     containerColor = theme.containerColor;
     textColor = theme.textColor;
 
@@ -73,17 +75,24 @@ class Board extends React.Component {
      * functions used to create the board
      */
     getBoardParams(layout){
+        console.log(`getBoardParams: ${layout}`);
+        console.log(this.props);
         switch (layout) {
             case "small":
+                console.log("got layout small");
                 return [0, 3, 8, 11, 16, 15];
             case "medium":
+                console.log("got layout medium");
                 return [0, 5, 15, 20, 30, 29];
             case "large":
+                console.log("got layout large");
                 return [0, 7, 24, 31, 48, 47];
             case "gigantic":
+                console.log("got layout gigantic");
                 return [0, 8, 28, 36, 56, 55];
             default:
                 // large
+                console.log("got layout default = large");
                 return [0, 7, 24, 31, 48, 47];
         }
     }
@@ -187,6 +196,7 @@ class Board extends React.Component {
      */
     async movePlayer(player, startingField, fieldsToMove, end, allowBarriers) {
         //console.log(`moving player ${player.playerName} with color ${player.playerColor} ${fieldsToMove} fields.`);
+        console.log(`movePlayer : PlayerColor ${player.playerColor}`);
         const color = player.playerColor;
         /*
         if (this.playerFields[player.playerName] === undefined){

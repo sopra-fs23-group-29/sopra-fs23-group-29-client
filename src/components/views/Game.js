@@ -18,6 +18,16 @@ const Game = props => {
     let webSocket = Stomper.getInstance();
 
     webSocket.leave("/topic/games/" + params.id + "/lobby");
+
+    // Get a message with the created game upon creation of the game
+    webSocket.join("/topic/games/" + params.id + "/newgame", function (message) {
+        console.log("newgame information");
+        // set the boardLayout parameter
+        let game = JSON.parse(message.body);
+        console.log(`newgame setting boardLayout = game.boardSize: ${game.boardSize.toLowerCase()}`);
+        setBoardLayout(game.boardSize.toLowerCase());
+    });
+
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
         setShowTurnScoreboard(false);
         setShowBarrier(false);
@@ -53,6 +63,7 @@ const Game = props => {
     });
     webSocket.join("/topic/games/" + params.id + "/moveByOne", function (message) {
         console.log("moving by one");
+        setShowBarrier(false);
         setPlayerToMove(JSON.parse(message.body));
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {
@@ -79,20 +90,36 @@ const Game = props => {
     const [gameJustStarted, setGameJustStarted] = useState(true);
     const [playerToMove, setPlayerToMove] = useState({})
 
-    const thisBoard = (
-        <Board
-            ref={React.createRef()}
-            gameId={params.id}
-            numPlayers={3}
-            withBarriers={true}
-            boardLayout={"small"}
-        />
-    )
+    const [thisBoard, setThisBoard] = useState(null);
+    const [boardLayout, setBoardLayout] = useState(null);
+
+    /*
+    assign a Board component to thisBoard
+    */
+    useEffect( async () => {
+
+        if (boardLayout === null) {
+            console.log("boardLayout null, skip assigning board");
+            return;
+        }
+
+        console.log(`assignBoard boardLayout : ${boardLayout}`);
+        setThisBoard(
+            <Board
+                ref={React.createRef()}
+                gameId={params.id}
+                numPlayers={3}
+                withBarriers={true}
+                boardLayout={boardLayout}
+            />
+        )
+
+    }, [boardLayout])
     
     /*
     process an incoming message to move a player
     expected message:
-    {'playerId':playerId, 'currentField':currentField}
+    {'playerId':playerId, 'playerColor':playerColor, 'currentField':currentField}
     */
     useEffect( async () => {
         
@@ -108,15 +135,17 @@ const Game = props => {
         const allowBarriers = board.withBarriers;
 
         let playerIdToMove = playerToMove.playerId;
+        let playerColorToMove = playerToMove.playerColor;
         let playerCurrentField = playerToMove.currentField;
 
-        if (playerIdToMove === null || playerCurrentField === null) {
+        if (playerIdToMove === null || playerCurrentField === null || playerColorToMove === null) {
             return;
         }
 
-        console.log(`playerIDToMove: ${playerIdToMove} currently at field ${playerCurrentField}`);
+        console.log(`playerIDToMove: ${playerIdToMove} with color ${playerColorToMove} currently at field ${playerCurrentField}`);
 
-        let playerMoving = new Player(playerIdToMove);
+        let playerMoving = new Player(playerToMove);
+        
         // send to board the player, and the starting field, moving by 1
         board.movePlayer(playerMoving, playerCurrentField, 1, end, allowBarriers);
 
@@ -145,7 +174,6 @@ const Game = props => {
         setMovedFields(fieldTracker);
 
     }, [players])
-
 
     useEffect( () => {
         //callback for barriers
