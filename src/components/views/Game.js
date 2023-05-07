@@ -8,6 +8,7 @@ import { TurnScoreboard } from 'components/ui/TurnScoreboard';
 import Stomper from 'helpers/Stomp';
 import Player from "../../models/Player";
 import Barrier from "../ui/Barrier";
+import { WinnerScreen } from 'components/ui/WinnerScreen';
 
 // TODO: When a player leaves the game, players should be updated otherwise the answering cannot be done
 
@@ -59,13 +60,18 @@ const Game = props => {
         console.log(JSON.parse(message.body));
         setBarrierHit(JSON.parse(message.body));
     });
-    webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {});
+    webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
+        console.log(message.body);
+    });
 
     const [showCountryRanking, setShowCountryRanking] = useState(false);
     const [countryRankingProps, setCountryRankingProps] = useState({});
 
     const [showTurnScoreboard, setShowTurnScoreboard] = useState(false);
     const [turnScoreboardProps, setTurnScoreboardProps] = useState({});
+
+    const [showWinnerScreen, setShowWinnerScreen] = useState(false);
+    const [winnerScreenProps, setWinnerScreenProps] = useState({});
 
     const [showBarrier, setShowBarrier] = useState(false);
     const [barrierProps, setBarrierProps] = useState({});
@@ -75,6 +81,8 @@ const Game = props => {
     const [players, setPlayers] = useState(null);
     const [movedFields, setMovedFields] = useState(null);
     const [gameJustStarted, setGameJustStarted] = useState(true);
+
+    
 
     const thisBoard = (
         <Board
@@ -102,11 +110,14 @@ const Game = props => {
         let fieldTracker = {};
         while (counter < players.length) {
             mover = new Player(players[counter]);
-            thisBoard.ref.current.addPlayer(mover, 0);
-            fieldTracker[mover.playerName] = 0;
+            thisBoard.ref.current.addPlayer(mover, 46);
+            fieldTracker[mover.playerName] = 46;
             counter += 1;
         }
+        console.log("filed tracker:");
+        console.log(fieldTracker);
         setMovedFields(fieldTracker);
+
 
     }, [players])
 
@@ -139,7 +150,7 @@ const Game = props => {
 
             moverIndex += 1;
         }
-        console.log(movedFields);
+
 
         // If the client is the player allowed to continue, wait and send
         if (userToken === playerAllowedToContinue.userToken) {
@@ -176,7 +187,9 @@ const Game = props => {
             {showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />
             }
             {showBarrier && <Barrier {...barrierProps} />
-                }
+            }
+            {showWinnerScreen && <WinnerScreen {...winnerScreenProps} />
+            }
 
         </BaseContainer>
     );
