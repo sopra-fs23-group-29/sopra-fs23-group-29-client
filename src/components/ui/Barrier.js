@@ -43,6 +43,7 @@ const Barrier = props => {
 
         // set player
         let player = new Player(props.playerAnswering);
+        setplayerBarrierAnswer(player.id);
         setBarrierPlayer(player);
         document.getElementById("Barrier Question Container").style.borderColor = player.playerColor
 

@@ -35,14 +35,14 @@ class Stomper {
 
       // store the callback function in a mapping object
 
-      console.log("Subscribed to " + endpoint);
+      // console.log("Subscribed to " + endpoint);
    
     }
   }
 
   send(destination, message) {
     this.stompClient.send(destination, {}, JSON.stringify(message));
-    console.log("Sent message " + message + " to " + destination);
+    // console.log("Sent message " + message + " to " + destination);
   }
 
   leave(endpoint) {
@@ -51,14 +51,14 @@ class Stomper {
       this.stompClient.unsubscribe(endpoint);
       sessionStorage.setItem('subscribedEndpoints', JSON.stringify(this.openChannels.filter(item => item !== endpoint))); // remove the endpoint from the list stored in session storage
       this.openChannels.splice(index, 1);
-      console.log("Unsubscribed from " + endpoint);
+      // console.log("Unsubscribed from " + endpoint);
     }
   }
 
   leaveAll() {
     this.openChannels.forEach((endpoint) => {
       this.stompClient.unsubscribe(endpoint);
-      console.log("Unsubscribed from " + endpoint);
+      // console.log("Unsubscribed from " + endpoint);
     });
     this.openChannels = [];
   }
@@ -71,6 +71,7 @@ class Stomper {
 
       this.socket = new SockJS(getWS());
       this.stompClient = Stomp.over(this.socket);
+      this.stompClient.debug = null;
 
       this.stompClient.connect(
         {},

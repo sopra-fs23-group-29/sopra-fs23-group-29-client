@@ -10,28 +10,37 @@ import Player from "../../models/Player";
 import Barrier from "../ui/Barrier";
 import { WinnerScreen } from 'components/ui/WinnerScreen';
 
-// TODO: When a player leaves the game, players should be updated otherwise the answering cannot be done
+// TODO : Board constructor should take boardSize as an argument
 
 const Game = props => {
+
     const params = useParams();
-    const userToken = JSON.parse(sessionStorage.getItem('token')).token;
 
     let webSocket = Stomper.getInstance();
+
     webSocket.leave("/topic/games/" + params.id + "/lobby");
+
+    // Get a message with the created game upon creation of the game
+    webSocket.join("/topic/games/" + params.id + "/newgame", function (message) {
+        // console.log("newgame information");
+        // set the boardSize parameter
+        let game = JSON.parse(message.body);
+        // console.log(`newgame setting boardSize = game.boardSize: ${game.boardSize.toLowerCase()}`);
+        setBoardSize(game.boardSize.toLowerCase());
+    });
+
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
         setShowTurnScoreboard(false);
         setShowBarrier(false);
-        console.log("newturn information")
+        // console.log("newturn information")
+        // todo: how to replace country ranking, so it does not show double?
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
 
         setPlayers(JSON.parse(message.body).turnPlayers);
         setGameJustStarted(false);
     });
-    webSocket.join("/topic/games/" + params.id + "/nextTurn", function (message) {
-        setCountryRankingProps(JSON.parse(message.body));
-        setShowCountryRanking(true);
-    });
+
     webSocket.join("/topic/games/" + params.id + "/updatedturn", function (message) {
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
@@ -40,15 +49,17 @@ const Game = props => {
         setShowCountryRanking(false);
         setTurnScoreboardProps(JSON.parse(message.body));
         // setTurnResults(JSON.parse(message.body).scoreboardEntries)
-        console.log("showing scoreboard");
+        // console.log("showing scoreboard");
         setShowTurnScoreboard(true);
     });
     webSocket.join("/topic/games/" + params.id + "/scoreboardOver", function (message) {
-        console.log("remove scoreboard and move players");
+        // console.log("remove scoreboard and set turnResults");
         setShowTurnScoreboard(false);
-        setTurnResults(JSON.parse(message.body).scoreboardEntries)
-        
-        
+    });
+    webSocket.join("/topic/games/" + params.id + "/moveByOne", function (message) {
+        // console.log("moving by one");
+        setShowBarrier(false);
+        setPlayerToMove(JSON.parse(message.body));
     });
     webSocket.join("/topic/games/" + params.id + "/barrierquestion", function (message) {
         setShowTurnScoreboard(false);
@@ -56,10 +67,7 @@ const Game = props => {
         setBarrierProps(JSON.parse(message.body));
         setShowBarrier(true);
     });
-    webSocket.join("/topic/games/" + params.id + "/barrierHit", function (message) {
-        console.log(JSON.parse(message.body));
-        setBarrierHit(JSON.parse(message.body));
-    });
+
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
         setShowWinnerScreen(true);
         setWinnerScreenProps(JSON.parse(message.body));
@@ -78,22 +86,70 @@ const Game = props => {
     const [barrierProps, setBarrierProps] = useState({});
 
     const [turnResults, setTurnResults] = useState(null);
-    const [barrierHit, setBarrierHit] = useState(null);
+    const [barrierHit, setBarrierHit] = useState(null); // todo: remove?
     const [players, setPlayers] = useState(null);
     const [movedFields, setMovedFields] = useState(null);
     const [gameJustStarted, setGameJustStarted] = useState(true);
+    const [playerToMove, setPlayerToMove] = useState({})
 
-    
+    const [thisBoard, setThisBoard] = useState(null);
+    const [boardSize, setBoardSize] = useState(null);
 
-    const thisBoard = (
-        <Board
-            ref={React.createRef()}
-            gameId={params.id}
-            numPlayers={3}
-            withBarriers={true}
-            boardLayout={"large"}
-        />
-    )
+    /*
+    assign a Board component to thisBoard
+    */
+    useEffect( async () => {
+
+        if (boardSize === null) {
+            // console.log("boardSize null, skip assigning board");
+            return;
+        }
+
+        // console.log(`assignBoard boardSize : ${boardSize}`);
+        setThisBoard(
+            <Board
+                ref={React.createRef()}
+                boardSize={boardSize}
+            />
+        )
+
+    }, [boardSize])
+
+    /*
+    process an incoming message to move a player
+    expected message:
+    {'playerId':playerId, 'playerColor':playerColor, 'currentField':currentField}
+    */
+    useEffect( async () => {
+
+        if (Object.keys(playerToMove).length === 0) {
+            return;
+        }
+
+        // console.log("Starting moveByOne ...");
+        // console.log(playerToMove)
+
+        const board = thisBoard.ref.current;
+        const end = board.boardParams[5];
+        const allowBarriers = board.withBarriers;
+
+        let playerIdToMove = playerToMove.playerId;
+        let playerColorToMove = playerToMove.playerColor;
+        let playerCurrentField = playerToMove.currentField;
+
+        if (playerIdToMove === null || playerCurrentField === null || playerColorToMove === null) {
+            return;
+        }
+
+        console.log(`playerIDToMove: ${playerIdToMove} with color ${playerColorToMove} currently at field ${playerCurrentField}`);
+
+        let playerMoving = new Player(playerToMove);
+        board.addPlayer(playerMoving, playerCurrentField);
+
+        // send to board the player, and the starting field, moving by 1
+        await board.movePlayerOnce(playerMoving, playerCurrentField, end, allowBarriers);
+
+    }, [playerToMove])
 
     useEffect( () => {
         /**
@@ -122,74 +178,22 @@ const Game = props => {
 
     }, [players])
 
-    useEffect(async () => {
-        /**
-         * callback to move players at the end of turn
-         */
-        if (turnResults === null) {
-            return
-        }
-        const board = thisBoard.ref.current;
-        const end = board.boardParams[5];
-        const allowBarriers = board.withBarriers;
-
-        // pick first player from round who can send nextTurn
-        const playerAllowedToContinue = new Player(players[0]);
-
-        let moverIndex = 0;
-        let mover;
-        let counter;
-        while (moverIndex < turnResults.length) {
-            mover = new Player(turnResults[moverIndex]);
-            counter = 0;
-            while (counter < turnResults[moverIndex].currentScore) {
-                webSocket.send(`/app/games/${params.id}/player/${mover.playerId}/moveByOne`);
-                counter += 1;
-            }
-            await board.movePlayer(mover, movedFields[mover.playerName], turnResults[moverIndex].currentScore, end, allowBarriers);
-            movedFields[mover.playerName] += turnResults[moverIndex].currentScore;
-
-            moverIndex += 1;
-        }
-
-
-        // If the client is the player allowed to continue, wait and send
-        if (userToken === playerAllowedToContinue.userToken) {
-            setTimeout(() => {
-                webSocket.send(`/app/games/${params.id}/nextTurn`, {message: `Player ${userToken} : nextTurn`})
-            }, "2000");
-            
-        }
-    }, [turnResults]);
-
-
-    useEffect( () => {
-        //callback for barriers
-
-        console.log(barrierHit)
-        if (barrierHit === null) {
-            return
-        }
-        if (barrierHit === false) {
-            const board = thisBoard.ref.current;
-            const end = board.boardParams[5];
-            const allowBarriers = board.withBarriers;
-
-            const mover = new Player(turnResults[0]);
-            board.movePlayerOnce(mover, end, allowBarriers);
-        }
-    }, [barrierHit]);
-
     return (
         <BaseContainer className="game container">
-            {thisBoard}
-            {showCountryRanking && <CountryRanking {...countryRankingProps} />
+            {
+                thisBoard
             }
-            {showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />
+            {
+                showCountryRanking && <CountryRanking {...countryRankingProps} />
             }
-            {showBarrier && <Barrier {...barrierProps} />
+            {
+                showTurnScoreboard && <TurnScoreboard {...turnScoreboardProps} />
             }
-            {showWinnerScreen && <WinnerScreen {...winnerScreenProps} />
+            {
+                showBarrier && <Barrier {...barrierProps} />
+            }
+            {
+                showWinnerScreen && <WinnerScreen {...winnerScreenProps} />
             }
 
         </BaseContainer>
