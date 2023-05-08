@@ -76,12 +76,23 @@ const CountryRanking = props => {
         let randomizedCountries = shuffleArray(props.rankQuestion.countryList)
 
         // set countries
-        for (let i = 0; i < randomizedCountries.length; i++) {
-            countries.push(randomizedCountries[i].nameMap.common)
-            cioc.push(randomizedCountries[i].cioc)
-            flags.push(randomizedCountries[i].flagsMap.svg)
-            flagAlt.push(randomizedCountries[i].flagsMap.alt)
+        if (true) {
+            let tempCountries = []
+            let tempCioc = []
+            let tempFlags = []
+            let tempFlagAlt = []
+            for (let i = 0; i < randomizedCountries.length; i++) {
+                tempCountries.push(randomizedCountries[i].nameMap.common)
+                tempCioc.push(randomizedCountries[i].cioc)
+                tempFlags.push(randomizedCountries[i].flagsMap.svg)
+                tempFlagAlt.push(randomizedCountries[i].flagsMap.alt)
+            }
+            setCountries(tempCountries)
+            setCioc(tempCioc)
+            setFlags(tempFlags)
+            setFlagAlt(tempFlagAlt)
         }
+
 
         // set category
         setCategory(props.rankQuestion.questionText.replace("^2", "²"))
