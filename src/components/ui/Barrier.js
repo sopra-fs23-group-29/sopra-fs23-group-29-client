@@ -75,15 +75,13 @@ const Barrier = props => {
             chosenAnswer.style.backgroundColor = "red"
             setQuestionText("Wrong :(")
         }
-        webSocket.send(
+        document.getElementById("saveBarrierAnswer").disabled = true;
+        await new Promise(resolve => setTimeout(() => {webSocket.send(
             `/app/games/${gameId}/player/${playerBarrierAnswer}/resolveBarrierAnswer`,
             {
                 userToken: userToken,
-                guess: barrierAnswer,
-            }
-        )
-        await new Promise(resolve => setTimeout(resolve, 5000))
-    };
+                guess: barrierAnswer,})}, 5000))
+    }
 
     // set answer as checked when text is clicked
     const setAnswerChecked = (answerId) => {
