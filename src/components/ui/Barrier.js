@@ -9,7 +9,7 @@ import Player from "../../models/Player";
 const Barrier = props => {
     // set these as const [] = useState... if possible
     const gameId = useParams().id;
-    let webSocket = Stomper.getInstance(); // TODO: bruchts das hie?
+    let webSocket = Stomper.getInstance();
     let userToken = JSON.parse(sessionStorage.getItem('token')).token;
 
     // websocket variables
@@ -25,7 +25,7 @@ const Barrier = props => {
     const [flagAlt, setFlagAlt] = useState(null);
 
     // barrier answer
-    const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null); // TODO: change to playerId
+    const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null);
     const [barrierAnswer, setBarrierAnswer] = useState(null);
 
     useEffect(() => {
@@ -131,7 +131,6 @@ const Barrier = props => {
         <BaseContainer className="barrier answer-container" id="Barrier Question Container">
             <h3 style={{marginBottom: 0}}>{questionText}</h3>
             <div className="barrier country-container">
-                <div className="barrier country-name">{country}</div>
                 <img src={flag} alt={flagAlt} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
             </div>
             <div className="barrier answer-row">
