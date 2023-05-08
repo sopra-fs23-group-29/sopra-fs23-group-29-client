@@ -85,7 +85,7 @@ const Barrier = props => {
             `/app/games/${gameId}/player/${playerBarrierAnswer}/resolveBarrierAnswer`,
             {
                 userToken: userToken,
-                guess: barrierAnswer,})}, 5000))
+                guess: barrierAnswer,})}, 3000))
     }
 
     // set answer as checked when text is clicked
