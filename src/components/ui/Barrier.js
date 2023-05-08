@@ -47,12 +47,8 @@ const Barrier = props => {
         setBarrierPlayer(player);
         document.getElementById("Barrier Question Container").style.borderColor = player.playerColor
 
-        // set answer options
-        let randomizedAnswerOptions = shuffleArray(props.barrierQuestion.answerOptions);
-        for (let i = 0; i < randomizedAnswerOptions.length; i++) {
-            answerOptions.push(randomizedAnswerOptions[i])
-        }
-        console.log("Rand" + randomizedAnswerOptions)
+        // set randomized answer options
+        setAnswerOptions(shuffleArray(props.barrierQuestion.answerOptions))
 
         // set country
         setCountry(props.barrierQuestion.country.nameMap.common)
@@ -70,14 +66,23 @@ const Barrier = props => {
         return array;
     }
 
-    const saveBarrierAnswer = () => {
+    async function saveBarrierAnswer() {
+        let chosenAnswer = document.getElementById("answerOptions" + barrierAnswer)
+        let correctAnswer = document.getElementById("answerOptions" + correctResult)
+        correctAnswer.style.backgroundColor = "green"
+        setQuestionText("Good Job!")
+        if (chosenAnswer !== correctAnswer) {
+            chosenAnswer.style.backgroundColor = "red"
+            setQuestionText("Wrong :(")
+        }
         webSocket.send(
             `/app/games/${gameId}/player/${playerBarrierAnswer}/resolveBarrierAnswer`,
             {
                 userToken: userToken,
                 guess: barrierAnswer,
             }
-        );
+        )
+        await new Promise(resolve => setTimeout(resolve, 5000))
     };
 
     // set answer as checked when text is clicked
@@ -89,12 +94,12 @@ const Barrier = props => {
     function createAnswer(barrierAnswer) {
         if (barrierPlayer.userToken === userToken) {
                 let answerArr = []
-                for (let i = 0; i <= barrierAnswer.length; i++) {
+                for (let i = 0; i <= barrierAnswer.length-1; i++) {
                     answerArr.push(
                         <div>
-                            <div className="barrier answer-option-container" onClick={() => setAnswerChecked(`answerOptions${i}`)}>
-                                <label className="barrier answer-option-number" onClick={() => setAnswerChecked(`answerOptions${i}`)}>{answerOptions[i]}</label>
-                                <input type="radio" name="answerOptions" id={"answerOptions" + i} disabled={false} key={i} className="answer-radio" value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
+                            <div className="barrier answer-option-container" onClick={() => setAnswerChecked(`answerOptions${answerOptions[i]}`)}>
+                                <label className="barrier answer-option-number" onClick={() => setAnswerChecked(`answerOptions${answerOptions[i]}`)}>{answerOptions[i]}</label>
+                                <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} className="answer-radio" value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
                             </div>
                         </div>
                     )
