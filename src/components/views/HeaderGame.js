@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import "styles/views/Header.scss";
 import {Globalissimo} from "../ui/Globalissimo";
+import CountdownTimer from "../ui/Countdown";
 import {api, handleError} from "../../helpers/api";
 import {useHistory, useParams} from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
@@ -15,17 +16,48 @@ const HeaderGame = (props) => {
     const username = JSON.parse(sessionStorage.getItem('token')).username;
     const gameId = sessionStorage.getItem("gameId");
     
+    
     const [hasTurn, setHasTurn] = useState(false);
     const [currentTurn, setCurrentTurn] = useState(null);
+    const [showPlayers, setShowPlayers] = useState(true);
     const [yourPlayerColor, setYourPlayerColor] = useState(theme.textColor);
 
+    const [hasTimer, setHasTimer] = useState(false);
+    const [timer, setTimer] = useState(null);
+
     let webSocket = Stomper.getInstance();
+
+    // join the /newgame topic for the HeaderGame
+    webSocket.join("/topic/games/" + params.id + "/newgame", receiveNewGame);
 
     // join the specific topic for the HeaderGame
     webSocket.join("/topic/games/" + params.id + "/newturn_gameheader", receiveNewTurn);
 
+    function receiveNewGame(message) {
+        console.log("received newgame information");
+        console.log(JSON.parse(message.body));
+
+        const game = JSON.parse(message.body);
+
+        if (game !== null) {
+            
+            // if the game is not PVP do not show the players
+            if (game.gameMode !== "PVP") {
+                setShowPlayers(false);
+            }
+
+            if (game.gameMode === "HOWFAR") {
+                setHasTimer(true);
+                const OVER_IN_MS = game.maxDurationInt*60*1000;
+                const NOW_IN_MS = new Date().getTime();
+                const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
+                setTimer(<CountdownTimer targetDate = {TARGET_DATETIME}/>)
+            }
+        }
+    }
+
     function receiveNewTurn(message) {
-        console.log("receiveNewTurn start ...");
+        console.log("received newturn information");
 
         const receivedTurn = JSON.parse(message.body);
 
@@ -33,6 +65,11 @@ const HeaderGame = (props) => {
             setHasTurn(true);
             setCurrentTurn(receivedTurn);
         }
+    }
+
+    function timeUp() {
+        console.log("time is up");
+        
     }
 
     const Player = ({ player }) => {
@@ -81,16 +118,19 @@ const HeaderGame = (props) => {
     return (
         <div className="header container" style={{height: props.height}}>
             <Globalissimo/>
+
             <h2 className="header game username" style={{color: yourPlayerColor}}>{username}</h2>
-            {(hasTurn && currentTurn !== null) ? (
+
+            {(hasTimer) ? (timer) : (<div/>)}
+
+            {(hasTurn && showPlayers && currentTurn !== null) ? (
                 <div className="header game playerlist">
                     {currentTurn.turnPlayers.map((p) => (<Player player={p} key={p.id}/>))}
                 </div>
             ) : (
-                <div className="header game playerlist">
-                    no turn received yet
-                </div>
+                <div/>
             )}
+
             <div className="header game round-counter">
                 {(hasTurn && currentTurn !== null) ? (
                     <div style={{width: "5em"}}> Round {currentTurn.turnNumber} </div>
@@ -98,6 +138,7 @@ const HeaderGame = (props) => {
                     <div className="header game round-counter"/>
                 )}
             </div>
+
             <i className="header game icon" onClick={() => popUpLeave()}>logout</i>
         </div>
     );
