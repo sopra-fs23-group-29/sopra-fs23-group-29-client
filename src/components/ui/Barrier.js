@@ -90,8 +90,8 @@ const Barrier = props => {
 
     // answer elements
     function createAnswer(barrierAnswer) {
+        let answerArr = []
         if (barrierPlayer.userToken === userToken) {
-                let answerArr = []
                 for (let i = 0; i <= barrierAnswer.length-1; i++) {
                     answerArr.push(
                         <div>
@@ -103,6 +103,13 @@ const Barrier = props => {
                     )
                 }
                 return answerArr
+        } else {
+            answerArr.push(
+                <div className="barrier answer-option-container">
+                    <p>Please wait while the other player answers the barrier question.</p>
+                </div>
+            )
+            return answerArr
         }
     }
 
