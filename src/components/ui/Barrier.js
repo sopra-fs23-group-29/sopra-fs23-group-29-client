@@ -66,9 +66,14 @@ const Barrier = props => {
         return array;
     }
 
+    const setDisabled = (item) => {
+        item.disabled = true;
+    }
+
     async function saveBarrierAnswer() {
         let chosenAnswer = document.getElementById("answerOptions" + barrierAnswer)
         let correctAnswer = document.getElementById("answerOptions" + correctResult)
+        document.getElementsByName("answerOptions").forEach(setDisabled)
         correctAnswer.style.backgroundColor = "green"
         setQuestionText("Good Job!")
         if (chosenAnswer !== correctAnswer) {
@@ -113,11 +118,6 @@ const Barrier = props => {
         }
     }
 
-    // set country as checked when text, container or else is clicked
-    const setCountryChecked = (countryId) => {
-        document.getElementById(countryId).click();
-    }
-
     function enableSaveBarrierAnswer() {
         if (barrierPlayer.userToken && barrierAnswer !== null) {
             if (barrierPlayer.userToken === userToken) {
@@ -129,10 +129,10 @@ const Barrier = props => {
 
     return (
         <BaseContainer className="barrier answer-container" id="Barrier Question Container">
-            <h3>{questionText}</h3>
+            <h3 style={{marginBottom: 0}}>{questionText}</h3>
             <div className="barrier country-container">
-                <div className="barrier country-name" onClick={() => setCountryChecked(country)}>{country}</div>
-                <img src={flag} onClick={() => setCountryChecked(country)} alt={flagAlt} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
+                <div className="barrier country-name">{country}</div>
+                <img src={flag} alt={flagAlt} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
             </div>
             <div className="barrier answer-row">
                 {createAnswer(answerOptions)}
@@ -140,7 +140,7 @@ const Barrier = props => {
             <Button
                 className="hidden-button"
                 id="saveBarrierAnswer"
-                width="100%"
+                width="60%"
                 disabled ={enableSaveBarrierAnswer()}
                 onClick={() => saveBarrierAnswer()}>
                 Submit Answer
