@@ -123,17 +123,6 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
-  /* Fake call to move player with ID 1 in game 1
-   */
-  const movePlayer = () => {
-    webSocket.send(
-      `/app/games/${gameToMove}/player/${playerToMove}/moveByOne`,
-      {
-        message: "MOVE PLAYER" + playerToMove + "BY ONE",
-      }
-    );
-  };
-
   return (
     <BaseContainer className="home container">
       <h2>PvP Lobbies</h2>{" "}
@@ -165,25 +154,6 @@ const Home = (props) => {
           Single Player Game
         </Button>
       </div>
-      <div className="login form">
-        <FormField
-          label="moveGame"
-          value={gameToMove}
-          onChange={(un) => setGameToMove(un)}
-        />
-        <FormField
-          label="movePlayer"
-          value={playerToMove}
-          onChange={(un) => setPlayerToMove(un)}
-        />
-      </div>
-      <Button
-        className="primary-button"
-        width="15%"
-        onClick={() => movePlayer()}
-      >
-        Move Player
-      </Button>
     </BaseContainer>
   );
 };
