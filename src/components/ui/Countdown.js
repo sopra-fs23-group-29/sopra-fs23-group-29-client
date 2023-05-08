@@ -1,6 +1,9 @@
 import React from 'react';
 import DateTimeDisplay from './DateTimeDisplay';
 import { useCountdown } from './useCountdown';
+import Stomper from "../../helpers/Stomp";
+
+let webSocket = Stomper.getInstance();
 
 const ShowCounter = ({ days, hours, minutes, seconds }) => {
   return (
@@ -23,11 +26,18 @@ const ShowCounter = ({ days, hours, minutes, seconds }) => {
   );
 };
 
-const CountdownTimer = ({ targetDate }) => {
+function timeUp(gameId) {
+  console.log("time is up, send a message to /endGame");
+  webSocket.send("/app/games/" + gameId + "/endGame", {
+      message: "END GAME " + gameId,
+    });
+}
+
+const CountdownTimer = ({ targetDate, gameId }) => {
   const [days, hours, minutes, seconds] = useCountdown(targetDate);
 
   if (days + hours + minutes + seconds <= 0) {
-    return <div>Countdown expired</div>
+    timeUp(gameId);
   } else {
     return (
       <ShowCounter

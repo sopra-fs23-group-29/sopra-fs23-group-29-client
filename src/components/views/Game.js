@@ -10,8 +10,6 @@ import Player from "../../models/Player";
 import Barrier from "../ui/Barrier";
 import { WinnerScreen } from 'components/ui/WinnerScreen';
 
-// TODO : Board constructor should take boardSize as an argument
-
 const Game = props => {
 
     const params = useParams();
@@ -105,7 +103,7 @@ const Game = props => {
             return;
         }
 
-        // console.log(`assignBoard boardSize : ${boardSize}`);
+        console.log(`assignBoard boardSize : ${boardSize}`);
         setThisBoard(
             <Board
                 ref={React.createRef()}

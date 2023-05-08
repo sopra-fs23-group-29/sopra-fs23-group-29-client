@@ -11,11 +11,11 @@ import theme from "styles/_theme.scss";
 // todo: When a player leaves the game, players should be updated otherwise the answering cannot be done
 
 const HeaderGame = (props) => {
+
     const history = useHistory();
     const params = useParams();
     const username = JSON.parse(sessionStorage.getItem('token')).username;
     const gameId = sessionStorage.getItem("gameId");
-    
     
     const [hasTurn, setHasTurn] = useState(false);
     const [currentTurn, setCurrentTurn] = useState(null);
@@ -51,7 +51,7 @@ const HeaderGame = (props) => {
                 const OVER_IN_MS = game.maxDurationInt*60*1000;
                 const NOW_IN_MS = new Date().getTime();
                 const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
-                setTimer(<CountdownTimer targetDate = {TARGET_DATETIME}/>)
+                setTimer(<CountdownTimer targetDate = {TARGET_DATETIME} gameId = {gameId}/>)
             }
         }
     }
@@ -65,11 +65,6 @@ const HeaderGame = (props) => {
             setHasTurn(true);
             setCurrentTurn(receivedTurn);
         }
-    }
-
-    function timeUp() {
-        console.log("time is up");
-        
     }
 
     const Player = ({ player }) => {
