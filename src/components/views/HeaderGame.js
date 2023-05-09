@@ -28,15 +28,14 @@ const HeaderGame = (props) => {
     let webSocket = Stomper.getInstance();
 
     // join the /newgame topic for the HeaderGame
-    webSocket.join("/topic/games/" + params.id + "/newgame", receiveNewGame);
+    webSocket.join("/topic/games/" + params.id + "/newgame_gameheader", receiveNewGame);
 
     // join the specific topic for the HeaderGame
     webSocket.join("/topic/games/" + params.id + "/newturn_gameheader", receiveNewTurn);
 
     function receiveNewGame(message) {
-        console.log("received newgame information");
-        console.log(JSON.parse(message.body));
-
+        // console.log("GameHeader : received newgame information");
+        // console.log(JSON.parse(message.body));
         const game = JSON.parse(message.body);
 
         if (game !== null) {
@@ -47,10 +46,19 @@ const HeaderGame = (props) => {
             }
 
             if (game.gameMode === "HOWFAR") {
+
                 setHasTimer(true);
-                const OVER_IN_MS = game.maxDurationInt*60*1000;
                 const NOW_IN_MS = new Date().getTime();
+
+                // Correct implementation of countdown, depending on game.maxDuration
+                const OVER_IN_MS = game.maxDurationInt*60*1000;
+                
+                // DEBUG
+                // todo: remove later
+                // const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
+                
                 const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
+
                 setTimer(<CountdownTimer targetDate = {TARGET_DATETIME} gameId = {gameId}/>)
             }
         }

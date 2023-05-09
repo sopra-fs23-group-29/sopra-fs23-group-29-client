@@ -38,6 +38,7 @@ const CountdownTimer = ({ targetDate, gameId }) => {
 
   if (days + hours + minutes + seconds <= 0) {
     timeUp(gameId);
+    return null;
   } else {
     return (
       <ShowCounter

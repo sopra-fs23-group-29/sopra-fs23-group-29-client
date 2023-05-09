@@ -94,10 +94,8 @@ const SoloGameSettings = () => {
             message: "START GAME " + gameId,
           });
 
-          /* push to lobby screen using the id we got as response from the server once the game is created there*/
-          history.push(`/sologame/${gameId}`);
-          // todo: Change to 
-          // history.push(`/games/${gameId}`);
+          /* push to game screen using the id we got as response from the server once the game is created there*/ 
+          history.push(`/games/${gameId}`);
 
 
         } catch (error) {
