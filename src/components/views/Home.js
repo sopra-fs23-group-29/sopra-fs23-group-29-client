@@ -96,8 +96,8 @@ const Home = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log(lobbies);
-    console.log(hasLobbies);
+    // console.log(lobbies);
+    // console.log(hasLobbies);
   }, [lobbies, hasLobbies]);
 
   /* assign content to lobbies to display them */

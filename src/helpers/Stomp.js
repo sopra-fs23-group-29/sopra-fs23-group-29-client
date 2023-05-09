@@ -42,7 +42,7 @@ class Stomper {
 
   send(destination, message) {
     this.stompClient.send(destination, {}, JSON.stringify(message));
-    // console.log("Sent message " + message + " to " + destination);
+    console.log("Sent message " + JSON.stringify(message) + " to " + destination);
   }
 
   leave(endpoint) {

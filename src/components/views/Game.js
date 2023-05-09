@@ -69,8 +69,9 @@ const Game = props => {
     });
 
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
-        setShowWinnerScreen(true);
         setWinnerScreenProps(JSON.parse(message.body));
+        setShowWinnerScreen(true);
+        
     });
 
     const [showCountryRanking, setShowCountryRanking] = useState(false);
@@ -141,10 +142,9 @@ const Game = props => {
             return;
         }
 
-        console.log(`playerIDToMove: ${playerIdToMove} with color ${playerColorToMove} currently at field ${playerCurrentField}`);
+        // console.log(`playerIDToMove: ${playerIdToMove} with color ${playerColorToMove} currently at field ${playerCurrentField}`);
 
         let playerMoving = new Player(playerToMove);
-        board.addPlayer(playerMoving, playerCurrentField);
 
         // send to board the player, and the starting field, moving by 1
         await board.movePlayerOnce(playerMoving, playerCurrentField, end, allowBarriers);
@@ -174,7 +174,6 @@ const Game = props => {
         console.log("filed tracker:");
         console.log(fieldTracker);
         setMovedFields(fieldTracker);
-
 
     }, [players])
 

@@ -7,6 +7,7 @@ import "styles/views/SoloGameSettings.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import BoardSizeSelect from "components/ui/BoardSizeSelect";
 import DurationSelect from "components/ui/DurationSelect";
+import Stomper from "../../helpers/Stomp";
 
 const SoloGameSettings = () => {
   const history = useHistory();
@@ -16,6 +17,8 @@ const SoloGameSettings = () => {
   const [hasGameMode, setHasGameMode] = useState(false);
   const [isHowFar, setIsHowFar] = useState(false);
   const [isHowFast, setIsHowFast] = useState(false);
+
+  let webSocket = Stomper.getInstance();
 
   /* executed whenever the How Far option is chosen */
   const howFarChosen = () => {
@@ -86,8 +89,15 @@ const SoloGameSettings = () => {
           /* Set the current gameId in sessionStorage */
           sessionStorage.setItem("gameId", gameId);
 
+          /* send a message to the server to start the game */
+          webSocket.send("/app/games/" + gameId + "/startGame", {
+            message: "START GAME " + gameId,
+          });
+
           /* push to lobby screen using the id we got as response from the server once the game is created there*/
           history.push(`/sologame/${gameId}`);
+
+
         } catch (error) {
           alert(
             `Something went wrong while creating game: \n${handleError(error)}`
