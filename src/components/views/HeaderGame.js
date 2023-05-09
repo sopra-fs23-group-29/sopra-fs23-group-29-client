@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import "styles/views/Header.scss";
 import {Globalissimo} from "../ui/Globalissimo";
+import CountdownTimer from "../ui/Countdown";
 import {api, handleError} from "../../helpers/api";
 import {useHistory, useParams} from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
@@ -10,6 +11,7 @@ import theme from "styles/_theme.scss";
 // todo: When a player leaves the game, players should be updated otherwise the answering cannot be done
 
 const HeaderGame = (props) => {
+
     const history = useHistory();
     const params = useParams();
     const username = JSON.parse(sessionStorage.getItem('token')).username;
@@ -17,15 +19,58 @@ const HeaderGame = (props) => {
     
     const [hasTurn, setHasTurn] = useState(false);
     const [currentTurn, setCurrentTurn] = useState(null);
+    const [showPlayers, setShowPlayers] = useState(true);
     const [yourPlayerColor, setYourPlayerColor] = useState(theme.textColor);
 
+    const [hasTimer, setHasTimer] = useState(false);
+    const [timer, setTimer] = useState(null);
+    const [gamemode, setGamemode] = useState("");
+
     let webSocket = Stomper.getInstance();
+
+    // join the /newgame topic for the HeaderGame
+    webSocket.join("/topic/games/" + params.id + "/newgame_gameheader", receiveNewGame);
 
     // join the specific topic for the HeaderGame
     webSocket.join("/topic/games/" + params.id + "/newturn_gameheader", receiveNewTurn);
 
+    function receiveNewGame(message) {
+        // console.log("GameHeader : received newgame information");
+        // console.log(JSON.parse(message.body));
+        const game = JSON.parse(message.body);
+
+        if (game.gameMode !== null && game.gameMode !== "PVP") {
+            setGamemode(game.gameMode);
+        }
+
+        if (game !== null) {
+            
+            // if the game is not PVP do not show the players
+            if (game.gameMode !== "PVP") {
+                setShowPlayers(false);
+            }
+
+            if (game.gameMode === "HOWFAR") {
+
+                setHasTimer(true);
+                const NOW_IN_MS = new Date().getTime();
+
+                // Correct implementation of countdown, depending on game.maxDuration
+                const OVER_IN_MS = game.maxDurationInt*60*1000;
+                
+                // DEBUG
+                // todo: remove later
+                // const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
+                
+                const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
+
+                setTimer(<CountdownTimer targetDate = {TARGET_DATETIME} gameId = {gameId}/>)
+            }
+        }
+    }
+
     function receiveNewTurn(message) {
-        console.log("receiveNewTurn start ...");
+        console.log("received newturn information");
 
         const receivedTurn = JSON.parse(message.body);
 
@@ -81,16 +126,21 @@ const HeaderGame = (props) => {
     return (
         <div className="header container" style={{height: props.height}}>
             <Globalissimo/>
+
             <h2 className="header game username" style={{color: yourPlayerColor}}>{username}</h2>
-            {(hasTurn && currentTurn !== null) ? (
+
+            {(gamemode !== "") ? (<h2 className="header game username">{gamemode}</h2>) : (<div/>) }
+
+            {(hasTimer) ? (timer) : (<div/>)}
+            
+            {(hasTurn && showPlayers && currentTurn !== null) ? (
                 <div className="header game playerlist">
                     {currentTurn.turnPlayers.map((p) => (<Player player={p} key={p.id}/>))}
                 </div>
             ) : (
-                <div className="header game playerlist">
-                    no turn received yet
-                </div>
+                <div/>
             )}
+
             <div className="header game round-counter">
                 {(hasTurn && currentTurn !== null) ? (
                     <div style={{width: "5em"}}> Round {currentTurn.turnNumber} </div>
@@ -98,6 +148,7 @@ const HeaderGame = (props) => {
                     <div className="header game round-counter"/>
                 )}
             </div>
+
             <i className="header game icon" onClick={() => popUpLeave()}>logout</i>
         </div>
     );

@@ -8,7 +8,7 @@ import { Gradient } from "components/ui/LinearGradient";
 
 class Board extends React.Component {
 
-    withBarriers = true;
+    withBarriers = this.props.withBarriers;
     boardSize = this.props.boardSize; // setting the board with the props passed by Game.js
     containerColor = theme.containerColor;
     textColor = theme.textColor;
