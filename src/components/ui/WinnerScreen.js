@@ -13,57 +13,6 @@ export const WinnerScreen = (props) => {
   const params = useParams();
   let gameId = params.id;
 
-  /*let props = {
-    "players": [
-        {
-            "id": 7,
-            "userToken": "8b1a4c0d-4f11-4970-8f06-c54d2ea75cbd",
-            "gameId": 6,
-            "playerName": "nb",
-            "token": "038add01-d83c-49c4-85a5-f0be52b7ba95",
-            "playerColor": "INDIANRED",
-            "isHost": true
-        }
-    ],
-    "turnNumber": 4,
-    "resolvedBarriers": [
-        4,
-        7
-    ],
-    "gameId": 6,
-    "gameName": "fsdfsd",
-    "gameStatus": "FINISHED",
-    "gameMode": "PVP",
-    "leaderboard": {
-        "entries": [
-            {
-                "playerId": 7,
-                "currentScore": 11,
-                "playerName": "nb",
-                "playerColor": "INDIANRED",
-                "guess": 0
-            }
-        ]
-    },
-    "barrierLeaderboard": {
-        "entries": [
-            {
-                "playerId": 7,
-                "currentScore": 2,
-                "playerName": "nb",
-                "playerColor": "INDIANRED",
-                "guess": 0
-            }
-        ]
-    },
-    "joinable": false,
-    "boardSize": "SMALL",
-    "boardSizeInt": 12,
-    "maxDuration": "NA",
-    "maxDurationInt": 0,
-    "maxTurns": 0
-}*/
-
   const reformatProperties = () => {
     // Loop through each object in the barrierScoreboard array
     barrierScoreboard.forEach(barrierObj => {
