@@ -109,12 +109,12 @@ const Game = props => {
             return;
         }
         
-        if (boardSize === null) {
+        if (newgame.boardSize === null) {
             console.log("boardSize null, skip assigning board");
             return;
         }
         
-        if (withBarriers === null) {
+        if (newgame.barriersEnabled === null) {
             console.log("withBarriers null, skip assigning board");
             return;
         }
