@@ -120,7 +120,7 @@ const Game = props => {
         }
         
         const boardSize = newgame.boardSize.toLowerCase();
-        const withBarriers = newgame.withBarriers;
+        const withBarriers = newgame.barriersEnabled;
         
         console.log(`assignBoard boardSize : ${boardSize}`);
         console.log(`assignBoard withBarriers : ${withBarriers}`);
