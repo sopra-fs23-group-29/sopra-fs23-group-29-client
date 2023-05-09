@@ -75,9 +75,7 @@ export const TurnScoreboard = (props) => {
                     return (
                         <div className="turn-scoreboard table-row">
                             <div>{index + 1}.</div>
-                            <div>
-                                <img src={country.flagUrl} alt={`${country.name} flag`} />
-                            </div>
+                            <img src={country.flagUrl} alt={`${country.name} flag`} />
                             <div className="turn-scoreboard table-country-name">{country.name}</div>
                             <div style={{backgroundColor: player ? player.playerColor : 'transparent', borderRadius: '50%', width: '30px', height: '30px', color: 'white', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                                 {player ? player.guess : ""}
