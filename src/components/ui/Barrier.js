@@ -9,7 +9,7 @@ import Player from "../../models/Player";
 const Barrier = props => {
     // set these as const [] = useState... if possible
     const gameId = useParams().id;
-    let webSocket = Stomper.getInstance(); // TODO: bruchts das hie?
+    let webSocket = Stomper.getInstance();
     let userToken = JSON.parse(sessionStorage.getItem('token')).token;
 
     // websocket variables
@@ -25,7 +25,7 @@ const Barrier = props => {
     const [flagAlt, setFlagAlt] = useState(null);
 
     // barrier answer
-    const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null); // TODO: change to playerId
+    const [playerBarrierAnswer, setplayerBarrierAnswer] = useState(null);
     const [barrierAnswer, setBarrierAnswer] = useState(null);
 
     useEffect(() => {
@@ -47,12 +47,8 @@ const Barrier = props => {
         setBarrierPlayer(player);
         document.getElementById("Barrier Question Container").style.borderColor = player.playerColor
 
-        // set answer options
-        let randomizedAnswerOptions = shuffleArray(props.barrierQuestion.answerOptions);
-        for (let i = 0; i < randomizedAnswerOptions.length; i++) {
-            answerOptions.push(randomizedAnswerOptions[i])
-        }
-        console.log("Rand" + randomizedAnswerOptions)
+        // set randomized answer options
+        setAnswerOptions(shuffleArray(props.barrierQuestion.answerOptions))
 
         // set country
         setCountry(props.barrierQuestion.country.nameMap.common)
@@ -70,15 +66,27 @@ const Barrier = props => {
         return array;
     }
 
-    const saveBarrierAnswer = () => {
-        webSocket.send(
+    const setDisabled = (item) => {
+        item.disabled = true;
+    }
+
+    async function saveBarrierAnswer() {
+        let chosenAnswer = document.getElementById("answerOptions" + barrierAnswer)
+        let correctAnswer = document.getElementById("answerOptions" + correctResult)
+        document.getElementsByName("answerOptions").forEach(setDisabled)
+        correctAnswer.style.backgroundColor = "green"
+        setQuestionText("Good Job!")
+        if (chosenAnswer !== correctAnswer) {
+            chosenAnswer.style.backgroundColor = "red"
+            setQuestionText("Wrong :(")
+        }
+        document.getElementById("saveBarrierAnswer").disabled = true;
+        await new Promise(resolve => setTimeout(() => {webSocket.send(
             `/app/games/${gameId}/player/${playerBarrierAnswer}/resolveBarrierAnswer`,
             {
                 userToken: userToken,
-                guess: barrierAnswer,
-            }
-        );
-    };
+                guess: barrierAnswer,})}, 3000))
+    }
 
     // set answer as checked when text is clicked
     const setAnswerChecked = (answerId) => {
@@ -87,25 +95,27 @@ const Barrier = props => {
 
     // answer elements
     function createAnswer(barrierAnswer) {
+        let answerArr = []
         if (barrierPlayer.userToken === userToken) {
-                let answerArr = []
-                for (let i = 0; i <= barrierAnswer.length; i++) {
+                for (let i = 0; i <= barrierAnswer.length-1; i++) {
                     answerArr.push(
                         <div>
-                            <div className="barrier answer-option-container" onClick={() => setAnswerChecked(`answerOptions${i}`)}>
-                                <label className="barrier answer-option-number" onClick={() => setAnswerChecked(`answerOptions${i}`)}>{answerOptions[i]}</label>
-                                <input type="radio" name="answerOptions" id={"answerOptions" + i} disabled={false} key={i} className="answer-radio" value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
+                            <div className="barrier answer-option-container" onClick={() => setAnswerChecked(`answerOptions${answerOptions[i]}`)}>
+                                <label className="barrier answer-option-number" onClick={() => setAnswerChecked(`answerOptions${answerOptions[i]}`)}>{answerOptions[i]}</label>
+                                <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} className="answer-radio" value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
                             </div>
                         </div>
                     )
                 }
                 return answerArr
+        } else {
+            answerArr.push(
+                <div className="barrier answer-option-container">
+                    <p>Please wait while the other player answers the barrier question.</p>
+                </div>
+            )
+            return answerArr
         }
-    }
-
-    // set country as checked when text, container or else is clicked
-    const setCountryChecked = (countryId) => {
-        document.getElementById(countryId).click();
     }
 
     function enableSaveBarrierAnswer() {
@@ -119,10 +129,9 @@ const Barrier = props => {
 
     return (
         <BaseContainer className="barrier answer-container" id="Barrier Question Container">
-            <h3>{questionText}</h3>
+            <h3 style={{marginBottom: 0}}>{questionText}</h3>
             <div className="barrier country-container">
-                <div className="barrier country-name" onClick={() => setCountryChecked(country)}>{country}</div>
-                <img src={flag} onClick={() => setCountryChecked(country)} alt={flagAlt} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
+                <img src={flag} alt={flagAlt} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
             </div>
             <div className="barrier answer-row">
                 {createAnswer(answerOptions)}
@@ -130,7 +139,7 @@ const Barrier = props => {
             <Button
                 className="hidden-button"
                 id="saveBarrierAnswer"
-                width="100%"
+                width="60%"
                 disabled ={enableSaveBarrierAnswer()}
                 onClick={() => saveBarrierAnswer()}>
                 Submit Answer
