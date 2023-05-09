@@ -42,67 +42,55 @@
     display: flex;
     align-items: center;
     flex-direction: row;
-  }
-  &.answer-option-container {
-    display: flex;
-    align-items: center;
-  }
-  &.answer-option-number {
-    color: $textColor;
-    position: absolute;
-    cursor: pointer;
-    display: inline;
-    margin-left: 2em;
+    gap: 1em;
   }
 }
 
 input[type="radio"] {
   appearance: none;
 }
-
-.answer-radio {
+input[name="answerOptions"] + label {
   &:disabled {
+    pointer-events: none;
     cursor: default;
     opacity: 0.4;
   }
-  &:hover {
-    transform: none;
-  }
   background: $accentDarkContainerColor;
   border-radius: $borderRadius;
-  display: flex;
+  display: inline-block;
+  padding-top: 1.2em;
+  width: 4em;
+  height: 4em;
   cursor: pointer;
-  height: 5em;
-  width: 5em;
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.8em;
+  font-size: 1.1em;
+  text-transform: capitalize;
   transition: all 0.3s ease;
 }
+
 
 /*
   Update if colors in backend change
  */
-input[value="INDIANRED"]:checked {
+input[value="INDIANRED"]:checked + label {
   background-color: $accentColor1;
 }
 
-input[value="ORANGE"]:checked {
+input[value="ORANGE"]:checked + label {
   background-color: $accentColor2;
 }
 
-input[value="YELLOW"]:checked {
+input[value="YELLOW"]:checked + label {
   background-color: $accentColor3;
 }
 
-input[value="LIGHTGREEN"]:checked {
+input[value="LIGHTGREEN"]:checked + label {
   background-color: $accentColor4;
 }
 
-input[value="LIGHTSKYBLUE"]:checked {
+input[value="LIGHTSKYBLUE"]:checked + label {
   background-color: $accentColor5;
 }
 
-input[value="VIOLET"]:checked {
+input[value="VIOLET"]:checked + label {
   background-color: $accentColor6;
 }

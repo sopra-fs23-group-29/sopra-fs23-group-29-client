@@ -71,8 +71,8 @@ const Barrier = props => {
     }
 
     async function saveBarrierAnswer() {
-        let chosenAnswer = document.getElementById("answerOptions" + barrierAnswer)
-        let correctAnswer = document.getElementById("answerOptions" + correctResult)
+        let chosenAnswer = document.getElementById("answerOptionsLabel" + barrierAnswer)
+        let correctAnswer = document.getElementById("answerOptionsLabel" + correctResult)
         document.getElementsByName("answerOptions").forEach(setDisabled)
         correctAnswer.style.backgroundColor = "green"
         setQuestionText("Good Job!")
@@ -99,18 +99,16 @@ const Barrier = props => {
         if (barrierPlayer.userToken === userToken) {
                 for (let i = 0; i <= barrierAnswer.length-1; i++) {
                     answerArr.push(
-                        <div>
-                            <div className="barrier answer-option-container" onClick={() => setAnswerChecked(`answerOptions${answerOptions[i]}`)}>
-                                <label className="barrier answer-option-number" onClick={() => setAnswerChecked(`answerOptions${answerOptions[i]}`)}>{answerOptions[i]}</label>
-                                <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} className="answer-radio" value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
-                            </div>
+                        <div style={{textAlign: "center"}}>
+                            <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
+                            <label htmlFor={"answerOptions" + answerOptions[i]} name="answerOptionsLabel" id={"answerOptionsLabel" + answerOptions[i]}>{answerOptions[i]}</label>
                         </div>
                     )
                 }
                 return answerArr
         } else {
             answerArr.push(
-                <div className="barrier answer-option-container">
+                <div style={{textAlign: "center"}}>
                     <p>Please wait while the other player answers the barrier question.</p>
                 </div>
             )
