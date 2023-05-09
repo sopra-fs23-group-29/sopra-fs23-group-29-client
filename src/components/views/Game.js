@@ -24,7 +24,9 @@ const Game = props => {
         // set the boardSize parameter
         let game = JSON.parse(message.body);
         // console.log(`newgame setting boardSize = game.boardSize: ${game.boardSize.toLowerCase()}`);
-        setBoardSize(game.boardSize.toLowerCase());
+        // setBoardSize(game.boardSize.toLowerCase());
+        // setWithBarriers(game.barriersEnabled);
+        setNewGame(game);
     });
 
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
@@ -92,27 +94,41 @@ const Game = props => {
     const [playerToMove, setPlayerToMove] = useState({})
 
     const [thisBoard, setThisBoard] = useState(null);
-    const [boardSize, setBoardSize] = useState(null);
+    const [newgame, setNewGame] = useState({});
+    // const [boardSize, setBoardSize] = useState(null);
+    // const [withBarriers, setWithBarriers] = useState(null);
 
     /*
     assign a Board component to thisBoard
     */
     useEffect( async () => {
 
+        const boardSize = newgame.boardSize;
+        const withBarriers = newgame.withBarriers;
+
         if (boardSize === null) {
-            // console.log("boardSize null, skip assigning board");
+            console.log("boardSize null, skip assigning board");
+            return;
+        }
+
+        if (withBarriers === null) {
+            console.log("withBarriers null, skip assigning board");
             return;
         }
 
         console.log(`assignBoard boardSize : ${boardSize}`);
+        console.log(`assignBoard withBarriers : ${withBarriers}`);
+
         setThisBoard(
             <Board
                 ref={React.createRef()}
                 boardSize={boardSize}
+                withBarriers={withBarriers}
             />
         )
 
-    }, [boardSize])
+    // }, [boardSize, withBarriers])
+    }, [newgame])
 
     /*
     process an incoming message to move a player
