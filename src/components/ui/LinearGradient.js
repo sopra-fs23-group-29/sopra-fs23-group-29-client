@@ -107,15 +107,19 @@ class Gradient extends React.Component {
 
         this.state = {
             index: ind,
-            colors: prepareColors(colorArray),
+            colors: colorArray,
             place: placeOnBoard
         }
     }
 
     updateColors = (newColors) => {
         this.setState({
-            colors: prepareColors(newColors)
+            colors: newColors
         });
+    }
+
+    getColors = () => {
+        return structuredClone(this.state.colors);
     }
 
     render() {
@@ -124,7 +128,7 @@ class Gradient extends React.Component {
                 style={styles.container}
             >
                 <LinearGradient
-                    colors={this.state.colors}
+                    colors={ prepareColors(this.state.colors)}
                     style={styles.linearGradient}
                     //locations={getLocations(colorsToUse.length)}
                     start={getStart(this.state.place)}
