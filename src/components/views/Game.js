@@ -69,8 +69,9 @@ const Game = props => {
     });
 
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
-        setShowWinnerScreen(true);
         setWinnerScreenProps(JSON.parse(message.body));
+        setShowWinnerScreen(true);
+        
     });
 
     const [showCountryRanking, setShowCountryRanking] = useState(false);
