@@ -20,9 +20,10 @@ const Game = props => {
 
     // Get a message with the created game upon creation of the game
     webSocket.join("/topic/games/" + params.id + "/newgame", function (message) {
-        // console.log("newgame information");
+        console.log("Game : newgame information");
         // set the boardSize parameter
         let game = JSON.parse(message.body);
+        console.log(game);
         // console.log(`newgame setting boardSize = game.boardSize: ${game.boardSize.toLowerCase()}`);
         // setBoardSize(game.boardSize.toLowerCase());
         // setWithBarriers(game.barriersEnabled);
@@ -104,7 +105,12 @@ const Game = props => {
     useEffect( async () => {
 
         const boardSize = newgame.boardSize;
-        const withBarriers = newgame.withBarriers;
+        const withBarriers = newgame.barriersEnabled;
+
+        if (newgame === null || Object.keys(newgame).length === 0) {
+            console.log("game null or empty, skip assigning Board parameters");
+            return;
+        }
 
         if (boardSize === null) {
             console.log("boardSize null, skip assigning board");
