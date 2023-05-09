@@ -24,6 +24,7 @@ const HeaderGame = (props) => {
 
     const [hasTimer, setHasTimer] = useState(false);
     const [timer, setTimer] = useState(null);
+    const [gamemode, setGamemode] = useState("");
 
     let webSocket = Stomper.getInstance();
 
@@ -37,6 +38,10 @@ const HeaderGame = (props) => {
         // console.log("GameHeader : received newgame information");
         // console.log(JSON.parse(message.body));
         const game = JSON.parse(message.body);
+
+        if (game.gameMode !== null && game.gameMode !== "PVP") {
+            setGamemode(game.gameMode);
+        }
 
         if (game !== null) {
             
@@ -124,8 +129,10 @@ const HeaderGame = (props) => {
 
             <h2 className="header game username" style={{color: yourPlayerColor}}>{username}</h2>
 
-            {(hasTimer) ? (timer) : (<div/>)}
+            {(gamemode !== "") ? (<h2 className="header game username">{gamemode}</h2>) : (<div/>) }
 
+            {(hasTimer) ? (timer) : (<div/>)}
+            
             {(hasTurn && showPlayers && currentTurn !== null) ? (
                 <div className="header game playerlist">
                     {currentTurn.turnPlayers.map((p) => (<Player player={p} key={p.id}/>))}
