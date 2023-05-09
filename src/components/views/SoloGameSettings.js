@@ -112,7 +112,7 @@ const SoloGameSettings = () => {
     if (hasGameMode) {
       if (isHowFar) {
         setGameMode("HOWFAR");
-        setBoardSize("MEDIUM");
+        setBoardSize("LARGE");
       } else if (isHowFast) {
         setGameMode("HOWFAST");
         setDuration("NA");
