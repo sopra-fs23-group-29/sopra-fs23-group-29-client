@@ -6,6 +6,8 @@ import "styles/views/Countdown.scss";
 
 let webSocket = Stomper.getInstance();
 
+let timeIsUp = false;
+
 const ShowCounter = ({ days, hours, minutes, seconds }) => {
   return (
     <div className="show-counter">
@@ -28,10 +30,15 @@ const ShowCounter = ({ days, hours, minutes, seconds }) => {
 };
 
 function timeUp(gameId) {
-  console.log("time is up, send a message to /endGame");
-  webSocket.send("/app/games/" + gameId + "/endGame", {
-      message: "END GAME " + gameId,
-    });
+  if (!timeIsUp) {
+    console.log("time is up, send a message to /endGame");
+    webSocket.send("/app/games/" + gameId + "/endGame", {
+        message: "END GAME " + gameId,
+      });
+  }
+
+  timeIsUp = true;
+
 }
 
 const CountdownTimer = ({ targetDate, gameId }) => {
