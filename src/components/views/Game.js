@@ -104,24 +104,24 @@ const Game = props => {
     */
     useEffect( async () => {
 
-        const boardSize = newgame.boardSize;
-        const withBarriers = newgame.barriersEnabled;
-
         if (newgame === null || Object.keys(newgame).length === 0) {
             console.log("game null or empty, skip assigning Board parameters");
             return;
         }
-
+        
         if (boardSize === null) {
             console.log("boardSize null, skip assigning board");
             return;
         }
-
+        
         if (withBarriers === null) {
             console.log("withBarriers null, skip assigning board");
             return;
         }
-
+        
+        const boardSize = newgame.boardSize.toLowerCase();
+        const withBarriers = newgame.withBarriers;
+        
         console.log(`assignBoard boardSize : ${boardSize}`);
         console.log(`assignBoard withBarriers : ${withBarriers}`);
 
