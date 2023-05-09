@@ -9,30 +9,21 @@ import { api, handleError } from "../../helpers/api";
 
 export const WinnerScreen = (props) => {
 
-
   const history = useHistory();
   const params = useParams();
   let gameId = params.id;
 
-  //const [players, setPlayers] = useState(props.players);
-  const [globalScoreboard, setGlobalScoreboard] = useState(props.leaderboard);
-  const [barrierScoreboard, setBarrierScoreboard] = useState(props.barrierScoreboard);
-
-  let webSocket = Stomper.getInstance();
-
-  useEffect(() => {
-    setGlobalScoreboard(props.leaderboard);
-    setBarrierScoreboard(props.barrierScoreboard);
-
-    
+  const reformatProperties = () => {
     // Loop through each object in the barrierScoreboard array
     barrierScoreboard.forEach(barrierObj => {
       // Find the object in the globalScoreboard array with the same playerName
       const globalObj = globalScoreboard.find(globalObj => globalObj.playerName === barrierObj.playerName);
 
-      // If an object is found, update its currentscore property with the value from barrierScoreboard
+      // If an object is found, update its barrierCurrentscore property with the currentScore value from barrierScoreboard
       if (globalObj) {
-        globalObj.currentscore = barrierObj.currentscore;
+
+        globalObj.barrierCurrentScore = barrierObj.currentScore;
+
       }
     });
 
@@ -44,6 +35,24 @@ export const WinnerScreen = (props) => {
         return b.currentscore - a.currentscore;
       }
     });
+  }
+
+  //const [players, setPlayers] = useState(props.players);
+  const [globalScoreboard, setGlobalScoreboard] = useState(props.leaderboard.entries);
+  const [barrierScoreboard, setBarrierScoreboard] = useState(props.barrierLeaderboard.entries);
+
+  reformatProperties();
+
+  let webSocket = Stomper.getInstance();
+
+  useEffect(() => {
+
+    setGlobalScoreboard(props.leaderboard.entries);
+    setBarrierScoreboard(props.barrierLeaderboard.entries);
+
+    reformatProperties();
+    
+    
     
   }, [props]);
 
@@ -82,7 +91,6 @@ export const WinnerScreen = (props) => {
 
       <div>
       {globalScoreboard.map((player, index) => {
-
         return(
         <div className="winner-screen table-row"
           key={player.playerName}
@@ -101,7 +109,7 @@ export const WinnerScreen = (props) => {
           </span>
           <span>
           <i className="barrier icon"
-                   style={{color: player.playercolor, fontSize: "2em", marginLeft: "0" }}
+                   style={{color: player.playerColor, fontSize: "2em", marginLeft: "0" }}
                 >
                     error_outlined</i>
         </span>
