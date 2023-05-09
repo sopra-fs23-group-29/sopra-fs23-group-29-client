@@ -14,21 +14,6 @@ class Board extends React.Component {
     textColor = theme.textColor;
 
     /**
-     * create players
-     */
-    addPlayer(player, field){
-        const color = player.playerColor;
-        //console.log(`added player with name: ${name} on field ${field}`);
-
-        // add the color to the board if not already present
-        if (this.colors[field].indexOf(color) === -1){
-            this.colors[field].push(color);
-            this.gradientsAndBarriers[field].ref.current.updateColors(this.colors[0]);
-        }
-        //console.log(`playerFields[${player.playerName}] = ${this.playerFields[name]}`);
-    }
-
-    /**
      * helper functions to locate fields and identify barriers
      */
     getPlaceOnBoard(index, parameters){
@@ -182,6 +167,23 @@ class Board extends React.Component {
     /**
      * functions used to update the board
      */
+    addPlayer(player, field){
+        const color = player.playerColor;
+        console.log(`added player with color: ${color} on field ${field}`);
+
+        try {
+            this.gradientsAndBarriers[field].ref.current.getColors();
+        } catch {
+            console.log("error");
+        }
+
+        // add the color to the board if not already present
+        if (this.colors[field].indexOf(color) === -1){
+            this.colors[field].push(color);
+            this.gradientsAndBarriers[field].ref.current.updateColors(this.colors[0]);
+        }
+    }
+
     async movePlayerOnce(player, startingField, end, allowBarriers) {
         // console.log(`movePlayer : PlayerColor ${player.playerColor}`);
         const color = player.playerColor;
@@ -189,6 +191,11 @@ class Board extends React.Component {
         /**
          * handle starting field
          */
+        this.addPlayer(player, startingField);
+
+        console.log(this.colors[startingField]);
+        console.log(this.gradientsAndBarriers[startingField].ref.current.getColors());
+
         // remove the player from the current field
         if (allowBarriers && this.isBarrier(startingField, end)) {
             console.log("player was on barrier, do nothing");
@@ -201,7 +208,7 @@ class Board extends React.Component {
         /**
          * handle ending field
          */
-            // move the player one field forward
+        // move the player one field forward
         let endingField = Math.min(end, startingField + 1);
         if (allowBarriers && this.isBarrier(endingField, end)) {
             const barrier = this.gradientsAndBarriers[endingField].ref.current

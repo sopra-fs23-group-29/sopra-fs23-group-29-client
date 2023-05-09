@@ -65,19 +65,25 @@ class Barrier extends React.Component {
             tempColor: newColors[1]
         })
     }
-    getColor() {
+
+    getColors() {
+        return [];
+    }
+
+    applyColoring() {
         if (this.state.tempColor != null) {
             return this.state.tempColor;
         } else {
             return this.state.color;
         }
     }
+
     render() {
         return (
             <div className="barrier container">
 
                 <i className="barrier icon"
-                   style={{color: this.getColor()}}
+                   style={{color: this.applyColoring()}}
                 >
                     error_outlined</i>
             </div>
