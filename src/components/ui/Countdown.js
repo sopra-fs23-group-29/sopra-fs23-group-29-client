@@ -2,6 +2,7 @@ import React from 'react';
 import DateTimeDisplay from './DateTimeDisplay';
 import { useCountdown } from './useCountdown';
 import Stomper from "../../helpers/Stomp";
+import "styles/views/Countdown.scss";
 
 let webSocket = Stomper.getInstance();
 
