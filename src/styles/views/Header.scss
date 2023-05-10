@@ -70,5 +70,9 @@
       color: $accent;
       cursor: pointer;
     }
+    
+    &.gamemode {
+      color: $textColor;
+    }
   }
 }
