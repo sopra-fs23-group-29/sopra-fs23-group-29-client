@@ -35,6 +35,9 @@ const HeaderGame = (props) => {
 
     // join the specific topic for the HeaderGame
     webSocket.join("/topic/games/" + params.id + "/newturn_gameheader", receiveNewTurn);
+    
+    // join the topioc about the game ending
+    webSocket.join("/topic/games/" + params.id + "/gameover_gameheader", receiveGameover);
 
     function receiveNewGame(message) {
         // console.log("GameHeader : received newgame information");
@@ -89,6 +92,12 @@ const HeaderGame = (props) => {
             setHasTurn(true);
             setCurrentTurn(receivedTurn);
         }
+    }
+
+    function receiveGameover(message) {
+        // on gameover, disable the timer
+        console.log("received gameover_gameheader information, hiding Timer");
+        setHasTimer(false);
     }
 
     const Player = ({ player }) => {
