@@ -58,11 +58,11 @@ const HeaderGame = (props) => {
                 const NOW_IN_MS = new Date().getTime();
 
                 // Correct implementation of countdown, depending on game.maxDuration
-                const OVER_IN_MS = game.maxDurationInt*60*1000;
+                // const OVER_IN_MS = game.maxDurationInt*60*1000;
                 
                 // DEBUG
                 // todo: remove later
-                // const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
+                const OVER_IN_MS = 30000; // 5 seconds to check timeUp functionality
                 
                 const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
 
