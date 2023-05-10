@@ -35,7 +35,7 @@ class Stomper {
 
       // store the callback function in a mapping object
 
-      // console.log("Subscribed to " + endpoint);
+      console.log("Subscribed to " + endpoint);
    
     }
   }

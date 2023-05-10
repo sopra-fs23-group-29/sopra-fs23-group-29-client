@@ -94,8 +94,8 @@ const SoloGameSettings = () => {
             message: "START GAME " + gameId,
           });
 
-          /* push to lobby screen using the id we got as response from the server once the game is created there*/
-          history.push(`/sologame/${gameId}`);
+          /* push to game screen using the id we got as response from the server once the game is created there*/ 
+          history.push(`/games/${gameId}`);
 
 
         } catch (error) {
@@ -112,7 +112,7 @@ const SoloGameSettings = () => {
     if (hasGameMode) {
       if (isHowFar) {
         setGameMode("HOWFAR");
-        setBoardSize("MEDIUM");
+        setBoardSize("LARGE");
       } else if (isHowFast) {
         setGameMode("HOWFAST");
         setDuration("NA");

@@ -10,8 +10,6 @@ import Player from "../../models/Player";
 import Barrier from "../ui/Barrier";
 import { WinnerScreen } from 'components/ui/WinnerScreen';
 
-// TODO : Board constructor should take boardSize as an argument
-
 const Game = props => {
 
     const params = useParams();
@@ -22,11 +20,14 @@ const Game = props => {
 
     // Get a message with the created game upon creation of the game
     webSocket.join("/topic/games/" + params.id + "/newgame", function (message) {
-        // console.log("newgame information");
+        console.log("Game : newgame information");
         // set the boardSize parameter
         let game = JSON.parse(message.body);
+        console.log(game);
         // console.log(`newgame setting boardSize = game.boardSize: ${game.boardSize.toLowerCase()}`);
-        setBoardSize(game.boardSize.toLowerCase());
+        // setBoardSize(game.boardSize.toLowerCase());
+        // setWithBarriers(game.barriersEnabled);
+        setNewGame(game);
     });
 
     webSocket.join("/topic/games/" + params.id + "/newturn", function (message) {
@@ -94,27 +95,46 @@ const Game = props => {
     const [playerToMove, setPlayerToMove] = useState({})
 
     const [thisBoard, setThisBoard] = useState(null);
-    const [boardSize, setBoardSize] = useState(null);
+    const [newgame, setNewGame] = useState({});
+    // const [boardSize, setBoardSize] = useState(null);
+    // const [withBarriers, setWithBarriers] = useState(null);
 
     /*
     assign a Board component to thisBoard
     */
     useEffect( async () => {
 
-        if (boardSize === null) {
-            // console.log("boardSize null, skip assigning board");
+        if (newgame === null || Object.keys(newgame).length === 0) {
+            console.log("game null or empty, skip assigning Board parameters");
             return;
         }
+        
+        if (newgame.boardSize === null) {
+            console.log("boardSize null, skip assigning board");
+            return;
+        }
+        
+        if (newgame.barriersEnabled === null) {
+            console.log("withBarriers null, skip assigning board");
+            return;
+        }
+        
+        const boardSize = newgame.boardSize.toLowerCase();
+        const withBarriers = newgame.barriersEnabled;
+        
+        console.log(`assignBoard boardSize : ${boardSize}`);
+        console.log(`assignBoard withBarriers : ${withBarriers}`);
 
-        // console.log(`assignBoard boardSize : ${boardSize}`);
         setThisBoard(
             <Board
                 ref={React.createRef()}
                 boardSize={boardSize}
+                withBarriers={withBarriers}
             />
         )
 
-    }, [boardSize])
+    // }, [boardSize, withBarriers])
+    }, [newgame])
 
     /*
     process an incoming message to move a player
