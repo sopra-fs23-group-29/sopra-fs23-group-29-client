@@ -20,13 +20,10 @@ const Game = props => {
 
     // Get a message with the created game upon creation of the game
     webSocket.join("/topic/games/" + params.id + "/newgame", function (message) {
-        console.log("Game : newgame information");
+        // console.log("Game : newGame information");
         // set the boardSize parameter
         let game = JSON.parse(message.body);
-        console.log(game);
-        // console.log(`newgame setting boardSize = game.boardSize: ${game.boardSize.toLowerCase()}`);
-        // setBoardSize(game.boardSize.toLowerCase());
-        // setWithBarriers(game.barriersEnabled);
+        // console.log(game);
         setNewGame(game);
     });
 
@@ -37,9 +34,6 @@ const Game = props => {
         // todo: how to replace country ranking, so it does not show double?
         setCountryRankingProps(JSON.parse(message.body));
         setShowCountryRanking(true);
-
-        setPlayers(JSON.parse(message.body).turnPlayers);
-        setGameJustStarted(false);
     });
 
     webSocket.join("/topic/games/" + params.id + "/updatedturn", function (message) {
@@ -87,54 +81,69 @@ const Game = props => {
     const [showBarrier, setShowBarrier] = useState(false);
     const [barrierProps, setBarrierProps] = useState({});
 
-    const [turnResults, setTurnResults] = useState(null);
-    const [barrierHit, setBarrierHit] = useState(null); // todo: remove?
-    const [players, setPlayers] = useState(null);
-    const [movedFields, setMovedFields] = useState(null);
-    const [gameJustStarted, setGameJustStarted] = useState(true);
+    const [colorArray, setColorArray] = useState(null);
     const [playerToMove, setPlayerToMove] = useState({})
-
     const [thisBoard, setThisBoard] = useState(null);
-    const [newgame, setNewGame] = useState({});
-    // const [boardSize, setBoardSize] = useState(null);
-    // const [withBarriers, setWithBarriers] = useState(null);
+    const [newGame, setNewGame] = useState({});
 
     /*
     assign a Board component to thisBoard
     */
     useEffect( async () => {
-
-        if (newgame === null || Object.keys(newgame).length === 0) {
-            console.log("game null or empty, skip assigning Board parameters");
+        if (newGame === null || Object.keys(newGame).length === 0) {
+            // console.log("game null or empty, skip assigning Board parameters");
             return;
         }
         
-        if (newgame.boardSize === null) {
+        if (newGame.boardSize === null) {
             console.log("boardSize null, skip assigning board");
             return;
         }
         
-        if (newgame.barriersEnabled === null) {
+        if (newGame.barriersEnabled === null) {
             console.log("withBarriers null, skip assigning board");
             return;
         }
+
+        // console.log("received new game information:")
+        console.log(JSON.stringify(newGame));
         
-        const boardSize = newgame.boardSize.toLowerCase();
-        const withBarriers = newgame.barriersEnabled;
-        
-        console.log(`assignBoard boardSize : ${boardSize}`);
-        console.log(`assignBoard withBarriers : ${withBarriers}`);
+        const boardSize = newGame.boardSize.toLowerCase();
+        const withBarriers = newGame.barriersEnabled;
+        const numFields = newGame.boardSizeInt;
+        const gameMode = newGame.gameMode;
 
         setThisBoard(
             <Board
                 ref={React.createRef()}
                 boardSize={boardSize}
                 withBarriers={withBarriers}
+                numFields={numFields}
+                gameMode={gameMode}
             />
         )
+    }, [newGame])
 
-    // }, [boardSize, withBarriers])
-    }, [newgame])
+    /*
+    place players at the start of the board
+     */
+    useEffect(async () => {
+        if (thisBoard === null) {
+            return;
+        }
+
+        // update colorArray
+        const players = newGame.players;
+        const startingColors = thisBoard.ref.current.getColors();
+        for (let i = 0; i < players.length; i++) {
+            startingColors[0].push(players[i].playerColor)
+        }
+        setColorArray(startingColors)
+
+        // place players at the start of the board
+        const startField = thisBoard.ref.current.gradientsAndBarriers[0];
+        startField.ref.current.updateColors(startingColors[0]);
+    }, [thisBoard])
 
     /*
     process an incoming message to move a player
@@ -167,35 +176,10 @@ const Game = props => {
         let playerMoving = new Player(playerToMove);
 
         // send to board the player, and the starting field, moving by 1
-        await board.movePlayerOnce(playerMoving, playerCurrentField, end, allowBarriers);
+        const result = await board.movePlayerOnce(playerMoving, playerCurrentField, colorArray, end, allowBarriers);
+        setColorArray(result);
 
     }, [playerToMove])
-
-    useEffect( () => {
-        /**
-         * callback to add the players to the board at the beginning of the game
-         */
-        if (players === null){
-            return;
-        }
-        if (!gameJustStarted) {
-            return;
-        }
-
-        let counter = 0;
-        let mover;
-        let fieldTracker = {};
-        while (counter < players.length) {
-            mover = new Player(players[counter]);
-            thisBoard.ref.current.addPlayer(mover, 0);
-            fieldTracker[mover.playerName] = 0;
-            counter += 1;
-        }
-        console.log("filed tracker:");
-        console.log(fieldTracker);
-        setMovedFields(fieldTracker);
-
-    }, [players])
 
     return (
         <BaseContainer className="game container">
