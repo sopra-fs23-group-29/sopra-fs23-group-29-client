@@ -22,6 +22,8 @@ const HeaderGame = (props) => {
     const [showPlayers, setShowPlayers] = useState(true);
     const [yourPlayerColor, setYourPlayerColor] = useState(theme.textColor);
 
+    const [hasCountdown, setHasCountdown] = useState(false);
+    const [countdown, setCountdown] = useState(null);
     const [hasTimer, setHasTimer] = useState(false);
     const [timer, setTimer] = useState(null);
     const [gamemode, setGamemode] = useState("");
@@ -52,7 +54,7 @@ const HeaderGame = (props) => {
 
             if (game.gameMode === "HOWFAR") {
 
-                setHasTimer(true);
+                setHasCountdown(true);
                 const NOW_IN_MS = new Date().getTime();
 
                 // Correct implementation of countdown, depending on game.maxDuration
@@ -64,7 +66,12 @@ const HeaderGame = (props) => {
                 
                 const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
 
-                setTimer(<CountdownTimer targetDate = {TARGET_DATETIME} gameId = {gameId}/>)
+                setCountdown(<CountdownTimer targetDate = {TARGET_DATETIME} gameId = {gameId}/>)
+            }
+
+            if (game.gameMode == "HOWFAST") {
+                // implement a timer
+
             }
         }
     }
@@ -131,7 +138,7 @@ const HeaderGame = (props) => {
 
             {(gamemode !== "") ? (<h2 className="header game username">{gamemode}</h2>) : (<div/>) }
 
-            {(hasTimer) ? (timer) : (<div/>)}
+            {(hasCountdown) ? (countdown) : (<div/>)}
             
             {(hasTurn && showPlayers && currentTurn !== null) ? (
                 <div className="header game playerlist">
