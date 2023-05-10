@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import "styles/views/Header.scss";
 import {Globalissimo} from "../ui/Globalissimo";
-import CountdownTimer from "../ui/Countdown";
+import { CountdownTimer, Timer }from "../ui/Countdown";
 import {api, handleError} from "../../helpers/api";
 import {useHistory, useParams} from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
@@ -22,9 +22,11 @@ const HeaderGame = (props) => {
     const [showPlayers, setShowPlayers] = useState(true);
     const [yourPlayerColor, setYourPlayerColor] = useState(theme.textColor);
 
+    const [gamemode, setGamemode] = useState("");
+    const [hasCountdown, setHasCountdown] = useState(false);
+    const [countdown, setCountdown] = useState(null);
     const [hasTimer, setHasTimer] = useState(false);
     const [timer, setTimer] = useState(null);
-    const [gamemode, setGamemode] = useState("");
 
     let webSocket = Stomper.getInstance();
 
@@ -33,6 +35,9 @@ const HeaderGame = (props) => {
 
     // join the specific topic for the HeaderGame
     webSocket.join("/topic/games/" + params.id + "/newturn_gameheader", receiveNewTurn);
+    
+    // join the topioc about the game ending
+    webSocket.join("/topic/games/" + params.id + "/gameover_gameheader", receiveGameover);
 
     function receiveNewGame(message) {
         // console.log("GameHeader : received newgame information");
@@ -52,19 +57,28 @@ const HeaderGame = (props) => {
 
             if (game.gameMode === "HOWFAR") {
 
-                setHasTimer(true);
+                setHasCountdown(true);
                 const NOW_IN_MS = new Date().getTime();
 
                 // Correct implementation of countdown, depending on game.maxDuration
-                const OVER_IN_MS = game.maxDurationInt*60*1000;
+                // const OVER_IN_MS = game.maxDurationInt*60*1000;
                 
                 // DEBUG
                 // todo: remove later
-                // const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
+                const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
                 
                 const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
 
-                setTimer(<CountdownTimer targetDate = {TARGET_DATETIME} gameId = {gameId}/>)
+                setCountdown(<CountdownTimer targetDate = {TARGET_DATETIME} gameId = {gameId}/>)
+            }
+
+            if (game.gameMode == "HOWFAST") {
+                
+                // implement a timer
+                const NOW_IN_MS = new Date().getTime();
+                setTimer(<Timer start = {NOW_IN_MS}/>)
+                
+                setHasTimer(true);
             }
         }
     }
@@ -78,6 +92,12 @@ const HeaderGame = (props) => {
             setHasTurn(true);
             setCurrentTurn(receivedTurn);
         }
+    }
+
+    function receiveGameover(message) {
+        // on gameover, disable the timer
+        console.log("received gameover_gameheader information, hiding Timer");
+        setHasTimer(false);
     }
 
     const Player = ({ player }) => {
@@ -129,8 +149,10 @@ const HeaderGame = (props) => {
 
             <h2 className="header game username" style={{color: yourPlayerColor}}>{username}</h2>
 
-            {(gamemode !== "") ? (<h2 className="header game username">{gamemode}</h2>) : (<div/>) }
+            {(gamemode !== "") ? (<h2 className="header game gamemode">{gamemode}</h2>) : (<div/>) }
 
+            {(hasCountdown) ? (countdown) : (<div/>)}
+            
             {(hasTimer) ? (timer) : (<div/>)}
             
             {(hasTurn && showPlayers && currentTurn !== null) ? (
