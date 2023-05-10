@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import PropTypes from "prop-types";
 import "styles/views/Header.scss";
 import {Globalissimo} from "../ui/Globalissimo";
-import CountdownTimer from "../ui/Countdown";
+import { CountdownTimer, Timer }from "../ui/Countdown";
 import {api, handleError} from "../../helpers/api";
 import {useHistory, useParams} from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
@@ -22,11 +22,11 @@ const HeaderGame = (props) => {
     const [showPlayers, setShowPlayers] = useState(true);
     const [yourPlayerColor, setYourPlayerColor] = useState(theme.textColor);
 
+    const [gamemode, setGamemode] = useState("");
     const [hasCountdown, setHasCountdown] = useState(false);
     const [countdown, setCountdown] = useState(null);
     const [hasTimer, setHasTimer] = useState(false);
     const [timer, setTimer] = useState(null);
-    const [gamemode, setGamemode] = useState("");
 
     let webSocket = Stomper.getInstance();
 
@@ -58,11 +58,11 @@ const HeaderGame = (props) => {
                 const NOW_IN_MS = new Date().getTime();
 
                 // Correct implementation of countdown, depending on game.maxDuration
-                const OVER_IN_MS = game.maxDurationInt*60*1000;
+                // const OVER_IN_MS = game.maxDurationInt*60*1000;
                 
                 // DEBUG
                 // todo: remove later
-                // const OVER_IN_MS = 30000; // 5 seconds to check timeUp functionality
+                const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
                 
                 const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
 
@@ -70,8 +70,12 @@ const HeaderGame = (props) => {
             }
 
             if (game.gameMode == "HOWFAST") {
+                
                 // implement a timer
-
+                const NOW_IN_MS = new Date().getTime();
+                setTimer(<Timer start = {NOW_IN_MS}/>)
+                
+                setHasTimer(true);
             }
         }
     }
@@ -139,6 +143,8 @@ const HeaderGame = (props) => {
             {(gamemode !== "") ? (<h2 className="header game gamemode">{gamemode}</h2>) : (<div/>) }
 
             {(hasCountdown) ? (countdown) : (<div/>)}
+            
+            {(hasTimer) ? (timer) : (<div/>)}
             
             {(hasTurn && showPlayers && currentTurn !== null) ? (
                 <div className="header game playerlist">

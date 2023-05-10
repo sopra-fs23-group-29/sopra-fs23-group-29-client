@@ -18,12 +18,40 @@ const useCountdown = (targetDate) => {
   return getReturnValues(countDown);
 };
 
-const getReturnValues = (countDown) => {
-  // calculate time left in minutes
-  const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
 
-  return [minutes, seconds];
+
+const useTimer = ({start}) => {
+
+  const startDatetime = start;
+  
+  const [elapsedTime, setElapsedTime] = useState(
+    new Date().getTime() - startDatetime -60000
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedTime(new Date().getTime() - startDatetime);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [startDatetime]);
+
+  return getReturnValues(elapsedTime);
 };
 
-export { useCountdown };
+
+
+const getReturnValues = (datetime) => {
+  // calculate time left in minutes
+  const hours = Math.floor(
+    (datetime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  );
+  const minutes = Math.floor((datetime % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((datetime % (1000 * 60)) / 1000);
+
+  return [hours, minutes, seconds];
+};
+
+
+
+export { useCountdown, useTimer };

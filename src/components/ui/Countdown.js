@@ -1,6 +1,6 @@
 import React from 'react';
 import DateTimeDisplay from './DateTimeDisplay';
-import { useCountdown } from './useCountdown';
+import { useCountdown, useTimer } from './useCountdown';
 import Stomper from "../../helpers/Stomp";
 import "styles/views/Countdown.scss";
 
@@ -8,7 +8,7 @@ let webSocket = Stomper.getInstance();
 
 let timeIsUp = false;
 
-const ShowCounter = ({ minutes, seconds }) => {
+const ShowCountdown = ({ minutes, seconds }) => {
   return (
     <div className="show-counter">
       <a
@@ -21,9 +21,23 @@ const ShowCounter = ({ minutes, seconds }) => {
   );
 };
 
-function timeUp(gameId) {
+const ShowTimer = ({ hours, minutes, seconds }) => {
+  return (
+    <div className="show-counter">
+      <a
+        className="countdown-link"
+      >
+        <DateTimeDisplay value={hours} type={'Hours'} isDanger={false} />
+        <DateTimeDisplay value={minutes} type={'Mins'} isDanger={false} />
+        <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={false} />
+      </a>
+    </div>
+  );
+};
+
+function timeUpCountdown(gameId) {
   if (!timeIsUp) {
-    console.log("time is up, send a message to /endGame");
+    console.log("time is up on countdown, send a message to /endGame");
     webSocket.send("/app/games/" + gameId + "/endGame", {
         message: "END GAME " + gameId,
       });
@@ -34,14 +48,14 @@ function timeUp(gameId) {
 }
 
 const CountdownTimer = ({ targetDate, gameId }) => {
-  const [minutes, seconds] = useCountdown(targetDate);
+  const [hours, minutes, seconds] = useCountdown(targetDate);
 
   if (minutes + seconds <= 0) {
-    timeUp(gameId);
+    timeUpCountdown(gameId);
     return null;
   } else {
     return (
-      <ShowCounter
+      <ShowCountdown
         minutes={minutes}
         seconds={seconds}
       />
@@ -49,4 +63,16 @@ const CountdownTimer = ({ targetDate, gameId }) => {
   }
 };
 
-export default CountdownTimer;
+const Timer = (start) => {
+  const [hours, minutes, seconds] = useTimer(start);
+
+  return (
+    <ShowTimer
+      hours={hours}
+      minutes={minutes}
+      seconds={seconds}
+    />
+  );
+};
+
+export { CountdownTimer, Timer };
