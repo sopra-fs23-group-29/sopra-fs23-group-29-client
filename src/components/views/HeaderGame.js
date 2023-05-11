@@ -61,11 +61,10 @@ const HeaderGame = (props) => {
                 const NOW_IN_MS = new Date().getTime();
 
                 // Correct implementation of countdown, depending on game.maxDuration
-                // const OVER_IN_MS = game.maxDurationInt*60*1000;
+                const OVER_IN_MS = game.maxDurationInt*60*1000;
                 
-                // DEBUG
-                // todo: remove later
-                const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
+                // DEBUG - Set a short countdown
+                // const OVER_IN_MS = 5000; // 5 seconds to check timeUp functionality
                 
                 const TARGET_DATETIME = NOW_IN_MS + OVER_IN_MS
 
@@ -95,9 +94,11 @@ const HeaderGame = (props) => {
     }
 
     function receiveGameover(message) {
-        // on gameover, disable the timer
-        console.log("received gameover_gameheader information, hiding Timer");
-        setHasTimer(false);
+        // on gameover, disable the timer if one is there
+        if (hasTimer === true) {
+            console.log("received gameover_gameheader information, hiding Timer");
+            setHasTimer(false);
+        }
     }
 
     const Player = ({ player }) => {

@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import DateTimeDisplay from './DateTimeDisplay';
 import { useCountdown, useTimer } from './useCountdown';
 import Stomper from "../../helpers/Stomp";
 import "styles/views/Countdown.scss";
 
 let webSocket = Stomper.getInstance();
-
-let timeIsUp = false;
 
 const ShowCountdown = ({ minutes, seconds }) => {
   return (
@@ -36,22 +34,20 @@ const ShowTimer = ({ hours, minutes, seconds }) => {
 };
 
 function timeUpCountdown(gameId) {
-  if (!timeIsUp) {
-    console.log("time is up on countdown, send a message to /endGame");
-    webSocket.send("/app/games/" + gameId + "/endGame", {
-        message: "END GAME " + gameId,
-      });
-  }
-
-  timeIsUp = true;
-
+  webSocket.send("/app/games/" + gameId + "/endGame", {
+    message: "END GAME " + gameId,
+  });
 }
 
 const CountdownTimer = ({ targetDate, gameId }) => {
+  const [timeIsUp, setTimeIsUp] = useState(false);
   const [hours, minutes, seconds] = useCountdown(targetDate);
-
-  if (minutes + seconds <= 0) {
-    timeUpCountdown(gameId);
+  
+  if (hours + minutes + seconds <= 0) {
+    if (timeIsUp === false) {
+      timeUpCountdown(gameId);
+      setTimeIsUp(true);
+    }
     return null;
   } else {
     return (
