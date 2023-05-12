@@ -9,6 +9,8 @@ import Stomper from 'helpers/Stomp';
 import Player from "../../models/Player";
 import Barrier from "../ui/Barrier";
 import { WinnerScreen } from 'components/ui/WinnerScreen';
+import { WinnerScreenSoloFar } from 'components/ui/WinnerScreenSoloFar';
+import { WinnerScreenSoloFast } from 'components/ui/WinnerScreenSoloFast';
 
 const Game = props => {
 
@@ -64,8 +66,27 @@ const Game = props => {
     });
 
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
-        setWinnerScreenProps(JSON.parse(message.body));
-        setShowWinnerScreen(true);
+        console.log("Gamemode:")
+        let parsedMessage = JSON.parse(message.body);
+        console.log(parsedMessage.gameMode);
+        switch (parsedMessage.gameMode) {
+            case "HOWFAR":
+                setShowBarrier(false);
+                setShowCountryRanking(false);
+                setWinnerScreenSoloFarProps(parsedMessage);
+                setShowWinnerScreenSoloFar(true);
+                break;
+            case "HOWFAST":
+                setShowBarrier(false);
+                setShowCountryRanking(false);
+                setWinnerScreenSoloFastProps(parsedMessage);
+                setShowWinnerScreenSoloFast(true);
+                break;
+            case "PVP":
+                setWinnerScreenProps(parsedMessage);
+                setShowWinnerScreen(true);
+                break;
+        }
         
     });
 
@@ -78,6 +99,12 @@ const Game = props => {
     const [showWinnerScreen, setShowWinnerScreen] = useState(false);
     const [winnerScreenProps, setWinnerScreenProps] = useState({});
 
+    const [showWinnerScreenSoloFar, setShowWinnerScreenSoloFar] = useState(false);
+    const [winnerScreenSoloFarProps, setWinnerScreenSoloFarProps] = useState({});
+
+    const [showWinnerScreenSoloFast, setShowWinnerScreenSoloFast] = useState(false);
+    const [winnerScreenSoloFastProps, setWinnerScreenSoloFastProps] = useState({});
+
     const [showBarrier, setShowBarrier] = useState(false);
     const [barrierProps, setBarrierProps] = useState({});
 
@@ -85,6 +112,7 @@ const Game = props => {
     const [playerToMove, setPlayerToMove] = useState({})
     const [thisBoard, setThisBoard] = useState(null);
     const [newGame, setNewGame] = useState({});
+
 
     /*
     assign a Board component to thisBoard
@@ -197,6 +225,12 @@ const Game = props => {
             }
             {
                 showWinnerScreen && <WinnerScreen {...winnerScreenProps} />
+            }
+            {
+                showWinnerScreenSoloFar && <WinnerScreenSoloFar {...winnerScreenSoloFarProps} />
+            }
+            {
+                showWinnerScreenSoloFast && <WinnerScreenSoloFast {...winnerScreenSoloFastProps} />
             }
 
         </BaseContainer>
