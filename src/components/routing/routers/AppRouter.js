@@ -16,6 +16,7 @@ import HeaderGame from "../../views/HeaderGame";
 import LobbySettings from "../../views/LobbySettings";
 import PvPLobby from "../../views/PvPLobby";
 import SoloGameSettings from "components/views/SoloGameSettings";
+import HowToPlay from "components/views/HowToPlay";
 import { TurnScoreboard } from "components/ui/TurnScoreboard";
 import CountryRanking from "components/ui/CountryRanking";
 import { WinnerScreen } from "components/ui/WinnerScreen";
@@ -88,6 +89,13 @@ const AppRouter = () => {
           </GameGuard>
         </Route>
 
+        <Route exact path="/howto">
+          <GameGuard>
+            <HeaderHome height="100" />
+            <HowToPlay />
+          </GameGuard>
+        </Route>
+
         <Route exact path="/profile/:id">
           <ProfileGuard>
             <HeaderHome height="100" />
@@ -110,9 +118,8 @@ const AppRouter = () => {
         </Route>
 
         <Route exact path="/winnerscreen">
-          <WinnerScreen/>
+          <WinnerScreen />
         </Route>
-
       </Switch>
     </BrowserRouter>
   );

@@ -188,7 +188,6 @@ const Game = props => {
         // console.log(playerToMove)
 
         const board = thisBoard.ref.current;
-        const end = board.boardParams[5];
         const allowBarriers = board.withBarriers;
 
         let playerIdToMove = playerToMove.playerId;
@@ -204,7 +203,7 @@ const Game = props => {
         let playerMoving = new Player(playerToMove);
 
         // send to board the player, and the starting field, moving by 1
-        const result = await board.movePlayerOnce(playerMoving, playerCurrentField, colorArray, end, allowBarriers);
+        const result = await board.movePlayerOnce(playerMoving, playerCurrentField, colorArray, allowBarriers);
         setColorArray(result);
 
     }, [playerToMove])
