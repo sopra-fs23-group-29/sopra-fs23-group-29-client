@@ -115,7 +115,13 @@ const HeaderGame = (props) => {
 
 
     const popUpLeave = async () => {
-        if (window.confirm("Do you want to leave the game?")) {
+        if (window.confirm(`
+Do you want to leave the game?
+WARNING: You will not be able to rejoin a running game, leaving is final!
+
+The game will continue for the other players unless the last player of the game leaves the game.
+If you are the last player of the game and leave, the game will be shut down and deleted.`
+        )) {
             try {
                 webSocket.leave("/topic/games/" + gameId + "/gamestart");
                 webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
