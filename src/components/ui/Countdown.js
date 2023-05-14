@@ -20,6 +20,12 @@ const ShowCountdown = ({ minutes, seconds }) => {
 };
 
 const ShowTimer = ({ hours, minutes, seconds }) => {
+
+  // dont allow neg numbers
+  hours = Math.max(hours, 0);
+  minutes = Math.max(minutes, 0);
+  seconds = Math.max(seconds, 0);
+
   return (
     <div className="show-counter">
       <a
