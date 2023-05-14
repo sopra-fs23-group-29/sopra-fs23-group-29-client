@@ -93,13 +93,7 @@ const HeaderGame = (props) => {
         }
     }
 
-    function receiveGameover(message) {
-        // on gameover, disable the timer if one is there
-        if (hasTimer === true) {
-            console.log("received gameover_gameheader information, hiding Timer");
-            setHasTimer(false);
-        }
-    }
+    function receiveGameover(message) {setHasTimer(false);}
 
     const Player = ({ player }) => {
         const pc = player.playerColor;
