@@ -118,114 +118,61 @@ const Game = props => {
     const [thisBoard, setThisBoard] = useState(null);
     const [newGame, setNewGame] = useState({});
 
-    
-    
-    // option 1: window.addEventListener
-    window.addEventListener("unload", (event) => {
+    // onbeforeunload makes sure there is a popup with a warning instead of just executing the reload
+    // works on changing url, refresh, close tab and close window
+    // NO CUSTOM MESSAGE is possible
+    window.onbeforeunload = (event) => {
+        const e = event || window.event;
+        // Cancel the event
+        e.preventDefault();
+        if (e) {
+            e.returnValue = '';
+        }
+        return ''; // Legacy method for cross browser support
+    };
 
-        console.log("delete gameid from sessionStorage before unloading page");
-        sessionStorage.removeItem("gameId");
+    // onunload executes the code when the unload actually happens
+    window.onunload = (event) => {
+        const e = event || window.event;
+        // Cancel the event
+        e.preventDefault();
 
-        console.log("sending POST request to leave game with gameId stored in sessionStorage when Game.js was mounted");
-        api.delete(
-            `/games/${gameId}`,
-            {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
-        );
+        if (e) {
 
-        console.log("leaving all websocket channels");
-        webSocket.leave("/topic/games/" + gameId + "/gamestart");
-        webSocket.leave("/topic/games/" + gameId + "/newgame_gameheader");
-        webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
-        webSocket.leave("/topic/games/" + gameId + "/newgame");
-        webSocket.leave("/topic/games/" + gameId + "/newturn");
-        webSocket.leave("/topic/games/" + gameId + "/nextTurn");
-        webSocket.leave("/topic/games/" + gameId + "/updatedturn");
-        webSocket.leave("/topic/games/" + gameId + "/moveByOne");
-        webSocket.leave("/topic/games/" + gameId + "/scoreboard");
-        webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
-        webSocket.leave("/topic/games/" + gameId + "/barrierHit");
-        webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
-        webSocket.leave("/topic/games/" + gameId + "/gameover");
-        webSocket.leave("/topic/games/" + gameId + "/gameover_gameheader");
+            console.log("delete gameid from sessionStorage before unloading page");
+            sessionStorage.removeItem("gameId");
 
-        console.log("reroute to /");
-        history.push("/");
-
-    })
-    
-
-
-    // // option 2 : useEffect handleEvent
-    // useEffect(() => {
-    //     const handleBeforeUnload = (event) => {
-    //         // event.preventDefault();
-    //         event.returnValue = '';
-            
-    //         console.log("executing before reload");
-
-    //     };
-    //     window.addEventListener('beforeunload', handleBeforeUnload);
-    //     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    // }, []);
-
-
-
-    // // option 3 : https://dev.to/eons/detect-page-refresh-tab-close-and-route-change-with-react-router-v5-3pd
-    // window.onbeforeunload = (event) => {
-    //     const e = event || window.event;
-    //     // Cancel the event
-    //     e.preventDefault();
-    //     if (e) {
-    //       e.returnValue = ''; // Legacy method for cross browser support
-    //     }
-
-    //     console.log("execute before unload");
-
-    //     return ''; // Legacy method for cross browser support
-
-    //   };
-      
-
-
-
-    const unloadLeaveChannels = () => {
-
-        console.log("leaving websocket channels");
-        webSocket.leave("/topic/games/" + gameId + "/gamestart");
-        webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
-        webSocket.leave("/topic/games/" + gameId + "/newturn");
-        webSocket.leave("/topic/games/" + gameId + "/nextTurn");
-        webSocket.leave("/topic/games/" + gameId + "/updatedturn");
-        webSocket.leave("/topic/games/" + gameId + "/scoreboard");
-        webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
-        webSocket.leave("/topic/games/" + gameId + "/barrierHit");
-        webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
-        webSocket.leave("/topic/games/" + gameId + "/gameover");
-
-    }
-
-    const unloadLeaveGame = async () => {
-        try {
-            // set status to offline
-            await api.delete(
+            console.log("sending POST request to leave game with gameId stored in sessionStorage when Game.js was mounted");
+            api.delete(
                 `/games/${gameId}`,
                 {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
             );
-            console.log("Left game");
-            sessionStorage.removeItem("gameId");
 
-            // redirect to home
-            history.push('/');
-            
-        } catch (error) {
-            console.log(`Something went wrong when leaving the game: \n${handleError(error)}`);
+            console.log("leaving all websocket channels");
+            webSocket.leave("/topic/games/" + gameId + "/gamestart");
+            webSocket.leave("/topic/games/" + gameId + "/newgame_gameheader");
+            webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
+            webSocket.leave("/topic/games/" + gameId + "/newgame");
+            webSocket.leave("/topic/games/" + gameId + "/newturn");
+            webSocket.leave("/topic/games/" + gameId + "/nextTurn");
+            webSocket.leave("/topic/games/" + gameId + "/updatedturn");
+            webSocket.leave("/topic/games/" + gameId + "/moveByOne");
+            webSocket.leave("/topic/games/" + gameId + "/scoreboard");
+            webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
+            webSocket.leave("/topic/games/" + gameId + "/barrierHit");
+            webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
+            webSocket.leave("/topic/games/" + gameId + "/gameover");
+            webSocket.leave("/topic/games/" + gameId + "/gameover_gameheader");
+
+            console.log("reroute to /");
+            history.push("/");
+
+            e.returnValue = ''; // Legacy method for cross browser support
         }
-    }
+        return ''; // Legacy method for cross browser support
 
-
+    };
       
-
-
 
     /*
     assign a Board component to thisBoard
