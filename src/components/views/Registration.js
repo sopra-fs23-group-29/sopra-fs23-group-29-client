@@ -73,7 +73,6 @@ const Registration = (props) => {
         history.push(`/`);
       });
 
-      // Registration successfully worked --> navigate to the route /game in the GameRouter
     } catch (error) {
       alert(
         `Something went wrong during the registration: \n${handleError(error)}`
