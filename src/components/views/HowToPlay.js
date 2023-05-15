@@ -1,6 +1,8 @@
 import React from "react";
 import "styles/views/HowToPlay.scss";
 import BaseContainer from "components/ui/BaseContainer";
+import "styles/views/Profile.scss";
+import firstPicture from "styles/pictures/pvp1.png";
 
 const HowToPlay = () => {
   return (
@@ -22,6 +24,11 @@ const HowToPlay = () => {
             corresponding flag, and the numbers from one to five or six,
             depending on the number of countries.
           </div>
+          <div className="profile picture-container">
+            <div className="profile picture">
+              <img src={firstPicture} alt="" height="100%" />
+            </div>
+          </div>
           <h5 className="howto second-title">Completing a round</h5>
           <div>
             {" "}
@@ -39,17 +46,16 @@ const HowToPlay = () => {
             country has the second largest surface area, and so on.
           </div>
           <div>
-            There is a twist. You can only select countries and numbers that
-            have not been used by other players for their guesses. Assume two
-            players locked in their answers ahead of your turn and there are a
-            total of five countries being displayed: You can now only choose
-            from the remaining three countries and three numbers that those two
-            players haven't used.
+            There is a twist. You can only select countries that have not been
+            used by other players for their guesses. Assume one player locked in
+            their answer ahead of your turn and there are a total of five
+            countries being displayed: You can now only choose from the
+            remaining four countries that that players hasn't used.
           </div>
           <div>
             Whilst the other players are completing their turns, you can see
-            which player has guessed on which country by the coloured edge
-            around the country's flag.
+            which player has guessed on which country by the player colour of
+            the background around the country's flag.
           </div>
           <h5 className="howto second-title">
             Getting points and advancing on the gameboard
