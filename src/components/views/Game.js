@@ -118,6 +118,13 @@ const Game = props => {
     const [thisBoard, setThisBoard] = useState(null);
     const [newGame, setNewGame] = useState({});
 
+    const leaveGameUnload = async (gameId) => {
+        await api.delete(
+            `/games/${gameId}`,
+            {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
+        );
+    }
+
     // onbeforeunload makes sure there is a popup with a warning instead of just executing the reload
     // works on changing url, refresh, close tab and close window
     // NO CUSTOM MESSAGE is possible
@@ -143,10 +150,11 @@ const Game = props => {
             sessionStorage.removeItem("gameId");
 
             console.log("sending POST request to leave game with gameId stored in sessionStorage when Game.js was mounted");
-            api.delete(
-                `/games/${gameId}`,
-                {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
-            );
+            leaveGameUnload(gameId);
+            // api.delete(
+            //     `/games/${gameId}`,
+            //     {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
+            // );
 
             console.log("leaving all websocket channels");
             webSocket.leave("/topic/games/" + gameId + "/gamestart");
