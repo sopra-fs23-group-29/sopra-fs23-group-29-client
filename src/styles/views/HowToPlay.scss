@@ -21,4 +21,19 @@
         font-weight: 700;
         font-style: italic;
     }
+    &.picture-container {
+        @include center;
+        display: flex;
+        flex-direction: column;
+        width:100%;
+        margin-top: 0.5em;
+        margin-bottom: 1.5em;
+      }
+      &.picture {
+        @include center;
+        flex-direction: column;
+        background: none;
+        box-shadow: none;
+        height: 20em;
+      }
 }
