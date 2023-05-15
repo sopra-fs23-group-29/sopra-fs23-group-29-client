@@ -1,12 +1,23 @@
 # Globalissimo - SoPra Project FS23, Group 29
 
-Introductory paragraph: Project Goal and motivation
+**Test your geography knowledge in a fun board game, solo or with other players.**
+
+Our goal is to provide a game that is not only fun to play, but also improves the players' geograhpical knowledge. Users can show off their skills in multiplayer games with up to 6 players, or challenge themselves in our two solo player game modes.
 
 ## Technologies
+
+- ReactJS
+- REST API
 
 ## High-Level Components
 
 ## Launch & Deployment
+
+### Build & Run locally
+
+External dependecies/databases that need to be running for this to work
+
+### Deployment
 
 (currently, all text in this chapter is from sopra template)
 
