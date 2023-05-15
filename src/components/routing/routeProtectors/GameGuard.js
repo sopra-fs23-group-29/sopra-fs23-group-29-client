@@ -20,9 +20,8 @@ even exists. If not clear the sessionStorage and route to /login
 
 export const GameGuard = props => {
 
-  console.log("seraching for id in GameGuard ...");
+  // read the id from the route
   const params = useParams();
-  console.log(params.id);
   
   if (sessionStorage.getItem("gameId") === params.id) {
     return props.children;
