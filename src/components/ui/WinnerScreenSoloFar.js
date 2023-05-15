@@ -78,7 +78,7 @@ export const WinnerScreenSoloFar = (props) => {
   return (
     <BaseContainer className="winner-screen container">
       <h1 style={{ margin: 0 }}>Congratulations!</h1>
-      <h2 style={{ marginBottom: 40, textAlign: 'center'}}>You traveled far and wide and managed to move {globalScoreboard[0].currentScore} fields and crossed {globalScoreboard[0].barrierCurrentScore} barriers!</h2>
+      <h2 style={{ marginBottom: 40, textAlign: 'center'}}>You traveled far and wide and managed to move {globalScoreboard[0].currentScore} fields!</h2>
 
         <Button style={{ marginTop: 40 }}
             onClick={() => {
