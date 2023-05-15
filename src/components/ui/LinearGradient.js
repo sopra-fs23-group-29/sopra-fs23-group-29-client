@@ -118,10 +118,6 @@ class Gradient extends React.Component {
         });
     }
 
-    getColors = () => {
-        return structuredClone(this.state.colors);
-    }
-
     render() {
         return (
             <View

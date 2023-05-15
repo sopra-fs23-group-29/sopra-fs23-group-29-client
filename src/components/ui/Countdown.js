@@ -1,57 +1,63 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import DateTimeDisplay from './DateTimeDisplay';
-import { useCountdown } from './useCountdown';
+import { useCountdown, useTimer } from './useCountdown';
 import Stomper from "../../helpers/Stomp";
 import "styles/views/Countdown.scss";
 
 let webSocket = Stomper.getInstance();
 
-let timeIsUp = false;
-
-const ShowCounter = ({ days, hours, minutes, seconds }) => {
+const ShowCountdown = ({ minutes, seconds }) => {
   return (
     <div className="show-counter">
       <a
-        href="https://tapasadhikary.com"
-        target="_blank"
-        rel="noopener noreferrer"
         className="countdown-link"
       >
-        <DateTimeDisplay value={days} type={'Days'} isDanger={days <= 3} />
-        <p>:</p>
-        <DateTimeDisplay value={hours} type={'Hours'} isDanger={false} />
-        <p>:</p>
         <DateTimeDisplay value={minutes} type={'Mins'} isDanger={false} />
-        <p>:</p>
         <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={false} />
       </a>
     </div>
   );
 };
 
-function timeUp(gameId) {
-  if (!timeIsUp) {
-    console.log("time is up, send a message to /endGame");
-    webSocket.send("/app/games/" + gameId + "/endGame", {
-        message: "END GAME " + gameId,
-      });
-  }
+const ShowTimer = ({ hours, minutes, seconds }) => {
 
-  timeIsUp = true;
+  // dont allow neg numbers
+  hours = Math.max(hours, 0);
+  minutes = Math.max(minutes, 0);
+  seconds = Math.max(seconds, 0);
 
+  return (
+    <div className="show-counter">
+      <a
+        className="countdown-link"
+      >
+        <DateTimeDisplay value={hours} type={'Hours'} isDanger={false} />
+        <DateTimeDisplay value={minutes} type={'Mins'} isDanger={false} />
+        <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={false} />
+      </a>
+    </div>
+  );
+};
+
+function timeUpCountdown(gameId) {
+  webSocket.send("/app/games/" + gameId + "/endGame", {
+    message: "END GAME " + gameId,
+  });
 }
 
 const CountdownTimer = ({ targetDate, gameId }) => {
-  const [days, hours, minutes, seconds] = useCountdown(targetDate);
-
-  if (days + hours + minutes + seconds <= 0) {
-    timeUp(gameId);
+  const [timeIsUp, setTimeIsUp] = useState(false);
+  const [hours, minutes, seconds] = useCountdown(targetDate);
+  
+  if (hours + minutes + seconds <= 0) {
+    if (timeIsUp === false) {
+      timeUpCountdown(gameId);
+      setTimeIsUp(true);
+    }
     return null;
   } else {
     return (
-      <ShowCounter
-        days={days}
-        hours={hours}
+      <ShowCountdown
         minutes={minutes}
         seconds={seconds}
       />
@@ -59,4 +65,16 @@ const CountdownTimer = ({ targetDate, gameId }) => {
   }
 };
 
-export default CountdownTimer;
+const Timer = (start) => {
+  const [hours, minutes, seconds] = useTimer(start);
+
+  return (
+    <ShowTimer
+      hours={hours}
+      minutes={minutes}
+      seconds={seconds}
+    />
+  );
+};
+
+export { CountdownTimer, Timer };

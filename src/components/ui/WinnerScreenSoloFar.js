@@ -7,9 +7,9 @@ import Stomper from "../../helpers/Stomp";
 import { useEffect, useState } from "react";
 import { api, handleError } from "../../helpers/api";
 
-export const WinnerScreen = (props) => {
+export const WinnerScreenSoloFar = (props) => {
 
-  const history = useHistory();
+    const history = useHistory();
   const params = useParams();
   let gameId = params.id;
 
@@ -24,16 +24,6 @@ export const WinnerScreen = (props) => {
 
         globalObj.barrierCurrentScore = barrierObj.currentScore;
 
-      }
-      
-    });
-
-    // Sort the globalScoreboard array based on currentscore and barrierCurrentScore (in case of a tie)
-    globalScoreboard.sort((a, b) => {
-      if (b.currentScore == a.currentScore) {
-        return b.barrierCurrentScore - a.barrierCurrentScore;
-      } else {
-        return b.currentScore - a.currentScore;
       }
     });
   }
@@ -87,38 +77,8 @@ export const WinnerScreen = (props) => {
 
   return (
     <BaseContainer className="winner-screen container">
-      <h1 style={{ margin: 0 }}>Winner!</h1>
-      <h2 style={{ marginBottom: 40 }}>{globalScoreboard[0].playerName} is on top of the world right now!</h2>
-
-      <div>
-      {globalScoreboard.map((player, index) => {
-        return(
-        <div className="winner-screen table-row"
-          key={player.playerName}
-          
-        >
-            <span className="player-rank">{index + 1}.</span>
-          <span
-            style={{ backgroundColor: player.playerColor }}
-            className="player-username"
-          >
-            {player.playerName}
-          </span>
-          
-          <span className="player-barrier-questions" style={{marginRight: 0, marginLeft: 50}}>
-            {player.barrierCurrentScore}
-          </span>
-          <span>
-          <i className="barrier icon"
-                   style={{color: player.playerColor, fontSize: "2em", marginLeft: "0" }}
-                >
-                    error_outlined</i>
-        </span>
-        
-        </div>
-        )
-      })}
-      </div>
+      <h1 style={{ margin: 0 }}>Congratulations!</h1>
+      <h2 style={{ marginBottom: 40, textAlign: 'center'}}>You traveled far and wide and managed to move {globalScoreboard[0].currentScore} fields!</h2>
 
         <Button style={{ marginTop: 40 }}
             onClick={() => {
@@ -129,5 +89,5 @@ export const WinnerScreen = (props) => {
         </Button>
     </BaseContainer>
   );
-  
-};
+
+}

@@ -66,10 +66,6 @@ class Barrier extends React.Component {
         })
     }
 
-    getColors() {
-        return [];
-    }
-
     applyColoring() {
         if (this.state.tempColor != null) {
             return this.state.tempColor;

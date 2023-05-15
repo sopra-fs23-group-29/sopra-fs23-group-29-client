@@ -7,9 +7,13 @@ import { Gradient } from "components/ui/LinearGradient";
 
 
 class Board extends React.Component {
-
+    // setting the board with the props passed by Game.js
     withBarriers = this.props.withBarriers;
-    boardSize = this.props.boardSize; // setting the board with the props passed by Game.js
+    boardSize = this.props.boardSize;
+    numFields = this.props.numFields;
+    gameMode = this.props.gameMode;
+
+    // constants
     containerColor = theme.containerColor;
     textColor = theme.textColor;
 
@@ -58,7 +62,7 @@ class Board extends React.Component {
      * functions used to create the board
      */
     getBoardParams(size){
-        console.log(`getBoardParams: ${size}`);
+        // console.log(`getBoardParams: ${size}`);
         switch (size) {
             case "small":
                 return [0, 3, 9, 12, 12, 11];
@@ -74,30 +78,27 @@ class Board extends React.Component {
 
     createColorArray(end, allowBarriers) {
         let colorArray = []
-        let index = 0;
-        while (index <= end) {
+        for (let index = 0; index <= end; index++) {
             if (allowBarriers && this.isBarrier(index, end)) {
                 colorArray.push([this.textColor]);
             } else {
                 colorArray.push([this.containerColor]);
             }
-            index += 1;
         }
         return colorArray;
     }
 
-    createGradientAndBarrierArray(colorArray, parameters, allowBarriers) {
+    createGradientAndBarrierArray(parameters, allowBarriers) {
         let gradientAndBarrierArray = [];
-        let index = 0;
         let gradient;
         let barrier;
         let end = parameters[5];
 
-        while (index < colorArray.length) {
+        for (let index = 0; index <= end; index++) {
             if (allowBarriers && this.isBarrier(index, end)) {
                 barrier = (
                     <Barrier
-                        color={this.textColor}
+                        color={this.colors[index]}
                         ref={React.createRef()}
                         key={index}
                     />)
@@ -112,7 +113,6 @@ class Board extends React.Component {
                     />)
                 gradientAndBarrierArray.push(gradient)
             }
-            index += 1;
         }
         return gradientAndBarrierArray;
     }
@@ -167,62 +167,47 @@ class Board extends React.Component {
     /**
      * functions used to update the board
      */
-    addPlayer(player, field){
-        const color = player.playerColor;
-        console.log(`added player with color: ${color} on field ${field}`);
+    getColors() {
+        return this.colors;
+    }
 
-        try {
-            this.gradientsAndBarriers[field].ref.current.getColors();
-        } catch {
-            console.log("error");
-        }
-
-        // add the color to the board if not already present
-        if (this.colors[field].indexOf(color) === -1){
-            this.colors[field].push(color);
-            this.gradientsAndBarriers[field].ref.current.updateColors(this.colors[0]);
+    getEndingField(startField) {
+        const nextField = startField + 1;
+        if (this.gameMode === "HOWFAR") {
+            return nextField%this.numFields;
+        } else {
+            return Math.min(nextField, this.numFields - 1);
         }
     }
 
-    async movePlayerOnce(player, startingField, end, allowBarriers) {
+    async movePlayerOnce(player, field, colorArray, allowBarriers) {
         // console.log(`movePlayer : PlayerColor ${player.playerColor}`);
         const color = player.playerColor;
-
-        /**
-         * handle starting field
-         */
-        this.addPlayer(player, startingField);
-
-        console.log(this.colors[startingField]);
-        console.log(this.gradientsAndBarriers[startingField].ref.current.getColors());
+        const startingField = field%this.numFields; //player.currentField;
 
         // remove the player from the current field
-        if (allowBarriers && this.isBarrier(startingField, end)) {
-            console.log("player was on barrier, do nothing");
-        } else {
-            const index = this.colors[startingField].indexOf(color);
-            this.colors[startingField].splice(index, 2);
-            this.gradientsAndBarriers[startingField].ref.current.updateColors(this.colors[startingField]);
-        }
+        const startingColors = colorArray[startingField];
+        const index = startingColors.indexOf(color);
+        startingColors.splice(index, 1);
+        this.gradientsAndBarriers[startingField].ref.current.updateColors(startingColors);
 
-        /**
-         * handle ending field
-         */
         // move the player one field forward
-        let endingField = Math.min(end, startingField + 1);
-        if (allowBarriers && this.isBarrier(endingField, end)) {
-            const barrier = this.gradientsAndBarriers[endingField].ref.current
+        // we need to handle solo games where the player can take multiple laps
+        const endingField = this.getEndingField(startingField);
+        const endingColors = colorArray[endingField];
+        const endBoardField = this.gradientsAndBarriers[endingField].ref.current;
+
+        if (allowBarriers && this.isBarrier(endingField, this.boardParams[5])) {
             // we need to clear barriers if they aren't already
-            if (!barrier.isCleared()) {
-                barrier.clearBarrier(color);
+            if (!endBoardField.isCleared()) {
+                endBoardField.clearBarrier(color);
             }
-        } else {
-            this.colors[endingField].push(color);
-            this.gradientsAndBarriers[endingField].ref.current.updateColors(this.colors[endingField]);
         }
+        endingColors.push(color);
+        endBoardField.updateColors(endingColors);
 
         await new Promise(r => setTimeout(r, 200));
-        return endingField;
+        return colorArray;
     }
 
     /**
@@ -230,7 +215,7 @@ class Board extends React.Component {
      */
     boardParams = this.getBoardParams(this.boardSize);
     colors = this.createColorArray(this.boardParams[5], this.withBarriers);
-    gradientsAndBarriers = this.createGradientAndBarrierArray(this.colors, this.boardParams, this.withBarriers);
+    gradientsAndBarriers = this.createGradientAndBarrierArray(this.boardParams, this.withBarriers);
     fields = this.fieldMapper(this.boardParams, this.withBarriers, this.gradientsAndBarriers);
 
     leftColumn = this.fields.slice(this.boardParams[0], this.boardParams[1]).reverse();

@@ -123,6 +123,11 @@ const Home = (props) => {
     history.push(`/lobby`);
   };
 
+  const goToRules = () => {
+    webSocket.leave("/topic/games");
+    history.push(`/howto`);
+  };
+
   return (
     <BaseContainer className="home container">
       <h2>PvP Lobbies</h2>{" "}
@@ -153,6 +158,16 @@ const Home = (props) => {
         >
           Single Player Game
         </Button>
+      </div>
+      <div className="home textbox">
+        <div>New here? Check out our</div>
+        <div className="home bold" onClick={() => goToRules()}>
+          "How to Play"
+        </div>
+        <div>
+          page to get instructions on how to play our solo and multiplayer
+          games.
+        </div>
       </div>
     </BaseContainer>
   );
