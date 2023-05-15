@@ -1,6 +1,13 @@
 import React from "react";
 import "styles/views/HowToPlay.scss";
 import BaseContainer from "components/ui/BaseContainer";
+import firstPicture from "styles/pictures/pvp1.png";
+import secondPicture from "styles/pictures/pvp2.png";
+import thirdPicture from "styles/pictures/pvp3.png";
+import fourthPicture from "styles/pictures/pvp4.png";
+import fifthPicture from "styles/pictures/pvp5.png";
+import fastPicture from "styles/pictures/howfast.png";
+import farPicture from "styles/pictures/howfar.png";
 
 const HowToPlay = () => {
   return (
@@ -22,6 +29,11 @@ const HowToPlay = () => {
             corresponding flag, and the numbers from one to five or six,
             depending on the number of countries.
           </div>
+          <div className="howto picture-container">
+            <div className="howto picture">
+              <img src={firstPicture} alt="" height="100%" />
+            </div>
+          </div>
           <h5 className="howto second-title">Completing a round</h5>
           <div>
             {" "}
@@ -38,18 +50,27 @@ const HowToPlay = () => {
             the displayed countries. Thus, selecting number "2" means that the
             country has the second largest surface area, and so on.
           </div>
+          <div className="howto picture-container">
+            <div className="howto picture">
+              <img src={secondPicture} alt="" height="100%" />
+            </div>
+          </div>
           <div>
-            There is a twist. You can only select countries and numbers that
-            have not been used by other players for their guesses. Assume two
-            players locked in their answers ahead of your turn and there are a
-            total of five countries being displayed: You can now only choose
-            from the remaining three countries and three numbers that those two
-            players haven't used.
+            There is a twist. You can only select countries that have not been
+            used by other players for their guesses. Assume one player locked in
+            their answer ahead of your turn and there are a total of five
+            countries being displayed: You can now only choose from the
+            remaining four countries that that players hasn't used.
           </div>
           <div>
             Whilst the other players are completing their turns, you can see
-            which player has guessed on which country by the coloured edge
-            around the country's flag.
+            which player has guessed on which country by the player colour of
+            the background around the country's flag.
+          </div>
+          <div className="howto picture-container">
+            <div className="howto picture">
+              <img src={thirdPicture} alt="" height="100%" />
+            </div>
           </div>
           <h5 className="howto second-title">
             Getting points and advancing on the gameboard
@@ -69,6 +90,11 @@ const HowToPlay = () => {
             Then the tokens of all playes advance on the gameboard by as many
             fields as points the player has scored.
           </div>
+          <div className="howto picture-container">
+            <div className="howto picture">
+              <img src={fourthPicture} alt="" height="100%" />
+            </div>
+          </div>
           <h5 className="howto second-title">Barrier questions</h5>
           <div>
             To add one more challenge, there are barrier on the gameboard that
@@ -76,6 +102,11 @@ const HowToPlay = () => {
             answered correctly. The first player whose token reaches a barrier
             will be asked to answer the barrier question. All other players can
             see the question, but cannot answer.
+          </div>
+          <div className="howto picture-container">
+            <div className="howto picture">
+              <img src={fifthPicture} alt="" height="100%" />
+            </div>
           </div>
           <div>
             If the question is answered correctly, the barrier disappears for
@@ -109,10 +140,20 @@ const HowToPlay = () => {
             can choose between a speed round of 3 minutes, a normal round of 10
             minutes, or a endurance round of 20 minutes.
           </div>
+          <div className="howto picture-container">
+            <div className="howto picture">
+              <img src={farPicture} alt="" height="100%" />
+            </div>
+          </div>
           <h5 className="howto second-title">See HOW FAST you can go</h5>
           <div>
             In the HOW FAST game mode, you choose a set gameboard size and try
             to finish as fast as possible.
+          </div>
+          <div className="howto picture-container">
+            <div className="howto picture">
+              <img src={fastPicture} alt="" height="100%" />
+            </div>
           </div>
         </div>
       </div>
