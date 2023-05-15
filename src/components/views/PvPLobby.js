@@ -19,9 +19,6 @@ const PvPLobby = (props) => {
 
   let webSocket = Stomper.getInstance();
 
-  // set the current gameId in the sessionStorage
-  sessionStorage.setItem("gameId", params.id);
-
   const Players = ({ player }) => {
     const hostTag = player.isHost ? " (Host)" : "";
 
@@ -107,12 +104,17 @@ const PvPLobby = (props) => {
     history.push(`/games/` + id);
   };
 
+  // when a message comes in through this channel, the game is shut down, remove gameId from sessinStorage and reroute to home
   const gameHasEnded = (message) => {
     const id = params.id;
     // leave all lobby topics
     webSocket.leave(`/topic/games/${id}/lobby`);
     webSocket.leave(`/topic/games/${id}/gamestart`);
     webSocket.leave(`/topic/games/${id}/gamedeleted`);
+
+    /* remove gameid from sessionStorage */
+    sessionStorage.removeItem("gameId");
+
     history.push("/");
   };
 
@@ -147,6 +149,9 @@ const PvPLobby = (props) => {
       webSocket.leave(`/topic/games/${id}/lobby`);
       webSocket.leave(`/topic/games/${id}/gamestart`);
       webSocket.leave(`/topic/games/${id}/gamedeleted`);
+
+      /* remove gameid from sessionStorage */
+      sessionStorage.removeItem("gameId");
 
       // Edit successfully worked --> navigate to the route /profile/id
       console.log("Left game");

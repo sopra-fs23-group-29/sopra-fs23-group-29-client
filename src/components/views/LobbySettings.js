@@ -59,6 +59,9 @@ const LobbySettings = (props) => {
       /* Map answer from server to get the game id */
       const gameId = response.data.gameId;
 
+      /* set the gameid into the sessionStorage */
+      sessionStorage.setItem("gameId", gameId);
+
       /* push to lobby screen using the id we got as response from the server once the game is created there*/
       history.push(`/lobby/${gameId}`);
     } catch (error) {

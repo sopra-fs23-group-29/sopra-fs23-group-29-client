@@ -65,9 +65,6 @@ const Login = (props) => {
         history.push(`/`);
       });
 
-      // history.push(`/`);
-
-      // Login successfully worked --> navigate to the route /game in the GameRouter
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
