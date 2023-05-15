@@ -183,7 +183,7 @@ class Board extends React.Component {
     async movePlayerOnce(player, field, colorArray, allowBarriers) {
         // console.log(`movePlayer : PlayerColor ${player.playerColor}`);
         const color = player.playerColor;
-        const startingField = field; //player.currentField;
+        const startingField = field%this.numFields; //player.currentField;
 
         // remove the player from the current field
         const startingColors = colorArray[startingField];
