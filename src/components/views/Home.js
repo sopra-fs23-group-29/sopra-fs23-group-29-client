@@ -16,7 +16,6 @@ specific components that belong to the main one in the same file.
  */
 
 /* Displays the lobbies that people can join*/
-// right now with dummy data, change to real once websockets work
 const DisplayLobby = ({ lobby }) => {
   const history = useHistory();
   let players = lobby.players;
@@ -25,11 +24,26 @@ const DisplayLobby = ({ lobby }) => {
   const joinLobby = async (id) => {
     try {
       const token = JSON.parse(sessionStorage.getItem("token")).token;
+
+      // if we have a gameId in the sessionStorage and its the same as the game we want to join
+      // just reroute to that lobby
+      if (sessionStorage.getItem("gameId")) {
+        if (id.toString() === sessionStorage.getItem("gameId")) {
+          console.log("user was already in lobby, rejoin by rerouting");
+          history.push(`/lobby/${id}`);
+          return;
+        }
+      }
+
       await api.post(`/games/${id}`, {}, { headers: { Authorization: token } });
 
       /* unsubscribe from topic/games */
       let webSocket = Stomper.getInstance();
       webSocket.leave("/topic/games");
+
+      /* set the gameid into the sessionStorage */
+      sessionStorage.setItem("gameId", id);
+
       /* navigate to lobby page */
       history.push(`/lobby/${id}`);
     } catch (error) {

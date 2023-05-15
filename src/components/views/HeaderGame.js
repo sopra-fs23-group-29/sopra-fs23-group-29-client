@@ -118,15 +118,19 @@ If you are the last player of the game and leave, the game will be shut down and
         )) {
             try {
                 webSocket.leave("/topic/games/" + gameId + "/gamestart");
+                webSocket.leave("/topic/games/" + gameId + "/newgame_gameheader");
                 webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
+                webSocket.leave("/topic/games/" + gameId + "/newgame");
                 webSocket.leave("/topic/games/" + gameId + "/newturn");
                 webSocket.leave("/topic/games/" + gameId + "/nextTurn");
                 webSocket.leave("/topic/games/" + gameId + "/updatedturn");
+                webSocket.leave("/topic/games/" + gameId + "/moveByOne");
                 webSocket.leave("/topic/games/" + gameId + "/scoreboard");
                 webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
                 webSocket.leave("/topic/games/" + gameId + "/barrierHit");
                 webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
                 webSocket.leave("/topic/games/" + gameId + "/gameover");
+                webSocket.leave("/topic/games/" + gameId + "/gameover_gameheader");
                 // set status to offline
                 await api.delete(
                     `/games/${gameId}`,

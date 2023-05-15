@@ -35,21 +35,14 @@ const SoloGameSettings = () => {
   };
 
   useEffect(() => {
-    console.log("Board size:");
-    console.log(boardSize);
-    console.log("Duration:");
-    console.log(duration);
   }, [boardSize, duration]);
 
   /* useEffect needs to be used here to immediately update ishowfast and ishowfar when a checkbox is clicked*/
   useEffect(() => {
-    console.log("far: " + isHowFar);
-    console.log("fast: " + isHowFast);
     /* Change hasGameMode (for startGame() button display) iff either ishowfar or ishowfast is true*/
     (isHowFar & !isHowFast) | (!isHowFar & isHowFast)
       ? setHasGameMode(true)
       : setHasGameMode(false);
-    console.log("has game mode: " + hasGameMode);
   }, [isHowFar, isHowFast, hasGameMode]);
 
   useEffect(() => {
@@ -57,7 +50,6 @@ const SoloGameSettings = () => {
       if (gameMode != null) {
         /* create game name */
         const newName = JSON.parse(sessionStorage.getItem("token")).username;
-        console.log(newName);
         const nameForGame = "Solo Game for " + newName;
         console.log(nameForGame);
 
