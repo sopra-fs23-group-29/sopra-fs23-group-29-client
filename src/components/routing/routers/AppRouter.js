@@ -1,6 +1,6 @@
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { HomeGuard } from "components/routing/routeProtectors/HomeGuard";
 import { GameGuard } from "components/routing/routeProtectors/GameGuard";
-import GameRouter from "components/routing/routers/GameRouter";
 import { LoginGuard } from "components/routing/routeProtectors/LoginGuard";
 import Login from "components/views/Login";
 import { RegistrationGuard } from "components/routing/routeProtectors/RegistrationGuard";
@@ -16,9 +16,8 @@ import HeaderGame from "../../views/HeaderGame";
 import LobbySettings from "../../views/LobbySettings";
 import PvPLobby from "../../views/PvPLobby";
 import SoloGameSettings from "components/views/SoloGameSettings";
+import Game from "components/views/Game";
 import HowToPlay from "components/views/HowToPlay";
-import { TurnScoreboard } from "components/ui/TurnScoreboard";
-import CountryRanking from "components/ui/CountryRanking";
 import { WinnerScreen } from "components/ui/WinnerScreen";
 
 /**
@@ -34,10 +33,12 @@ const AppRouter = () => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/games">
-          <GameGuard>
-            <GameRouter base="/games" />
-          </GameGuard>
+
+        <Route exact path="/">
+          <HomeGuard>
+            <HeaderHome height="100" />
+            <Home />
+          </HomeGuard>
         </Route>
 
         <Route exact path="/login">
@@ -54,18 +55,13 @@ const AppRouter = () => {
           </RegistrationGuard>
         </Route>
 
-        <Route exact path="/">
-          <GameGuard>
-            <HeaderHome height="100" />
-            <Home />
-          </GameGuard>
-        </Route>
+
 
         <Route exact path="/lobby">
-          <GameGuard>
+          <HomeGuard>
             <HeaderHome height="100" />
             <LobbySettings />
-          </GameGuard>
+          </HomeGuard>
         </Route>
 
         <Route exact path="/lobby/:id">
@@ -75,25 +71,29 @@ const AppRouter = () => {
           </GameGuard>
         </Route>
 
+
         <Route exact path="/sologame">
-          <GameGuard>
+          <HomeGuard>
             <HeaderHome height="100" />
             <SoloGameSettings />
+          </HomeGuard>
+        </Route>
+
+
+        <Route exact path="/games/:id">
+          <GameGuard>
+            <HeaderGame/>
+            <Game/>
           </GameGuard>
         </Route>
 
-        <Route exact path="/sologame/:id">
-          <GameGuard>
-            <HeaderGame />
-            <GameRouter base="/game" />
-          </GameGuard>
-        </Route>
+
 
         <Route exact path="/howto">
-          <GameGuard>
+          <HomeGuard>
             <HeaderHome height="100" />
             <HowToPlay />
-          </GameGuard>
+          </HomeGuard>
         </Route>
 
         <Route exact path="/profile/:id">
@@ -111,10 +111,10 @@ const AppRouter = () => {
         </Route>
 
         <Route exact path="/users">
-          <GameGuard>
+          <HomeGuard>
             <HeaderHome height="100" />
             <Users />
-          </GameGuard>
+          </HomeGuard>
         </Route>
 
         <Route exact path="/winnerscreen">
