@@ -98,9 +98,6 @@ const Home = (props) => {
   const [lobbies, setLobbies] = useState([]);
   const [hasLobbies, setHasLobbies] = useState(false);
 
-  const [gameToMove, setGameToMove] = useState(null);
-  const [playerToMove, setPlayerToMove] = useState(null);
-
   useEffect(() => {
     async function fetchData() {
       webSocket.join("/topic/games", displayOpenLobbies);
@@ -141,6 +138,32 @@ const Home = (props) => {
     webSocket.leave("/topic/games");
     history.push(`/howto`);
   };
+
+  const leaveAllGames = async () => {
+    try {
+
+      const promise = await api.delete(
+        "/games/",
+        {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
+      )
+      const response = await promise.data;
+      if (promise.status == 200) {
+        const gameIdLeft = response.gameId;
+        window.alert(`You were in game ${gameIdLeft}, you were removed from that game`);
+
+        // make sure there is no gameId lingering in the sessionStorage
+        sessionStorage.removeItem("gameId");
+      }
+      
+    } catch (error) {      
+      // A 409 means there were no games to leave, thats ok, inform the user
+      if (error.response.status == 409) {
+        window.alert("You were in no games, nothing happened");
+      } else {
+        console.log(`Something went wrong when leaving all games: \n${handleError(error)}`);
+      }
+    }
+  }
 
   return (
     <BaseContainer className="home container">
@@ -183,6 +206,20 @@ const Home = (props) => {
           games.
         </div>
       </div>
+
+      <div className="home textbox">
+        <div>Are you trying to open a new game but are stuck in a game you cannot leave? This can happen when you exit a game not using the intended header button. No problem, try this:</div>
+      </div>
+      <div className="home button-container">
+        <Button
+          className="primary-button"
+          width="15%"
+          onClick={() => leaveAllGames()}
+        >
+          Leave all games
+        </Button>
+      </div>
+      
     </BaseContainer>
   );
 };
