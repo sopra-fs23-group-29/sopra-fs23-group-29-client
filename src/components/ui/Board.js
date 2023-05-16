@@ -138,7 +138,7 @@ class Board extends React.Component {
                 )
             }
             // end
-            else if (index === end) {
+            else if ((index === end) && (this.gameMode !== "HOWFAR")) {
                 fields.push(
                     <End key={index}>
                         {gradientsAndBarriers[index]}

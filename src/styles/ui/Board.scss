@@ -1,12 +1,11 @@
 @import "../theme";
 
 $thickness: 4em;
-$borderRadius: $thickness/2;
 $tall: 70%;
 $wide: 85%;
 $top: 17.5%;
 $left: 7.5%;
-$side: 2%;
+$side: 1%;
 
 .board {
     &.container {
@@ -26,11 +25,8 @@ $side: 2%;
 
             height: $tall;
             width: $thickness;
-            border-radius: $borderRadius;
             flex-direction: column;
             justify-content: space-between;
-
-            //background: lightcoral;
         }
     }
 
@@ -42,11 +38,8 @@ $side: 2%;
 
             height: $thickness;
             width: $wide;
-            border-radius: $borderRadius;
             flex-direction: row;
             justify-content: space-between;
-
-            //background: lightcoral;
         }
     }
 
@@ -59,11 +52,8 @@ $side: 2%;
 
             height: $tall;
             width: $thickness;
-            border-radius: $borderRadius;
             flex-direction: column;
             justify-content: space-between;
-
-            //background: lightcoral;
         }
     }
 
@@ -75,11 +65,8 @@ $side: 2%;
 
             height: $thickness;
             width: $wide;
-            border-radius: $borderRadius;
             flex-direction: row;
             justify-content: space-between;
-
-            //background: lightcoral;
         }
     }
 }
@@ -87,17 +74,26 @@ $side: 2%;
 .start {
     &.container {
         display: flex;
+        align-self: center;
         justify-content: center;
         border-radius: 50%;
         background-color: $containerColor;
         height: $thickness;
         width: $thickness;
+
+    }
+    &.icon {
+        @include icon;
+        font-size: 4em;
+        color: $textColor;
+        position: absolute;
     }
 }
 
 .position {
     &.container {
         display: flex;
+        align-self: center;
         justify-content: center;
         border-radius: 50%;
         background-color: $containerColor;
@@ -109,6 +105,7 @@ $side: 2%;
 .barrier {
     &.container {
         display: flex;
+        align-self: center;
         justify-content: center;
         height: $thickness;
         width: $thickness;
@@ -124,10 +121,18 @@ $side: 2%;
 .end {
     &.container {
         display: flex;
+        align-self: center;
         justify-content: center;
         border-radius: 50%;
         background-color: $containerColor;
         height: $thickness;
         width: $thickness;
+    }
+    &.icon {
+        @include icon;
+        font-size: 3.5em;
+        color: $textColor;
+        position: absolute;
+        margin-top: 0.03em;
     }
 }

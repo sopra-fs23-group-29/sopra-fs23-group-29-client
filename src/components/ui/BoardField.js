@@ -23,6 +23,9 @@ const Start = (props) => {
             {
                 props.children
             }
+            <i className="start icon">
+                arrow_upward
+            </i>
         </div>
     )
 }
@@ -33,6 +36,9 @@ const End = (props) => {
             {
                 props.children
             }
+            <i className="end icon">
+                flag
+            </i>
         </div>
     )
 }
