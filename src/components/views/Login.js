@@ -36,8 +36,8 @@ FormField.propTypes = {
 
 const Login = (props) => {
   const history = useHistory();
-  const [password, setPassword] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
   const goToRegistration = () => {
     history.push("/registration");

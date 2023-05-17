@@ -80,7 +80,7 @@ export const TurnScoreboard = (props) => {
           }
 
           return (
-            <div className="turn-scoreboard table-row">
+            <div className="turn-scoreboard table-row" key={index}>
               <div>{index + 1}.</div>
               <img src={country.flagUrl} alt={`${country.name} flag`} />
               <div className="turn-scoreboard table-country-name">
