@@ -99,7 +99,7 @@ const Barrier = props => {
         if (barrierPlayer.userToken === userToken) {
                 for (let i = 0; i <= barrierAnswer.length-1; i++) {
                     answerArr.push(
-                        <div style={{textAlign: "center"}}>
+                        <div style={{textAlign: "center"}} key={i}>
                             <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
                             <label htmlFor={"answerOptions" + answerOptions[i]} name="answerOptionsLabel" id={"answerOptionsLabel" + answerOptions[i]}>{answerOptions[i]}</label>
                         </div>

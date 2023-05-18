@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { api, handleError } from "helpers/api";
 import User from "models/User";
 import { useHistory } from "react-router-dom";
@@ -37,20 +37,14 @@ FormField.propTypes = {
 
 const Registration = (props) => {
   const history = useHistory();
-  const [password, setPassword] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [usernameChecked, setUsernameChecked] = useState(false);
+  const [passwordChecked, setPasswordChecked] = useState(false);
 
   const goToLogin = () => {
     history.push("/login");
   };
-
-  // Test function to count the number of games received through /topic/games
-  const countNumberOfLobbies = (message) => {
-    if (message.body) {
-      var games = JSON.parse(message.body);
-      console.log("Number of games received: " + games.length);
-    }
-  }
 
   const doRegistration = async () => {
     try {
@@ -80,6 +74,32 @@ const Registration = (props) => {
     }
   };
 
+  useEffect(() => {
+    setUsernameChecked(checkString(username));
+  }, [username])
+
+  useEffect(() => {
+    setPasswordChecked(checkString(password));
+  }, [password])
+  
+  const checkString = (stringToCheck) => {
+
+    if (!stringToCheck) {
+      return false;
+    }
+
+    // check if only digits and letters
+
+    // if only 1 character, must be A-Za-z0-9
+    if (stringToCheck.length === 1) {
+      return /[A-Za-z0-9]/.test(stringToCheck)
+    }
+
+    // _ is allowed in the middle
+    return /^[A-Za-z0-9]{1}[_A-Za-z0-9]*[A-Za-z0-9]{1}$/.test(stringToCheck);
+
+  }
+
   return (
     <BaseContainer>
       <div className="login container">
@@ -96,7 +116,7 @@ const Registration = (props) => {
           />
           <div className="login button-container">
             <Button
-              disabled={!username || !password}
+              disabled={!username || !password || !usernameChecked || !passwordChecked}
               width="100%"
               onClick={() => doRegistration()}
             >
@@ -105,6 +125,9 @@ const Registration = (props) => {
             <Button width="100%" onClick={() => goToLogin()}>
               To login
             </Button>
+          </div>
+          <div className="login label">
+            Only use letters and digits and underscores. No leading or trailing underscores.
           </div>
         </div>
       </div>

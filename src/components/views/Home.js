@@ -114,11 +114,14 @@ const Home = (props) => {
   /* assign content to lobbies to display them */
   const displayOpenLobbies = (message) => {
     let games = JSON.parse(message.body);
+    console.log("Number of games received: " + games.length);
+    console.log(games);
     if (games.length > 0) {
       setLobbies(games);
       setHasLobbies(true);
-      console.log("Number of games received: " + games.length);
-      console.log(games);
+    } else {
+      setLobbies([]);
+      setHasLobbies(false);
     }
   };
 
@@ -147,7 +150,7 @@ const Home = (props) => {
         {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
       )
       const response = await promise.data;
-      if (promise.status == 200) {
+      if (promise.status === 200) {
         const gameIdLeft = response.gameId;
         window.alert(`You were in game ${gameIdLeft}, you were removed from that game`);
 
@@ -157,7 +160,7 @@ const Home = (props) => {
       
     } catch (error) {      
       // A 409 means there were no games to leave, thats ok, inform the user
-      if (error.response.status == 409) {
+      if (error.response.status === 409) {
         window.alert("You were in no games, nothing happened");
       } else {
         console.log(`Something went wrong when leaving all games: \n${handleError(error)}`);

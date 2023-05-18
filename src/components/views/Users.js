@@ -44,16 +44,6 @@ const Users = () => {
 
                 // Get the returned users and update the state.
                 setUsers(response.data);
-
-                // This is just some data for you to see what is available.
-                // Feel free to remove it.
-                console.log('request to:', response.request.responseURL);
-                console.log('status code:', response.status);
-                console.log('status text:', response.statusText);
-                console.log('requested data:', response.data);
-
-                // See here to get more data.
-                console.log(response);
                 
                 // subscribe to /users - no .connect() needed
                 let webSocket = Stomper.getInstance();
