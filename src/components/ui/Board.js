@@ -171,6 +171,14 @@ class Board extends React.Component {
         return this.colors;
     }
 
+    getStartingField(field) {
+        if (this.gameMode === "HOWFAR") {
+            return field%this.numFields;
+        }
+        else {
+            return Math.min(field, this.numFields -1 );
+        }
+    }
     getEndingField(startField) {
         const nextField = startField + 1;
         if (this.gameMode === "HOWFAR") {
@@ -183,7 +191,7 @@ class Board extends React.Component {
     async movePlayerOnce(player, field, colorArray, allowBarriers) {
         // console.log(`movePlayer : PlayerColor ${player.playerColor}`);
         const color = player.playerColor;
-        const startingField = field%this.numFields; //player.currentField;
+        const startingField = this.getStartingField(field);
 
         // remove the player from the current field
         const startingColors = colorArray[startingField];
