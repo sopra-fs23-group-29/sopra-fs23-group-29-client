@@ -1,7 +1,7 @@
 import {Button} from 'components/ui/Button';
 import {useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/Barrier.scss";
+import "styles/ui/Barrier.scss";
 import Stomper from "../../helpers/Stomp";
 import React, {useEffect, useState} from "react";
 import Player from "../../models/Player";
@@ -127,9 +127,9 @@ const Barrier = props => {
 
     return (
         <BaseContainer className="barrier answer-container" id="Barrier Question Container">
-            <h3 style={{marginBottom: 0}}>{questionText}</h3>
+            <h3 style={{marginTop: 0}}>{questionText}</h3>
             <div className="barrier country-container">
-                <img src={flag} alt={flagAlt} height="85em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
+                <img src={flag} alt={flagAlt} height="100em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
             </div>
             <div className="barrier answer-row">
                 {createAnswer(answerOptions)}
@@ -137,7 +137,7 @@ const Barrier = props => {
             <Button
                 className="hidden-button"
                 id="saveBarrierAnswer"
-                width="60%"
+                width="62%"
                 disabled ={enableSaveBarrierAnswer()}
                 onClick={() => saveBarrierAnswer()}>
                 Submit Answer

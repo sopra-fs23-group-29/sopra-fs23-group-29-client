@@ -1,4 +1,4 @@
-@import '../_theme';
+@import '../theme';
 
 .barrier {
   &.answer-container {
@@ -7,21 +7,22 @@
     border-radius: $borderRadius;
     border-style: solid;
     border-color: $containerColor;
+    border-width: 0.4em;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-shadow: $dropShadow;
     position: fixed;
-    top: 25%;
+    top: 17.5%;
     left: 20%;
-    height: 55%;
+    height: 65%;
     width: 60%;
   }
   &.country-container {
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin-bottom: 1em;
+    margin-bottom: 2em;
     justify-content: space-between;
   }
   &.flag-container {
@@ -39,10 +40,14 @@
     margin-top: 0.5em;
   }
   &.answer-row {
+    max-width: 75%;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     flex-direction: row;
     gap: 1em;
+    justify-content: center;
+    margin-bottom: 1em;
   }
 }
 
@@ -58,13 +63,14 @@ input[type="radio"][name="answerOptions"] + label {
   background: $accentDarkContainerColor;
   border-radius: $borderRadius;
   display: inline-block;
-  padding-top: 1.2em;
-  width: 4em;
-  height: 4em;
+  padding: 1.2em;
+  width: 10em;
+  height: 7em;
   cursor: pointer;
   font-size: 1.1em;
   text-transform: capitalize;
   transition: all 0.3s ease;
+  overflow: overlay;
 }
 
 
