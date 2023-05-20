@@ -11,9 +11,8 @@ import farPicture from "styles/pictures/howfar.png";
 
 const HowToPlay = () => {
   return (
-    <BaseContainer>
-      <div className="howto container">
-        <h2>How to Play</h2>
+    <BaseContainer className="howto container">
+        <h2 style={{marginTop: "0em"}}>How to Play</h2>
         <div>
           Hi and welcome to our game manual! Here, you'll learn all you need to
           know to play a multiplayer or solo game.
@@ -156,7 +155,6 @@ const HowToPlay = () => {
             </div>
           </div>
         </div>
-      </div>
     </BaseContainer>
   );
 };

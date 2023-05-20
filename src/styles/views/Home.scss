@@ -3,9 +3,9 @@
 .home{
   display: flex;
   &.container {
-    background: #7F7F7F;
-    opacity: .8;
-    padding: 1.5em;
+    margin-top: 2em;
+    background: $containerColor;
+    padding: 2em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;
@@ -19,8 +19,7 @@
   }
   &.lobby-container {
     width:100%;
-    height: 50px;
-    background: #d7d7d7;
+    background: $textColor;
     color: $accentDark;
     padding: 1.5em;
     border-radius: $borderRadius;
@@ -68,6 +67,7 @@
     font-style: italic;
     font-weight: 700;
     text-decoration: underline;
+    cursor: pointer;
   }
 
 }
