@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { Button } from "components/ui/Button";
 import "styles/views/Login.scss";
-import "styles/views/Lobby.scss";
+import "styles/ui/Lobby.scss";
 import BaseContainer from "components/ui/BaseContainer";
 import Stomper from "../../helpers/Stomp";
 import { api, handleError } from "helpers/api";
@@ -175,13 +175,18 @@ const PvPLobby = (props) => {
               <Players player={player} key={player.id} />
             ))}
           </div>
-          <Button onClick={() => exitLobby()}>Leave Lobby</Button>
-          <Button
-            disabled={!players || players.length < 2 || !isHost}
-            onClick={() => startGame()}
-          >
-            Start Game
-          </Button>
+          <div style={{display: "flex", gap: "1em"}}>
+            <Button
+                className="primary-button"
+                onClick={() => exitLobby()}>Leave Lobby</Button>
+            <Button
+              className="primary-button"
+              disabled={!players || players.length < 2 || !isHost}
+              onClick={() => startGame()}
+            >
+              Start Game
+            </Button>
+          </div>
         </ul>
       ) : (
         <div />

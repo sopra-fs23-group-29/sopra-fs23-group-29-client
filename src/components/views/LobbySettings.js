@@ -85,11 +85,17 @@ const LobbySettings = (props) => {
       <NameFormField value={gameName} onChange={(un) => setGameName(un)} />
       <div className="lobbyset title">Gameboard Size:</div>
       <BoardSizeSelect changeBoardSize={changeBoardSize} />
-      <Button disabled={!gameName || !boardSize} onClick={() => createLobby()}>
+      <Button
+          className="primary-button"
+          disabled={!gameName || !boardSize}
+          onClick={() => createLobby()}>
         Create PvP Lobby
       </Button>
-
-      <Button onClick={() => backToLobbyOverview()}>Cancel</Button>
+      <Button
+          className="primary-button"
+          onClick={() => backToLobbyOverview()}>
+        Cancel
+      </Button>
     </BaseContainer>
   );
 };

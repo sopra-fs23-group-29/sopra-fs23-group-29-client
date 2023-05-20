@@ -166,6 +166,7 @@ const SoloGameSettings = () => {
         </div>
       </div>
       <Button
+        className="primary-button"
         onClick={() => startGame()}
         disabled={
           !hasGameMode ||
@@ -175,7 +176,11 @@ const SoloGameSettings = () => {
       >
         Start Game
       </Button>
-      <Button onClick={() => backToLobbyOverview()}>Cancel</Button>
+      <Button
+          className="primary-button"
+          onClick={() => backToLobbyOverview()}>
+        Cancel
+      </Button>
     </BaseContainer>
   );
 };

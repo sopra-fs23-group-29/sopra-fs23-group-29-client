@@ -1,4 +1,4 @@
-@import '../_theme';
+@import '../theme';
 
 .turn-scoreboard {
 
@@ -6,8 +6,6 @@
     background: $containerColor;
     padding: 2em;
     border-radius: $borderRadius;
-    border-style: solid;
-    border-color: $accentColor1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,6 +51,7 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    display: inline-block;
     max-width: 140px;
   }
 }

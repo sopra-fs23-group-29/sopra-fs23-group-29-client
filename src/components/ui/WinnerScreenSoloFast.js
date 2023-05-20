@@ -1,10 +1,10 @@
 import BaseContainer from "./BaseContainer";
-import "styles/views/WinnerScreen.scss";
+import "styles/ui/WinnerScreen.scss";
 import { Button } from "./Button";
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
 import Stomper from "../../helpers/Stomp";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { api, handleError } from "../../helpers/api";
 
 export const WinnerScreenSoloFast = (props) => {
@@ -58,7 +58,9 @@ export const WinnerScreenSoloFast = (props) => {
         </h2>
 
   
-          <Button style={{ marginTop: 40 }}
+          <Button
+              className="primary-button"
+              style={{ marginTop: 40 }}
               onClick={() => {
                   exitGame();
               }}

@@ -1,6 +1,6 @@
 import BaseContainer from "components/ui/BaseContainer";
 import { Button } from "components/ui/Button";
-import "styles/views/TurnScoreboard.scss";
+import "styles/ui/TurnScoreboard.scss";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Stomper from "helpers/Stomp";
@@ -117,6 +117,7 @@ export const TurnScoreboard = (props) => {
 
       {/* todo: maybe add timer which triggers automatically? */}
       <Button
+        className="primary-button"
         disabled={willContinue}
         onClick={() => {
           setWillContinue(true);

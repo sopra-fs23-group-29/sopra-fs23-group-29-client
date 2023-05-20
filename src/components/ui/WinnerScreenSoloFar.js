@@ -1,5 +1,5 @@
 import BaseContainer from "./BaseContainer";
-import "styles/views/WinnerScreen.scss";
+import "styles/ui/WinnerScreen.scss";
 import { Button } from "./Button";
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
@@ -80,7 +80,9 @@ export const WinnerScreenSoloFar = (props) => {
       <h1 style={{ margin: 0 }}>Congratulations!</h1>
       <h2 style={{ marginBottom: 40, textAlign: 'center'}}>You traveled far and wide and managed to move {globalScoreboard[0].currentScore} fields!</h2>
 
-        <Button style={{ marginTop: 40 }}
+        <Button
+            className="primary-button"
+            style={{ marginTop: 40 }}
             onClick={() => {
                 exitGame();
             }}

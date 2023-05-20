@@ -114,6 +114,7 @@ const ProfileEdit = props => {
                     <p style={{fontSize: "1.1em"}}>Flag</p>
                     <div className="edit button-container">
                         <Button
+                            className="primary-button"
                             style={{marginTop: "0em", marginBottom: "1em"}}
                             width="50%"
                             onClick={() => setCIOC("SUI")}
@@ -121,6 +122,7 @@ const ProfileEdit = props => {
                             get neutral Flag
                         </Button>
                         <Button
+                            className="primary-button"
                             style={{marginTop: "0em", marginBottom: "1em"}}
                             width="50%"
                             onClick={() => getNewRandomFlag()}
@@ -158,6 +160,7 @@ const ProfileEdit = props => {
                     />
                     <div className="edit button-container">
                         <Button
+                            className="primary-button"
                             width="100%"
                             onClick={() => deleteUser()}
                             style={{backgroundColor: "indianred"}}
@@ -165,6 +168,7 @@ const ProfileEdit = props => {
                             Delete Profile
                         </Button>
                         <Button
+                            className="primary-button"
                             width="100%"
                             onClick={() => doEdit()}
                         >

@@ -12,7 +12,7 @@
     font-size: 1.3em;
     font-weight: 700;
     font-family: $fontDefault;
-    margin-bottom: -16px;
+    margin-bottom: -8px;
   }
   &.form {
     display: flex;
@@ -47,7 +47,6 @@
   }
   &.label {
     color: $textColor;
-    margin-bottom: 10px;
     margin-top: 1em;
     text-transform: lowercase;
     font-size: 1.1em;

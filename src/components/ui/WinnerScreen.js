@@ -1,5 +1,5 @@
 import BaseContainer from "./BaseContainer";
-import "styles/views/WinnerScreen.scss";
+import "styles/ui/WinnerScreen.scss";
 import { Button } from "./Button";
 import React from "react";
 import { useParams, useHistory } from "react-router-dom";
@@ -99,7 +99,7 @@ export const WinnerScreen = (props) => {
         >
             <span className="player-rank">{index + 1}.</span>
           <span
-            style={{ backgroundColor: player.playerColor }}
+            style={{ backgroundColor: player.playerColor, paddingLeft: "0.5em", paddingRight: "0.5em" }}
             className="player-username"
           >
             {player.playerName}
@@ -120,7 +120,9 @@ export const WinnerScreen = (props) => {
       })}
       </div>
 
-        <Button style={{ marginTop: 40 }}
+        <Button
+            className="primary-button"
+            style={{ marginTop: 40 }}
             onClick={() => {
                 exitGame();
             }}

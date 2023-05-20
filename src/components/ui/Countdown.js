@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import DateTimeDisplay from './DateTimeDisplay';
 import { useCountdown, useTimer } from './useCountdown';
 import Stomper from "../../helpers/Stomp";
-import "styles/views/Countdown.scss";
+import "styles/ui/Countdown.scss";
 
 let webSocket = Stomper.getInstance();
 
