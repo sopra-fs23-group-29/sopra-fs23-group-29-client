@@ -16,63 +16,64 @@ As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
 const FormField = (props) => {
-  return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
-      <input
-        className="login input"
-        placeholder="enter here.."
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
+    return (
+        <div className="login field">
+            <i className="login icon">{props.icon}</i>
+            <label className="login label">{props.label}</label>
+            <input
+                className="login input"
+                placeholder={props.placeholder}
+                value={props.value}
+                onChange={(e) => props.onChange(e.target.value)}
+            />
+        </div>
+    );
 };
 
 FormField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
+    label: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
 };
 
 const Registration = (props) => {
-  const history = useHistory();
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [usernameChecked, setUsernameChecked] = useState(false);
-  const [passwordChecked, setPasswordChecked] = useState(false);
+    const history = useHistory();
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const [usernameChecked, setUsernameChecked] = useState(false);
+    const [passwordChecked, setPasswordChecked] = useState(false);
 
-  const goToLogin = () => {
-    history.push("/login");
-  };
+    const goToLogin = () => {
+        history.push("/login");
+    };
 
-  const doRegistration = async () => {
-    try {
-      const requestBody = JSON.stringify({ password, username });
-      const response = await api.post("/users", requestBody);
+    const doRegistration = async () => {
+        try {
+            const requestBody = JSON.stringify({ password, username });
+            const response = await api.post("/users", requestBody);
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
+            // Get the returned user and update a new object.
+            const user = new User(response.data);
 
-      // Store a token into the local storage for verification if logged in
-      // currently in use: token
-      const token = response.headers["authorization"];
-      sessionStorage.setItem(
-        "token",
-        JSON.stringify({ token: token, id: user.id, username: user.username })
-      );
+            // Store a token into the local storage for verification if logged in
+            // currently in use: token
+            const token = response.headers["authorization"];
+            sessionStorage.setItem(
+                "token",
+                JSON.stringify({ token: token, id: user.id, username: user.username })
+            );
 
-      let webSocket = Stomper.getInstance();
-      webSocket.connect().then(() => {
-        history.push(`/`);
-      });
+            let webSocket = Stomper.getInstance();
+            webSocket.connect().then(() => {
+                history.push(`/`);
+            });
 
-    } catch (error) {
-      alert(
-        `Something went wrong during the registration: \n${handleError(error)}`
-      );
-    }
-  };
+        } catch (error) {
+            alert(
+                `Something went wrong during the registration: \n${handleError(error)}`
+            );
+        }
+    };
 
   useEffect(() => {
     setUsernameChecked(checkString(username));
@@ -81,7 +82,7 @@ const Registration = (props) => {
   useEffect(() => {
     setPasswordChecked(checkString(password));
   }, [password])
-  
+
   const checkString = (stringToCheck) => {
 
     if (!stringToCheck) {
@@ -100,39 +101,45 @@ const Registration = (props) => {
 
   }
 
-  return (
-    <BaseContainer>
-      <div className="login container">
-        <div className="login form">
-          <FormField
-            label="Username"
-            value={username}
-            onChange={(un) => setUsername(un)}
-          />
-          <FormField
-            label="Password"
-            value={password}
-            onChange={(n) => setPassword(n)}
-          />
-          <div className="login button-container">
-            <Button
-              disabled={!username || !password || !usernameChecked || !passwordChecked}
-              width="100%"
-              onClick={() => doRegistration()}
-            >
-              Registration
-            </Button>
-            <Button width="100%" onClick={() => goToLogin()}>
-              To login
-            </Button>
-          </div>
-          <div className="login label">
-            Only use letters and digits and underscores. No leading or trailing underscores.
-          </div>
-        </div>
-      </div>
-    </BaseContainer>
-  );
+    return (
+        <BaseContainer className="login container">
+            <h2 style={{marginTop: "0", marginBottom: "0"}}>Register</h2>
+            <div className="login form">
+                <p style={{textAlign: "center", marginTop: "0"}}>Only use letters and digits.</p>
+                <FormField
+                    icon="account_circle"
+                    label="Username"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(un) => setUsername(un)}
+                />
+                <FormField
+                    icon="lock"
+                    label="Password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(n) => setPassword(n)}
+                />
+                <div className="login secondary-button-container">
+                    <Button
+                        className="secondary-button"
+                        onClick={() => goToLogin()}>
+                        Already have an account? Sign in
+                    </Button>
+                </div>
+                <div className="login button-container">
+                    <Button
+                        className="primary-button"
+                        disabled={!username || !password || !usernameChecked || !passwordChecked}
+                        width="50%"
+                        onClick={() => doRegistration()}
+                    >
+                        Register
+                    </Button>
+                </div>
+            </div>
+        </BaseContainer>
+    );
 };
 
 /**

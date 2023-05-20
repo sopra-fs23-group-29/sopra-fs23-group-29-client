@@ -7,48 +7,54 @@
     /* we include the center mixin defined in _theme.scss and save three duplicate lines :) */
     @include center;
     flex-direction: column;
-  }
-  &.form {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    width: 60%;
-    max-width: 30em;
+    max-width: 50em;
     height: fit-content;
     font-size: 1em;
-    padding: 2.5em;
+    padding: 2em;
     border-radius: 0.75em;
     background-color: $containerColor;
     transition: opacity 0.5s ease, transform 0.5s ease;
     box-shadow: $dropShadow;
   }
-  &.field {
+  &.form {
+    width: 80%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+  }
+  &.field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1em;
     padding-bottom: 1em;
   }
   &.input {
-    height: 35px;
-    padding-left: 15px;
-    margin-left: -4px;
+    padding: 1em;
+    padding-left: 4em;
+    width: 100%;
     border: none;
-    border-radius: 0.75em;
+    border-radius: $borderRadius;
     background: transparentize($textColor, 0.5);
-    color: $textColor;
+    color: $accent;
   }
   &.label {
-    color: $textColor;
-    margin-bottom: 10px;
-    margin-top: 1em;
-    text-transform: lowercase;
-    font-size: 1.1em;
-    font-weight: 300;
+    display: none;
+  }
+  &.secondary-button-container {
+    display: flex;
+    justify-content: flex-end;
   }
   &.button-container {
     display: flex;
     justify-content: center;
-    gap: 1em;
-    flex-direction: column;
   }
-}
+  &.icon {
+    @include icon;
+    font-size: 2em;
+    color: $accent;
+    padding-top: 0.4em;
+    position: absolute;
+    margin-left: 0.5em;
+  }}

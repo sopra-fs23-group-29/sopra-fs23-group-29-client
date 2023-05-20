@@ -15,91 +15,100 @@ As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
 const FormField = (props) => {
-  return (
-    <div className="login field">
-      <label className="login label">{props.label}</label>
-      <input
-        className="login input"
-        placeholder="enter here.."
-        value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      />
-    </div>
-  );
+    return (
+        <div className="login field">
+            <i className="login icon">{props.icon}</i>
+            <label className="login label">{props.label}</label>
+            <input
+                className="login input"
+                placeholder={props.placeholder}
+                value={props.value}
+                onChange={(e) => props.onChange(e.target.value)}
+            />
+        </div>
+    );
 };
 
 FormField.propTypes = {
-  label: PropTypes.string,
-  value: PropTypes.string,
-  onChange: PropTypes.func,
+    label: PropTypes.string,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
 };
 
 const Login = (props) => {
-  const history = useHistory();
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+    const history = useHistory();
+    const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
 
-  const goToRegistration = () => {
-    history.push("/registration");
-  };
+    const goToRegistration = () => {
+        history.push("/registration");
+    };
 
-  const doLogin = async () => {
-    try {
-      // Check if a user comes back, meaning the user exists and pw is correct
-      const requestBody = JSON.stringify({ password, username });
-      const response = await api.put("/users/login", requestBody);
+    const doLogin = async () => {
+        try {
+            // Check if a user comes back, meaning the user exists and pw is correct
+            const requestBody = JSON.stringify({ password, username });
+            const response = await api.put("/users/login", requestBody);
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
+            // Get the returned user and update a new object.
+            const user = new User(response.data);
 
-      // Store a token into the local storage for verification if logged in
-      // currently in use: token
-      const token = response.headers["authorization"];
-      sessionStorage.setItem(
-        "token",
-        JSON.stringify({ token: token, id: user.id, username: user.username })
-      );
+            // Store a token into the local storage for verification if logged in
+            // currently in use: token
+            const token = response.headers["authorization"];
+            sessionStorage.setItem(
+                "token",
+                JSON.stringify({ token: token, id: user.id, username: user.username })
+            );
 
-      let webSocket = Stomper.getInstance();
-      webSocket.connect().then(() => {
-        history.push(`/`);
-      });
+            let webSocket = Stomper.getInstance();
+            webSocket.connect().then(() => {
+                history.push(`/`);
+            });
 
-    } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
-    }
-  };
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+    };
 
-  return (
-    <BaseContainer>
-      <div className="login container">
-        <div className="login form">
-          <FormField
-            label="Username"
-            value={username}
-            onChange={(un) => setUsername(un)}
-          />
-          <FormField
-            label="Password"
-            value={password}
-            onChange={(n) => setPassword(n)}
-          />
-          <div className="login button-container">
-            <Button
-              disabled={!username || !password}
-              width="100%"
-              onClick={() => doLogin()}
-            >
-              Login
-            </Button>
-            <Button width="100%" onClick={() => goToRegistration()}>
-              To registration
-            </Button>
-          </div>
-        </div>
-      </div>
-    </BaseContainer>
-  );
+    return (
+        <BaseContainer className="login container">
+            <h2 style={{marginTop: "0"}}>Login</h2>
+            <div className="login form">
+                <FormField
+                    icon="account_circle"
+                    label="Username"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(un) => setUsername(un)}
+                />
+                <FormField
+                    icon="lock"
+                    label="Password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(n) => setPassword(n)}
+                />
+                <div className="login secondary-button-container">
+                    <Button
+                        className="secondary-button"
+                        onClick={() => goToRegistration()}>
+                        Create Account
+                    </Button>
+                </div>
+                <div className="login button-container">
+                    <Button
+                        className="primary-button"
+                        disabled={!username || !password}
+                        width="50%"
+                        onClick={() => doLogin()}
+                    >
+                        Login
+                    </Button>
+                </div>
+            </div>
+        </BaseContainer>
+    );
 };
 
 /**
