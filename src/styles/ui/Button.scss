@@ -12,19 +12,41 @@
     }
   }
   align-self: center;
-  padding: 6px;
+  padding: 1em;
   margin-top: 16px;
   font-weight: 700;
-  text-transform: uppercase;
-  font-size: 13px;
+  font-size: 0.9em;
+  text-transform: capitalize;
   text-align: center;
-  height: fit-content;
   border: none;
   border-radius: $borderRadius;
   cursor: pointer;
   opacity: 1;
   color: $textColor;
   background-color: $accentDark;
+  transition: all 0.3s ease;
+}
+
+.secondary-button {
+  &:hover {
+    transform: translateY(-2px);
+  }
+  &:disabled {
+    cursor: default;
+    opacity: 0.4;
+    &:hover {
+      transform: none;
+    }
+  }
+  font-weight: 700;
+  font-size: 0.9em;
+  text-transform: capitalize;
+  border: none;
+  text-decoration: underline $accentDark;
+  cursor: pointer;
+  opacity: 1;
+  color: $accentDark;
+  background-color: transparent;
   transition: all 0.3s ease;
 }
 
@@ -39,13 +61,12 @@
     }
   }
   align-self: center;
-  padding: 6px;
+  padding: 1em;
   margin-top: 16px;
   font-weight: 700;
-  text-transform: uppercase;
-  font-size: 13px;
+  font-size: 0.9em;
+  text-transform: capitalize;
   text-align: center;
-  height: fit-content;
   border: none;
   border-radius: $borderRadius;
   cursor: pointer;
