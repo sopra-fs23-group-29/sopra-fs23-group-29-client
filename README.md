@@ -4,43 +4,61 @@
 
 Our goal is to provide a game that is not only fun to play, but also improves the players' geograhpical knowledge. Users can show off their skills in multiplayer games with up to 6 players, or challenge themselves in our two solo player game modes.
 
+This repository contains the front end client side of the project. The server side can be found in [this repository](https://github.com/sopra-fs23-group-29/sopra-fs23-group-29-server)
+
+
 ## Technologies
 
-- ReactJS
-- REST API
+The front end is written in JavaScript using React. For the communication between the client and the server, REST endpoints are used. For the communication during a runnign game a websocket STOMP protocol is used.
 
 ## High-Level Components
+
+From a user persepctive, the basic views of the game are the [Login](./src/components/views/Login.js) and [Registration](./src/components/views/Registration.js) screens, the [Home](./src/components/views/Home.js) screen and the different [Game](./src/components/views/Game.js) screens.
+
+The Login/Registration screen are the entry point for a new user where she can login/register. Upon success, each user is directed to the Home screen where joinable lobbies are displayed or the user has the option to open up a multiplayer or singleplayer game of their own.
+
+The Game screen is the heart of the experience, combining different UI elements like the [Board](./src/components/ui/Board.js) and the different [question views](./src/components/ui/CountryRanking.js) during a runnign game, orchestrating the information received through the websocket channels from the server. It decided when to show the question, when to move the players on the board or when to show a result or game over screen.
 
 ## Launch & Deployment
 
 ### Build & Run locally
 
-External dependecies/databases that need to be running for this to work
+The project is built using npm. To run the project in development mode run
+```
+npm run dev
+```
+The development mode allows you to make changes to the code and see the effects directly in your local browser through `http://localhost:3000`
 
 ### Deployment
 
-(currently, all text in this chapter is from sopra template)
+The prod version of the application is deployed on the Google Cloud Platform (GCP) App Engine using a CI/CD pipeline through Github Actions. The steps upon push on the main branch are specified in this [yml file](.github/workflows/main.yml).
 
-For your local development environment, you will need Node.js. You can download it [here](https://nodejs.org). All other dependencies, including React, get installed with:
+Upon push on main, all the test are run (using [sonarcloud](https://sonarcloud.io/projects) for test reports and metrics) and then the workflow tries to deploy the app.
 
-`npm install`
-
-Run this command before you start your application for the first time. Next, you can start the app with:
-
-`npm run dev`
-
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use Google Chrome).
-
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance: the build is minified, and the filenames include hashes.<br>
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This [link](https://console.cloud.google.com/appengine/services?serviceId=default&hl=de&project=sopra-fs23-group-29-client) takes you the GCP project.
 
 ## Illustrations
 
+![Home screen](images/home.PNG)
+
+![PVP lobby](images/pvplobby.PNG)
+
+![PVP game](images/pvpgame.PNG)
+
+![End turn](images/endturn.PNG)
+
+![Solomode howfar](images/howfar.PNG)
+
+![Solomode howfast](images/howfast.PNG)
+
+![End screen](images/end.PNG)
+
+
+
 ## Roadmap
+- Enhanced UI showing the movement of the players on the board more clear
+- Global solo mode leaderboard
+- Friends list and the possibility to invite friends
 
 ## Authors and Acknoledgement
 
