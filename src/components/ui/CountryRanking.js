@@ -1,7 +1,7 @@
 import {Button} from 'components/ui/Button';
 import {useParams} from 'react-router-dom';
 import BaseContainer from "components/ui/BaseContainer";
-import "styles/views/CountryRanking.scss";
+import "styles/ui/CountryRanking.scss";
 import Stomper from "../../helpers/Stomp";
 import React, {useEffect, useState} from "react";
 import Player from "../../models/Player";
@@ -95,7 +95,7 @@ const CountryRanking = props => {
 
 
         // set category
-        setCategory(props.rankQuestion.questionText.replace("^2", "²"))
+        setCategory(props.rankQuestion.questionTextShort.replace("^2", "²"))
     };
 
     const processUpdatedTurn = (message) => {
@@ -178,15 +178,15 @@ const CountryRanking = props => {
     }
 
     // country elements
-    function country1(countries) {
+    function country(countries) {
         let countryArr = []
-        for (let i = 0; i < Math.min(3, countries.length); i++) {
+        for (let i = 0; i < countries.length; i++) {
             countryArr.push(
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
                         <label className="country-ranking country-name" onClick={() => setCountryChecked(cioc[i])}>{countries[i]}</label>
                         <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
-                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="80em" style={{borderRadius: "0.25em", margin: "1em"}}/>
+                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="75em" style={{borderRadius: "0.25em", margin: "1em"}}/>
                     </div>
                 </div>
             )
@@ -194,22 +194,6 @@ const CountryRanking = props => {
 
         return countryArr
     }
-    function country2(countries) {
-        let countryArr = []
-        for (let i = 3; i < Math.max(3, countries.length); i++) {
-            countryArr.push(
-                <div>
-                    <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
-                        <label className="country-ranking country-name" onClick={() => setCountryChecked(cioc[i])}>{countries[i]}</label>
-                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
-                        <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="80em" style={{borderRadius: "0.25em", margin: "1em"}}/>
-                    </div>
-                </div>
-            )
-        }
-        return countryArr
-    }
-
     function enableSaveAnswer() {
         if (currentPlayer && checkedCountry !== null && checkedMarker !== null) {
             if (currentPlayer.id === yourPlayer.id) {
@@ -221,12 +205,10 @@ const CountryRanking = props => {
 
     return (
         <BaseContainer className="country-ranking container" id="Country Ranking Container">
-            <h2>{category}</h2>
+            <h2 style={{marginTop: "0em"}}>Category: {category}</h2>
+            <p>Choose a country and a number guessing how the country will rank compared to the other countries.</p>
             <div className="country-ranking flag-rows">
-                {country1(countries)}
-            </div>
-            <div className="country-ranking flag-rows">
-                {country2(countries)}
+                {country(countries)}
             </div>
             <div className="country-ranking bottom-row">
                 <div style={{width: "10em"}}></div>
