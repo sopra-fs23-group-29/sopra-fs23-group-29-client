@@ -32,11 +32,11 @@
   @include left;
   &.container {
     margin: 0.5em 0;
-    width: 20em;
+    width: 30em;
     padding: 1em;
     border-radius: $borderRadius;
     justify-content: space-between;
-    background: $accentDark;
+    background: $textColor;
     cursor: pointer;
     transition: all 0.3s ease;
     &:hover {
@@ -47,8 +47,13 @@
     }
   }
   &.username {
-    font-weight: 500;
-    color: $textColor;
+    font-weight: 700;
+    color: $accentDark;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 25em;
   }
   &.status {
     color: $accent;
