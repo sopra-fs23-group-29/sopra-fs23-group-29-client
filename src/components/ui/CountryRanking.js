@@ -95,7 +95,7 @@ const CountryRanking = props => {
 
 
         // set category
-        setCategory(props.rankQuestion.questionTextShort.replace("^2", "²"))
+        setCategory(props.rankQuestion.questionText.replace("^2", "²"))
     };
 
     const processUpdatedTurn = (message) => {
@@ -205,7 +205,7 @@ const CountryRanking = props => {
 
     return (
         <BaseContainer className="country-ranking container" id="Country Ranking Container">
-            <h2 style={{marginTop: "0em"}}>Category: {category}</h2>
+            <h2 style={{marginTop: "0em"}}>{category}</h2>
             <p>Choose a country and a number guessing how the country will rank compared to the other countries.</p>
             <div className="country-ranking flag-rows">
                 {country(countries)}
