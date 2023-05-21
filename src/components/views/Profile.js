@@ -77,19 +77,9 @@ const Profile = () => {
                         <h2>{aUser.username}</h2>
                     </div>
                     <div className="profile row">
-                        <div className="profile sections">
-                            {
-                                //<p>Visited Countries: [STRING]</p>
-                            }
-                            <p>Birthday: {aUser.birthday}</p>
-                            {
-                                //<p>About Me: [STRING]</p>
-                            }
-
-                        </div>
+                        <p>Birthday: {aUser.birthday}</p>
                     </div>
                     {editButton}
-
                 </div>
             </div>
         </div>

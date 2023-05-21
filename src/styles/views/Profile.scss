@@ -11,6 +11,7 @@
   &.container {
     margin-top: 2em;
     background-color: $containerColor;
+    padding: 2em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: row;
@@ -43,7 +44,9 @@
     margin-right: 1em;
     background: none;
     box-shadow: none;
-    height: 8em;
+    max-width: 25em;
+    max-height: 12em;
+    object-fit: contain;
   }
   &.username {
     padding-left: 1em;

@@ -170,7 +170,7 @@ const Home = (props) => {
 
   return (
     <BaseContainer className="home container">
-      <h2>PvP Lobbies</h2>{" "}
+      <h2 style={{marginTop: "0"}}>PvP Lobbies</h2>{" "}
       {hasLobbies ? (
         <div>
           {lobbies.map((lobby) => (

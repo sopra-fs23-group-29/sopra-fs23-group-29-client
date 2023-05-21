@@ -4,9 +4,8 @@
   display: flex;
   &.container {
     margin-top: 2em;
-    background: #7F7F7F;
-    opacity: .8;
-    padding: 1.5em;
+    background: $containerColor;
+    padding: 2em;
     border-radius: $borderRadius;
     display: flex;
     flex-direction: column;

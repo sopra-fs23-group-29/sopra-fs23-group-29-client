@@ -126,7 +126,7 @@ const SoloGameSettings = () => {
 
   return (
     <BaseContainer className="home container">
-      <h2>Choose your prefered game mode:</h2>
+      <h2>Choose your preferred game mode:</h2>
       <div className="solosettings">
         <div className="solosettings container">
           <label>
