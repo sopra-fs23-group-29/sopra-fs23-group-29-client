@@ -57,46 +57,47 @@ export const WinnerScreen = (props) => {
     
   }, [props]);
 
-  const exitGame = async () => {
-    try {
-      webSocket.leave("/topic/games/" + gameId + "/gamestart");
-      webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
-      webSocket.leave("/topic/games/" + gameId + "/newturn");
-      webSocket.leave("/topic/games/" + gameId + "/nextTurn");
-      webSocket.leave("/topic/games/" + gameId + "/updatedturn");
-      webSocket.leave("/topic/games/" + gameId + "/scoreboard");
-      webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
-      webSocket.leave("/topic/games/" + gameId + "/barrierHit");
-      webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
-      webSocket.leave("/topic/games/" + gameId + "/gameover");
-      // set status to offline
-      await api.delete(
-          `/games/${gameId}`,
-          {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
-      );
-      console.log("Left game");
-      sessionStorage.removeItem("gameId");
-      sessionStorage.removeItem('game');
+    const exitGame = async () => {
+      try {
+        webSocket.leave("/topic/games/" + gameId + "/gamestart");
+        webSocket.leave("/topic/games/" + gameId + "/newturn_gameheader");
+        webSocket.leave("/topic/games/" + gameId + "/newturn");
+        webSocket.leave("/topic/games/" + gameId + "/nextTurn");
+        webSocket.leave("/topic/games/" + gameId + "/updatedturn");
+        webSocket.leave("/topic/games/" + gameId + "/scoreboard");
+        webSocket.leave("/topic/games/" + gameId + "/scoreboardOver");
+        webSocket.leave("/topic/games/" + gameId + "/barrierHit");
+        webSocket.leave("/topic/games/" + gameId + "/barrierquestion");
+        webSocket.leave("/topic/games/" + gameId + "/gameover");
+        // set status to offline
+        await api.delete(
+            `/games/${gameId}`,
+            {headers: {"Authorization": JSON.parse(sessionStorage.getItem('token')).token}}
+        );
+        console.log("Left game");
+        sessionStorage.removeItem("gameId");
+        sessionStorage.removeItem('game');
 
-      // redirect to home
-      history.push('/');
-  } catch (error) {
-      console.log(`Something went wrong when leaving the game: \n${handleError(error)}`);
-  }
-  }
+        // redirect to home
+        history.push('/');
+    } catch (error) {
+        console.log(`Something went wrong when leaving the game: \n${handleError(error)}`);
+    }
+    }
 
   return (
     <BaseContainer className="winner-screen container">
-      <h1 style={{ margin: 0 }}>Game over</h1>
-      <h2 style={{ marginBottom: 40 }}>{globalScoreboard[0].playerName} has won the game and is on top of the world right now!</h2>
+      <h1 style={{ margin: 0 }}>Winner!</h1>
+      <h2 style={{ marginBottom: 40 }}>{globalScoreboard[0].playerName} is on top of the world right now!</h2>
 
       <div>
       {globalScoreboard.map((player, index) => {
         return(
         <div className="winner-screen table-row"
-          key={player.playerName}  
+          key={player.playerName}
+          
         >
-          <span className="player-rank">{index + 1}.</span>
+            <span className="player-rank">{index + 1}.</span>
           <span
             style={{ backgroundColor: player.playerColor, paddingLeft: "0.5em", paddingRight: "0.5em" }}
             className="player-username"
@@ -110,17 +111,10 @@ export const WinnerScreen = (props) => {
           <span>
           <i className="barrier icon"
                    style={{color: player.playerColor, fontSize: "2em", marginLeft: "0" }}
-          >
-            error_outlined</i>
-          </span>
-
-          <span className="player-barrier-questions" style={{marginRight: 0, marginLeft: 0}}>
-            {player.currentScore}
-          </span>
-          <span className="player-barrier-questions" style={{marginRight: 0, marginLeft: 0}}>
-            fields
-          </span>
-
+                >
+                    error_outlined</i>
+        </span>
+        
         </div>
         )
       })}
