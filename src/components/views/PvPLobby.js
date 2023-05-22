@@ -121,14 +121,14 @@ const PvPLobby = (props) => {
   /* starts the game with all the players that are currently in the lobby*/
   const startGame = () => {
     const id = params.id;
-    console.log(id);
+    // console.log(id);
     webSocket.send("/app/games/" + id + "/startGame", {
       message: "START GAME " + id,
     });
     history.push(`/games/${id}`);
 
     // take this out once everything above works
-    console.log("Game with ID " + id + " has been started");
+    // console.log("Game with ID " + id + " has been started");
   };
 
   async function exitLobby() {

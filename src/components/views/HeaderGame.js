@@ -83,7 +83,7 @@ const HeaderGame = (props) => {
     }
 
     function receiveNewTurn(message) {
-        console.log("received newturn information");
+        // console.log("received newturn information");
 
         const receivedTurn = JSON.parse(message.body);
 

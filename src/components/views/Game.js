@@ -71,9 +71,9 @@ const Game = props => {
     });
 
     webSocket.join("/topic/games/" + params.id + "/gameover", function (message) {
-        console.log("Gamemode:")
+        // console.log("Gamemode:")
         let parsedMessage = JSON.parse(message.body);
-        console.log(parsedMessage.gameMode);
+        // console.log(parsedMessage.gameMode);
         switch (parsedMessage.gameMode) {
             case "HOWFAR":
                 setShowBarrier(false);
@@ -146,10 +146,10 @@ const Game = props => {
 
         if (e) {
 
-            console.log("delete gameid from sessionStorage before unloading page");
+            // console.log("delete gameid from sessionStorage before unloading page");
             sessionStorage.removeItem("gameId");
 
-            console.log("sending POST request to leave game with gameId stored in sessionStorage when Game.js was mounted");
+            // console.log("sending POST request to leave game with gameId stored in sessionStorage when Game.js was mounted");
             leaveGameUnload(gameId);
             // api.delete(
             //     `/games/${gameId}`,
@@ -172,7 +172,7 @@ const Game = props => {
             webSocket.leave("/topic/games/" + gameId + "/gameover");
             webSocket.leave("/topic/games/" + gameId + "/gameover_gameheader");
 
-            console.log("reroute to /");
+            // console.log("reroute to /");
             history.push("/");
 
             e.returnValue = ''; // Legacy method for cross browser support
@@ -202,7 +202,7 @@ const Game = props => {
         }
 
         // console.log("received new game information:")
-        console.log(JSON.stringify(newGame));
+        // console.log(JSON.stringify(newGame));
         
         const boardSize = newGame.boardSize.toLowerCase();
         const withBarriers = newGame.barriersEnabled;
