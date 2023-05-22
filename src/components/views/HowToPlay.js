@@ -96,10 +96,10 @@ const HowToPlay = () => {
           </div>
           <h5 className="howto second-title">Barrier questions</h5>
           <div>
-            To add one more challenge, there are barrier on the gameboard that
-            can only be passed by tokens an additional question has been
+            To add one more challenge, there are barriers on the gameboard that
+            can only be passed after an additional question has been
             answered correctly. The first player whose token reaches a barrier
-            will be asked to answer the barrier question. All other players can
+            will be asked to answer a barrier question. All other players can
             see the question, but cannot answer.
           </div>
           <div className="howto picture-container">
@@ -115,13 +115,13 @@ const HowToPlay = () => {
             If the answer was wrong, the token of the player who failed to
             answer correctly cannot advance and the barrier remains. Another
             barrier question will be posed to the next player whose token is
-            trying to pass the question.
+            trying to pass the barrier.
           </div>
           <h5 className="howto second-title">Winning</h5>
           <div>
             Once a token reaches the end of the gameboard, this player wins.
             Should two or more player reach the finish line in the same round,
-            the player who answered the most barrier questions wins.
+            the player who cleared more barriers wins.
           </div>
         </div>
         <div>
