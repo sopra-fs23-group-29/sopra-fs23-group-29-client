@@ -52,10 +52,6 @@ const LobbySettings = (props) => {
         },
       });
 
-      /* Take out later */
-      console.log("Created game");
-      console.log("Game ID : " + JSON.stringify(response.data.gameId));
-
       /* Map answer from server to get the game id */
       const gameId = response.data.gameId;
 
