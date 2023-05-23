@@ -35,6 +35,7 @@ const Barrier = props => {
     }, [props]);
 
     const processBarrier = props => {
+        document.getElementsByName("answerOptions").forEach(setEnabled)
         setBarrierQuestionEnum(props.barrierQuestion.barrierQuestionEnum);
         let text = props.barrierQuestion.questionText;
         let result = text.replace("this country", props.barrierQuestion.country.nameMap.common)
@@ -69,6 +70,9 @@ const Barrier = props => {
     const setDisabled = (item) => {
         item.disabled = true;
     }
+    const setEnabled = (item) => {
+        item.disabled = false;
+    }
 
     async function saveBarrierAnswer() {
         let chosenAnswer = document.getElementById("answerOptionsLabel" + barrierAnswer)
@@ -90,30 +94,29 @@ const Barrier = props => {
 
     // set answer as checked when text is clicked
     const setAnswerChecked = (answerId) => {
-        document.getElementById(answerId).click();
+        if (barrierPlayer.userToken === userToken) {
+            document.getElementById(answerId).click();
+        }
+    }
+
+    const setAnswerIfAllowed = (answer) => {
+        if (barrierPlayer.userToken === userToken) {
+            setBarrierAnswer(answer);
+        }
     }
 
     // answer elements
     function createAnswer(barrierAnswer) {
         let answerArr = []
-        if (barrierPlayer.userToken === userToken) {
-                for (let i = 0; i <= barrierAnswer.length-1; i++) {
-                    answerArr.push(
-                        <div style={{textAlign: "center"}} key={i}>
-                            <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} value={barrierPlayer.playerColor} onClick={() => setBarrierAnswer(answerOptions[i])}/>
-                            <label htmlFor={"answerOptions" + answerOptions[i]} name="answerOptionsLabel" id={"answerOptionsLabel" + answerOptions[i]}>{answerOptions[i]}</label>
-                        </div>
-                    )
-                }
-                return answerArr
-        } else {
+        for (let i = 0; i <= barrierAnswer.length-1; i++) {
             answerArr.push(
-                <div style={{textAlign: "center"}}>
-                    <p>Please wait while the other player answers the barrier question.</p>
+                <div style={{textAlign: "center"}} key={i}>
+                    <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} value={barrierPlayer.playerColor} onClick={() => setAnswerIfAllowed(answerOptions[i])}/>
+                    <label htmlFor={"answerOptions" + answerOptions[i]} name="answerOptionsLabel" id={"answerOptionsLabel" + answerOptions[i]}>{answerOptions[i]}</label>
                 </div>
             )
-            return answerArr
         }
+        return answerArr
     }
 
     function enableSaveBarrierAnswer() {
@@ -131,6 +134,11 @@ const Barrier = props => {
             <div className="barrier country-container">
                 <img src={flag} alt={flagAlt} height="100em" style={{borderRadius: "0.75em", padding: "0.5em"}}/>
             </div>
+            {barrierPlayer.userToken !== userToken ?
+                <div style={{textAlign: "center", marginBottom: "1em"}}>
+                    <p>Please wait while the other player answers the barrier question.</p>
+                </div> : <div></div>
+            }
             <div className="barrier answer-row">
                 {createAnswer(answerOptions)}
             </div>
