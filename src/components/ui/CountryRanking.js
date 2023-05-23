@@ -77,6 +77,11 @@ const CountryRanking = props => {
 
         // set countries
         if (true) {
+            document.getElementsByName("country").forEach(setReset)
+            if (checkedCountry !== null) {
+                document.getElementById(checkedCountry).checked = false;
+                setCheckedCountry(null)
+            }
             let tempCountries = []
             let tempCioc = []
             let tempFlags = []
@@ -97,6 +102,11 @@ const CountryRanking = props => {
         // set category
         setCategory(props.rankQuestion.questionText.replace("^2", "²"))
     };
+
+    const setReset = (item) => {
+        item.style.all = "revert"
+        item.parentElement.style.all = "revert"
+    }
 
     const processUpdatedTurn = (message) => {
         if (checkedCountry !== null) {
@@ -185,7 +195,7 @@ const CountryRanking = props => {
                 <div>
                     <div className="country-ranking countries-container" onClick={() => setCountryChecked(cioc[i])}>
                         <label className="country-ranking country-name" onClick={() => setCountryChecked(cioc[i])}>{countries[i]}</label>
-                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} onClick={() => setCheckedCountry(cioc[i])}/>
+                        <input type="radio" name="country" id={cioc[i]} disabled={false} className="country-ranking flag-container" value={currentPlayer.playerColor} key={countries[i]} onClick={() => setCheckedCountry(cioc[i])}/>
                         <img src={flags[i]} onClick={() => setCountryChecked(cioc[i])} alt={flagAlt[i]} height="75em" style={{borderRadius: "0.25em", margin: "1em"}}/>
                     </div>
                 </div>
