@@ -35,7 +35,7 @@ const Barrier = props => {
     }, [props]);
 
     const processBarrier = props => {
-        document.getElementsByName("answerOptions").forEach(setEnabled)
+        document.getElementsByName("answerOptionsLabel").forEach(setEnabled)
         setBarrierQuestionEnum(props.barrierQuestion.barrierQuestionEnum);
         let text = props.barrierQuestion.questionText;
         let result = text.replace("this country", props.barrierQuestion.country.nameMap.common)
@@ -67,12 +67,13 @@ const Barrier = props => {
         }
         return array;
     }
-
     const setDisabled = (item) => {
         item.disabled = true;
     }
     const setEnabled = (item) => {
         item.disabled = false;
+        item.style.all = "revert"
+        item.parentElement.style.all = "revert"
     }
 
     async function saveBarrierAnswer() {
