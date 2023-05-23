@@ -55,6 +55,7 @@ const Barrier = props => {
         setCountry(props.barrierQuestion.country.nameMap.common)
         setFlag(props.barrierQuestion.country.flagsMap.svg)
         setFlagAlt(props.barrierQuestion.country.flagsMap.alt)
+        enableAnswerOptions()
     };
 
     const shuffleArray = (array) => {
@@ -93,9 +94,9 @@ const Barrier = props => {
     }
 
     // set answer as checked when text is clicked
-    const setAnswerChecked = (answerId) => {
+    const enableAnswerOptions = () => {
         if (barrierPlayer.userToken === userToken) {
-            document.getElementById(answerId).click();
+            document.getElementsByName("answerOptions").disabled = false;
         }
     }
 
@@ -111,7 +112,7 @@ const Barrier = props => {
         for (let i = 0; i <= barrierAnswer.length-1; i++) {
             answerArr.push(
                 <div style={{textAlign: "center"}} key={i}>
-                    <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={false} key={i} value={barrierPlayer.playerColor} onClick={() => setAnswerIfAllowed(answerOptions[i])}/>
+                    <input type="radio" name="answerOptions" id={"answerOptions" + answerOptions[i]} disabled={barrierPlayer.userToken !== userToken} key={i} value={barrierPlayer.playerColor} onClick={() => setAnswerIfAllowed(answerOptions[i])}/>
                     <label htmlFor={"answerOptions" + answerOptions[i]} name="answerOptionsLabel" id={"answerOptionsLabel" + answerOptions[i]}>{answerOptions[i]}</label>
                 </div>
             )
