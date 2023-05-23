@@ -82,6 +82,10 @@ const CountryRanking = props => {
                 document.getElementById(checkedCountry).checked = false;
                 setCheckedCountry(null)
             }
+            if (checkedMarker !== null) {
+                document.getElementById(checkedMarker).checked = false;
+                setCheckedMarker(null)
+            }
             let tempCountries = []
             let tempCioc = []
             let tempFlags = []
@@ -112,6 +116,10 @@ const CountryRanking = props => {
         if (checkedCountry !== null) {
             document.getElementById(checkedCountry).checked = false;
             setCheckedCountry(null)
+        }
+        if (checkedMarker !== null) {
+            document.getElementById(checkedMarker).checked = false;
+            setCheckedMarker(null)
         }
         // set takenGuesses
         setTakenGuesses(props.takenGuesses);
