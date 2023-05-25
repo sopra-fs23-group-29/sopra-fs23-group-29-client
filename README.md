@@ -68,7 +68,7 @@ This [link](https://console.cloud.google.com/appengine/services?serviceId=defaul
 - **Ramona Walker**
 - **Mark Woolley**
 
-Acknoledgements but to whoom? Things like code we used, inspiration, etc.
+We want to thank our teaching assistant Jerome Maier for the support during the semester and Alejandro Matos for providing the great REST Countries API free of charge.
 
 ## License
 
