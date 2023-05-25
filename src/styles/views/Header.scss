@@ -13,10 +13,11 @@
 
   &.home {
     &.username {
+      display: inline-block;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      width: 50%;
+      width: 26em;
       font-weight: bold;
       color: $accent;
       text-align: left;
