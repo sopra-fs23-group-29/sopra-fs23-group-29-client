@@ -12,7 +12,6 @@ const Users = () => {
     const Player = ({user}) => (
         <div className="player container" onClick={() => goToProfile(user.id)}>
             <div className="player username">{user.username}</div>
-            <div className="player status">{user.status}</div>
         </div>
     );
 
