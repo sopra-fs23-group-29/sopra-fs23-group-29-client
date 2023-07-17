@@ -104,12 +104,11 @@ const Home = (props) => {
       webSocket.send("/app/games/getAllGames", { message: "GET ALL GAMES" });
     }
     fetchData();
-  }, []);
 
-  useEffect(() => {
-    // console.log(lobbies);
-    // console.log(hasLobbies);
-  }, [lobbies, hasLobbies]);
+    return () => {
+      webSocket.leave("/topic/games");
+    }
+  }, [webSocket]);
 
   /* assign content to lobbies to display them */
   const displayOpenLobbies = (message) => {
@@ -179,7 +178,6 @@ const Home = (props) => {
         </div>
       ) : (
         <div className="home lobby-container">
-          Missing a game? Try to hit F5/refresh!<br/>
           There are no multiplayer games to join. You can create your own by
           clicking on the button below!
         </div>
